@@ -160,6 +160,7 @@
 
     function action() {
         var tmp = c.get().vector.split("/");
+        var score = {"AV": 0, "AC": 0, "PR": 0, "UI": 0, "S": 0, "C": 0, "I": 0, "A": 0};
         var radar_point = {"AV": 0, "AC": 0, "PR": 0, "UI": 0, "S": 0, "C": 0, "I": 0, "A": 0};
         for (let index = 1; index < tmp.length; index++) {
             var type = tmp[index].split(":")[0];
@@ -168,15 +169,19 @@
                 case "AV":
                     switch (selection) {
                         case "N":
+                            score[type] = 0.85;
                             radar_point[type] = 2;
                             break;
                         case "A":
+                            score[type] = 0.62;
                             radar_point[type] = 1;
                             break;
                         case "L":
+                            score[type] = 0.55;
                             radar_point[type] = 0;
                             break;
                         case "P":
+                            score[type] = 0.2;
                             radar_point[type] = 0;
                             break;
                         default:
@@ -186,9 +191,11 @@
                 case "AC":
                     switch (selection) {
                         case "H":
+                            score[type] = 0.44;
                             radar_point[type] = 0;
                             break;
                         case "L":
+                            score[type] = 0.77;
                             radar_point[type] = 2;
                             break;
                         default:
@@ -198,12 +205,15 @@
                 case "PR":
                     switch (selection) {
                         case "N":
+                            score[type] = "N";
                             radar_point["PR"] = 2;
                             break;
                         case "L":
+                            score[type] = "L";
                             radar_point["PR"] = 1;
                             break;
                         case "H":
+                            score[type] = "H";
                             radar_point["PR"] = 0;
                             break;
                         default:
@@ -212,9 +222,11 @@
                 case "UI":
                     switch (selection) {
                         case "N":
+                            score[type] = 0.85;
                             radar_point[type] = 2;
                             break;
                         case "R":
+                            score[type] = 0.62;
                             radar_point[type] = 0;
                             break;
                         default:
@@ -224,9 +236,11 @@
                 case "S":
                     switch (selection) {
                         case "U":
+                            score[type] = 6.42;
                             radar_point[type] = 0;
                             break;
                         case "C":
+                            score[type] = 7.52;
                             radar_point[type] = 2;
                         default:
                             break;
@@ -237,12 +251,15 @@
                 case "A":
                     switch (selection) {
                         case "N":
+                            score[type] = 0.0;
                             radar_point[type] = 0;
                             break;
                         case "L":
+                            score[type] = 0.22;
                             radar_point[type] = 1;
                             break;
                         case "H":
+                            score[type] = 0.56;
                             radar_point[type] = 2;
                             break;
                         default:
@@ -251,9 +268,91 @@
                     break;        
                 default:
                     break;
-            }
-            
+            }       
         }
+
+        if (score["S"] == 6.42) {
+            switch (score["PR"]) {
+                case "N":
+                    score["PR"] = 0.85;
+                    break;
+                case "L": 
+                    score[type] = 0.62;
+                    break;
+                case "H":
+                    score[type] = 0.27;
+                    break;
+                default:
+                    break;
+            } 
+        }
+        else {
+            switch (score["PR"]) {
+                case "N":
+                    score["PR"] = 0.85;
+                    break;
+                case "L": 
+                    score["PR"] = 0.68;
+                    break;
+                case "H":
+                    score["PR"] = 0.5;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+        var impact = 1 - (1 - score["C"]) * (1 - score["I"]) * (1 - score["A"])
+        if (score["S"] == 6.42) {
+            impact =  6.42 * impact;
+        }
+        else {
+            impact = 7.52 * (impact - 0.029) - 3.25 * Math.pow((impact - 0.02), 15);
+        }
+
+        var exploitability = 8.22 * score["AV"] * score["AC"] * score["PR"] * score["UI"];
+
+
+        impact = Math.round(impact*2)/2    
+
+        if (impact <= 1.5) {
+            impact = "Mineur"
+        } 
+        else if (impact > 1.5 && impact <= 3) {
+            impact = "Important"
+        }
+        else if (impact > 3 && impact <= 4.5 ){
+            impact = "Majeur"
+        }
+        else {
+            impact = "Critique"
+        }
+
+        
+        exploitability = Math.round(exploitability)
+
+        if (exploitability <= 1) {
+            exploitability = "Difficile"
+        } 
+        else if (exploitability > 1 && exploitability <= 2) {
+            exploitability = "Elevee"
+        } 
+        else if (exploitability > 2 && exploitability <= 3) {
+            exploitability = "Moyen"
+        }
+        else {
+            exploitability = "Facile"
+        }
+
+        const risk_matrix = {
+            "Mineur": {"Difficile": "Mineur", "Elevee": "Mineur", "Moyen": "Important", "Facile": "Majeur"},
+            "Important": {"Difficile": "Mineur", "Elevee": "Important", "Moyen": "Important", "Facile": "Majeur"},
+            "Majeur": {"Difficile": "Important", "Elevee": "Majeur", "Moyen": "Majeur", "Facile": "Critique"},
+            "Critique": {"Difficile": "Important", "Elevee": "Majeur", "Moyen": "Critique", "Facile": "Critique"}
+        } 
+        
+        var risk = risk_matrix[impact][exploitability]
         
         score_cvss = c.get().score;
 
