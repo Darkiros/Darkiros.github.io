@@ -1,12 +1,24 @@
 <html>
-    <head>
-        <title>CVSSv3 graph generator</title>
-    </head>
 <style>
     canvas {
         -moz-user-select: none;
         -webkit-user-select: none;
         -ms-user-select: none;
+        margin: auto;
+        width: fit-content;
+        height: fit-content;
+    }
+
+    #canvas_bar {
+        margin-top: 1%;
+        width: fit-content;
+        height: fit-content;
+    }
+
+    #canvas_pie {
+        margin-top: 1%;
+        width: fit-content;
+        height: fit-content;
     }
 
     #chartjs-tooltip {
@@ -24,8 +36,22 @@
 
     #chartjs-radar {
         margin: auto;
-        width: 40%;
-        height: 40%;
+        text-align: center;
+    }
+
+    #chartjs-bar {
+        margin-top: 2%;
+        text-align: center;
+    }
+
+    #chartjs-pie {
+        margin-top: 2%;
+        text-align: center;
+    }
+
+    #vuln_pres {
+        margin: auto;
+        text-align: center;
     }
 
     .chartjs-tooltip-key {
@@ -39,6 +65,7 @@
 <script src=https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/cvssjs/cvssjs/cvss.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 <script>
     var score_cvss = 0.0;
     var image;
@@ -73,7 +100,7 @@
         }
     }
 
-    var config = {
+    var config_radar = {
         type: 'radar',
         data: {
             labels: [
@@ -95,6 +122,9 @@
             plugins: {
                 legend: {
                     display: false
+                },
+                tooltip: {
+                    enabled: false
                 }
             },
             scales: {
@@ -110,17 +140,110 @@
         },
         plugins: [centerText]
     };
+
+    var config_bar = {
+        type: 'bar',
+        data: {
+            labels: ["Low", "Medium", "High", "Critical"],
+            datasets: [{
+                label: "Number of vulnerabilities",
+                backgroundColor: [window.chartColors.green, window.chartColors.yellow, window.chartColors.orange, window.chartColors.red],
+                data: [0, 0, 0, 0],
+            }]
+        },
+        plugins: [ChartDataLabels],
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: 'Number of vulnerabilities per severity'
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: false
+                },
+                datalabels: {
+                    font: {
+                        weight: 'bold'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
+    var config_pie = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [0, 0, 0, 0],
+                backgroundColor: [window.chartColors.green, window.chartColors.yellow, window.chartColors.orange, window.chartColors.red],
+                label: 'Dataset 1',
+            }],
+            labels: ["Low", "Medium", "High", "Critical"]
+        },
+        plugins: [ChartDataLabels],
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: 'Number of vulnerabilities per severity'
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                },
+                tooltip: {
+                    enabled: false
+                },
+                datalabels: {
+                    font: {
+                        weight: 'bold'
+                    }
+                }
+            }
+        }
+    };
     
     var myRadar;
+    var myBar;
+    var myPie;
     
     window.onload = function () {
-       myRadar = new Chart(document.getElementById("canvas"), config);
+        //Chart.register(ChartDataLabels);
+        myRadar = new Chart(document.getElementById("canvas"), config_radar);
+        myBar = new Chart(document.getElementById("canvas_bar"), config_bar);
+        myPie = new Chart(document.getElementById("canvas_pie"), config_pie);
+        action_bar();
+        action_pie();
     };
     var colorNames = Object.keys(window.chartColors);
     
-    function download() {
+    function download_radar() {
         var a = document.createElement("a"); 
         a.href = myRadar.toBase64Image();
+        a.download = "Image.png"; 
+        a.click();
+    }
+
+    function download_bar() {
+        var a = document.createElement("a"); 
+        a.href = myBar.toBase64Image();
+        a.download = "Image.png"; 
+        a.click();
+    }
+
+    function download_pie() {
+        var a = document.createElement("a"); 
+        a.href = myPie.toBase64Image();
         a.download = "Image.png"; 
         a.click();
     }
@@ -130,8 +253,27 @@
 <body>
     <div id="cvssboard"></div>
     <div id="chartjs-radar"> 
-        <button onclick="download()">Download image</button>
+        <button onclick="download_radar()">Download image</button>
         <canvas id="canvas"></canvas>
+    </div>
+    <div id="vuln_pres">
+        <h2>Number of vulnerabilities per severity</h2>
+        <label for="low">Low</label>
+        <input type="number" name="low" value="0" id="low" onchange="action_bar(); action_pie()">
+        <label for="medium">Medium</label>
+        <input type="number" name="medium" value="0" id="medium" onchange="action_bar(); action_pie()">
+        <label for="high">High</label>
+        <input type="number" name="high" value="0" id="high" onchange="action_bar(); action_pie()">
+        <label for="critical">Critical</label>
+        <input type="number" name="critical" value="0" id="critical" onchange="action_bar(); action_pie()">
+    </div>
+    <div id="chartjs-bar">
+        <button onclick="download_bar()">Download image</button>
+        <canvas id="canvas_bar"></canvas>
+    </div>
+    <div id="chartjs-pie">
+        <button onclick="download_pie()">Download image</button>
+        <canvas id="canvas_pie"></canvas>
     </div>
 </body>
 <script>
@@ -268,7 +410,8 @@
                     break;        
                 default:
                     break;
-            }       
+            }
+            
         }
 
         if (score["S"] == 6.42) {
@@ -277,10 +420,10 @@
                     score["PR"] = 0.85;
                     break;
                 case "L": 
-                    score[type] = 0.62;
+                    score["PR"] = 0.62;
                     break;
                 case "H":
-                    score[type] = 0.27;
+                    score["PR"] = 0.27;
                     break;
                 default:
                     break;
@@ -301,7 +444,8 @@
                     break;
             }
         }
-
+        
+        score_cvss = c.get().score;
 
         var impact = 1 - (1 - score["C"]) * (1 - score["I"]) * (1 - score["A"])
         if (score["S"] == 6.42) {
@@ -314,23 +458,28 @@
         var exploitability = 8.22 * score["AV"] * score["AC"] * score["PR"] * score["UI"];
 
 
-        impact = Math.round(impact*2)/2    
+        impact = Math.round(impact*2)/2
 
-        if (impact <= 1.5) {
+        if (impact < 2.5) {
             impact = "Mineur"
         } 
-        else if (impact > 1.5 && impact <= 3) {
+        else if (impact >= 2.5 && impact < 4) {
             impact = "Important"
         }
-        else if (impact > 3 && impact <= 4.5 ){
+        else if (impact >= 4 && impact < 5.5 ){
             impact = "Majeur"
         }
         else {
             impact = "Critique"
         }
 
-        
         exploitability = Math.round(exploitability)
+        
+        if (score["S"] == 6.42 && exploitability == 4) {
+            exploitability = exploitability - 1
+        }
+
+        virt_exploitability = exploitability
 
         if (exploitability <= 1) {
             exploitability = "Difficile"
@@ -345,49 +494,80 @@
             exploitability = "Facile"
         }
 
-        const risk_matrix = {
+
+        const risk = {
             "Mineur": {"Difficile": "Mineur", "Elevee": "Mineur", "Moyen": "Important", "Facile": "Majeur"},
             "Important": {"Difficile": "Mineur", "Elevee": "Important", "Moyen": "Important", "Facile": "Majeur"},
             "Majeur": {"Difficile": "Important", "Elevee": "Majeur", "Moyen": "Majeur", "Facile": "Critique"},
             "Critique": {"Difficile": "Important", "Elevee": "Majeur", "Moyen": "Critique", "Facile": "Critique"}
         } 
-        
-        var risk = risk_matrix[impact][exploitability]
-        
-        score_cvss = c.get().score;
 
-        config.data.datasets[0].data[0] = radar_point["I"];
-        config.data.datasets[0].data[1] = radar_point["A"];
-        config.data.datasets[0].data[2] = radar_point["AV"];
-        config.data.datasets[0].data[3] = radar_point["AC"];
-        config.data.datasets[0].data[4] = radar_point["PR"];
-        config.data.datasets[0].data[5] = radar_point["UI"];
-        config.data.datasets[0].data[6] = radar_point["S"];
-        config.data.datasets[0].data[7] = radar_point["C"];
+
+        config_radar.data.datasets[0].data[0] = radar_point["I"];
+        config_radar.data.datasets[0].data[1] = radar_point["A"];
+        config_radar.data.datasets[0].data[2] = radar_point["AV"];
+        config_radar.data.datasets[0].data[3] = radar_point["AC"];
+        config_radar.data.datasets[0].data[4] = radar_point["PR"];
+        config_radar.data.datasets[0].data[5] = radar_point["UI"];
+        config_radar.data.datasets[0].data[6] = radar_point["S"];
+        config_radar.data.datasets[0].data[7] = radar_point["C"];
 
         if (score_cvss <= 3.9) {
-            config.data.datasets[0].backgroundColor = color(window.chartColors.green).alpha(0.2).rgbString(),
-            config.data.datasets[0].borderColor = window.chartColors.green,
-            config.data.datasets[0].pointBackgroundColor = window.chartColors.green
+            config_radar.data.datasets[0].backgroundColor = color(window.chartColors.green).alpha(0.2).rgbString(),
+            config_radar.data.datasets[0].borderColor = window.chartColors.green,
+            config_radar.data.datasets[0].pointBackgroundColor = window.chartColors.green
         }
         else if (score_cvss >= 4 && score_cvss <= 6.9) {
-            config.data.datasets[0].backgroundColor = color(window.chartColors.yellow).alpha(0.2).rgbString(),
-            config.data.datasets[0].borderColor = window.chartColors.yellow,
-            config.data.datasets[0].pointBackgroundColor = window.chartColors.yellow
+            config_radar.data.datasets[0].backgroundColor = color(window.chartColors.yellow).alpha(0.2).rgbString(),
+            config_radar.data.datasets[0].borderColor = window.chartColors.yellow,
+            config_radar.data.datasets[0].pointBackgroundColor = window.chartColors.yellow
         }
         else if (score_cvss >= 7 && score_cvss <= 8.9) {
-            config.data.datasets[0].backgroundColor = color(window.chartColors.orange).alpha(0.2).rgbString(),
-            config.data.datasets[0].borderColor = window.chartColors.orange,
-            config.data.datasets[0].pointBackgroundColor = window.chartColors.orange
+            config_radar.data.datasets[0].backgroundColor = color(window.chartColors.orange).alpha(0.2).rgbString(),
+            config_radar.data.datasets[0].borderColor = window.chartColors.orange,
+            config_radar.data.datasets[0].pointBackgroundColor = window.chartColors.orange
         }
         else {
-            config.data.datasets[0].backgroundColor = color(window.chartColors.red).alpha(0.2).rgbString(),
-            config.data.datasets[0].borderColor = window.chartColors.red,
-            config.data.datasets[0].pointBackgroundColor = window.chartColors.red
+            config_radar.data.datasets[0].backgroundColor = color(window.chartColors.red).alpha(0.2).rgbString(),
+            config_radar.data.datasets[0].borderColor = window.chartColors.red,
+            config_radar.data.datasets[0].pointBackgroundColor = window.chartColors.red
+        }
+        
+        if (score["S"] == 6.42) {
+            exploitability = virt_exploitability + 1
+        }
+
+        if (exploitability <= 1) {
+            exploitability = "Difficile"
+        } 
+        else if (exploitability > 1 && exploitability <= 2) {
+            exploitability = "Elevee"
+        } 
+        else if (exploitability > 2 && exploitability <= 3) {
+            exploitability = "Moyen"
+        }
+        else {
+            exploitability = "Facile"
         }
 
         myRadar.update()
 
+    }
+
+    function action_bar() {
+        config_bar.data.datasets[0].data[0] = document.getElementById("low").value;
+        config_bar.data.datasets[0].data[1] = document.getElementById("medium").value;
+        config_bar.data.datasets[0].data[2] = document.getElementById("high").value;
+        config_bar.data.datasets[0].data[3] = document.getElementById("critical").value;
+        myBar.update()
+    }
+
+    function action_pie() {
+        config_pie.data.datasets[0].data[0] = document.getElementById("low").value;
+        config_pie.data.datasets[0].data[1] = document.getElementById("medium").value;
+        config_pie.data.datasets[0].data[2] = document.getElementById("high").value;
+        config_pie.data.datasets[0].data[3] = document.getElementById("critical").value;
+        myPie.update()
     }
 </script>
 
