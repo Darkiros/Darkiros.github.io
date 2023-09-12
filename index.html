@@ -301,6 +301,7 @@
     
 
     function action() {
+        console.clear();
         var tmp = c.get().vector.split("/");
         var score = {"AV": 0, "AC": 0, "PR": 0, "UI": 0, "S": 0, "C": 0, "I": 0, "A": 0};
         var radar_point = {"AV": 0, "AC": 0, "PR": 0, "UI": 0, "S": 0, "C": 0, "I": 0, "A": 0};
@@ -458,23 +459,29 @@
         var exploitability = 8.22 * score["AV"] * score["AC"] * score["PR"] * score["UI"];
 
 
-        impact = Math.round(impact*2)/2
+        impact = Math.round(impact*10)/10
 
-        if (impact < 2.5) {
+        console.log("impact : " + impact)
+
+        if (impact <= 2.5) {
             impact = "Mineur"
         } 
-        else if (impact >= 2.5 && impact < 4) {
+        else if (impact > 2.5 && impact <= 4) {
             impact = "Important"
         }
-        else if (impact >= 4 && impact < 5.5 ){
+        else if (impact > 4 && impact <= 5.5 ){
             impact = "Majeur"
         }
         else {
             impact = "Critique"
         }
 
-        exploitability = Math.round(exploitability)
+        console.log("impact : " + impact)
+
+        exploitability = Math.round(exploitability*10)/10
         
+        console.log("exploitability : " + exploitability)
+
         if (score["S"] == 6.42 && exploitability == 4) {
             exploitability = exploitability - 1
         }
@@ -494,14 +501,19 @@
             exploitability = "Facile"
         }
 
+        console.log("exploitability : " + exploitability)
 
-        const risk = {
-            "Mineur": {"Difficile": "Mineur", "Elevee": "Mineur", "Moyen": "Important", "Facile": "Majeur"},
+
+        const risk_matrix = {
+            "Mineur": {"Difficile": "Mineur", "Elevee": "Mineur", "Moyen": "Important", "Facile": "Important"},
             "Important": {"Difficile": "Mineur", "Elevee": "Important", "Moyen": "Important", "Facile": "Majeur"},
-            "Majeur": {"Difficile": "Important", "Elevee": "Majeur", "Moyen": "Majeur", "Facile": "Critique"},
+            "Majeur": {"Difficile": "Important", "Elevee": "Important", "Moyen": "Majeur", "Facile": "Critique"},
             "Critique": {"Difficile": "Important", "Elevee": "Majeur", "Moyen": "Critique", "Facile": "Critique"}
         } 
 
+        var risk = risk_matrix[impact][exploitability]
+
+        console.log("risk : " + risk)
 
         config_radar.data.datasets[0].data[0] = radar_point["I"];
         config_radar.data.datasets[0].data[1] = radar_point["A"];
