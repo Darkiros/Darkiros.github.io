@@ -1,1376 +1,212 @@
-<html>
-
-<style>
-
-    canvas {
-
-        -moz-user-select: none;
-
-        -webkit-user-select: none;
-
-        -ms-user-select: none;
-
-        margin: auto;
-
-        width: fit-content;
-
-        height: fit-content;
-
-    }
-
-
-
-    #canvas_bar {
-
-        margin-top: 1%;
-
-        width: fit-content;
-
-        height: fit-content;
-
-    }
-
-
-
-    #cvssboard {
-
-        text-align: center;
-
-    }
-
-
-
-    #canvas_pie {
-
-        margin-top: 1%;
-
-        width: fit-content;
-
-        height: fit-content;
-
-    }
-
-
-
-    #chartjs-tooltip {
-
-        opacity: 1;
-
-        position: absolute;
-
-        background: rgba(0, 0, 0, .7);
-
-        color: white;
-
-        border-radius: 3px;
-
-        -webkit-transition: all .1s ease;
-
-        transition: all .1s ease;
-
-        pointer-events: none;
-
-        -webkit-transform: translate(-50%, 0);
-
-        transform: translate(-50%, 0);
-
-    }
-
-
-
-    #chartjs-radar {
-
-        margin-top: 2%;
-
-        display: inline-flex;
-
-        margin: auto;
-
-        text-align: center;
-
-    }
-
-
-
-    #chartjs-bar {
-
-        display: inline-flex;
-
-        margin-top: 2%;
-
-        text-align: center;
-
-        width: 25%;
-
-    }
-
-
-
-    #chartjs-pie {
-
-        display: inline-flex;
-
-        text-align: center;
-
-        margin: auto;
-
-        margin-top: 2%;
-
-        width: 15%;
-
-    }
-
-
-
-    #vuln_pres {
-
-        margin: auto;
-
-        text-align: center;
-
-    }
-
-
-
-    .chartjs-tooltip-key {
-
-        display: inline-block;
-
-        width: 10px;
-
-        height: 10px;
-
-        margin-right: 10px;
-
-    }
-
-
-
-    .download {
-
-        margin-left: 3%;
-
-        background-color: transparent;
-
-        border: none;
-
-        height: fit-content;
-
-        margin-top: auto;
-
-        margin-bottom: auto;
-
-    }
-
-    
-
-    .download:hover {
-
-        cursor: pointer;
-
-        color: blue;
-
-    }
-
-
-
-    .center-box {
-
-        margin: auto;
-
-        text-align: center;
-
-    }
-
-
-
-    .table {
-
-        width: 50%;
-
-        margin: auto;
-
-        border-collapse: collapse;
-
-    }
-
-    .table th {
-
-        padding: 5px;
-
-        color: white;
-
-        background-color:#6c7ae0;
-
-    }
-
-
-
-    .table td {
-
-        padding: 5px;
-
-        text-align: center;
-
-        background-color: whitesmoke;
-
-        font-weight: bold;
-
-    }
-
-</style>
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/gh/cvssjs/cvssjs/cvss.css">
-
-<script src=https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/gh/cvssjs/cvssjs/cvss.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-
-<script>
-
-    var score_cvss = 0.0;
-
-    var image;
-
-
-
-    window.chartColors = {
-
-        red: 'rgb(255, 99, 132)',
-
-        orange: 'rgb(255, 159, 64)',
-
-        yellow: 'rgb(255, 205, 86)',
-
-        green: 'rgb(162, 213, 114)',
-
-        blue: 'rgb(54, 162, 235)'
-
-    };
-
-
-
-    var color = Chart.helpers.color;
-
-
-
-    const centerText = {
-
-        beforeDraw: function (chart) {
-
-            const width = chart.width
-
-            const height = chart.height
-
-            const ctx = chart.ctx
-
-            ctx.restore()
-
-            const fontSize = (height / 114).toFixed(2)
-
-            ctx.font = 'bold ' + fontSize + 'em sans-serif'
-
-            ctx.textBaseline = 'middle'
-
-            ctx.fillStyle = 'white'
-
-            ctx.strokeStyle = 'black'
-
-            const text = score_cvss
-
-            const textX = Math.round((width - (ctx.measureText(text).width)) / 2 - 16)
-
-            const textY = height / 2
-
-            ctx.fillText(text, textX, textY)
-
-            ctx.strokeText(text, textX, textY)
-
-            ctx.save()
-
-        }
-
-    }
-
-
-
-    var config_radar = {
-
-        type: 'radar',
-
-        data: {
-
-            labels: [
-
-                "Integrity", "Availability", "Access vector", "Attack complexity", "Privileges required", "User interaction", "Scope", "Confidentiality"],
-
-            datasets: [{
-
-                label: "Score",
-
-                backgroundColor: color(window.chartColors.red).alpha(0.2).rgbString(),
-
-                borderColor: window.chartColors.red,
-
-                pointBackgroundColor: window.chartColors.red,
-
-                data: [1, 1, 1, 1, 1, 1, 1, 1],
-
-            }]
-
-        },
-
-        options: {
-
-            responsive: true,
-
-            title: {
-
-                display: true,
-
-                text: 'CVSS Score'
-
-            },
-
-            plugins: {
-
-                legend: {
-
-                    display: false
-
-                },
-
-                tooltip: {
-
-                    enabled: false
-
-                }
-
-            },
-
-            scales: {
-
-                r : {
-
-                    min: -1,
-
-                    max: 2,
-
-                    ticks: {
-
-                        display: false,
-
-                        stepSize: 1
-
-                    }
-
-                }
-
-            }
-
-        },
-
-        plugins: [centerText]
-
-    };
-
-
-
-    var config_bar = {
-
-        type: 'bar',
-
-        data: {
-
-            labels: ["Low", "Medium", "High", "Critical"],
-
-            datasets: [{
-
-                label: "Number of vulnerabilities",
-
-                backgroundColor: [window.chartColors.green, window.chartColors.yellow, window.chartColors.orange, window.chartColors.red],
-
-                data: [0, 0, 0, 0],
-
-            }]
-
-        },
-
-        plugins: [ChartDataLabels],
-
-        options: {
-
-            responsive: true,
-
-            title: {
-
-                display: true,
-
-                text: 'Number of vulnerabilities per severity'
-
-            },
-
-            plugins: {
-
-                legend: {
-
-                    display: false
-
-                },
-
-                tooltip: {
-
-                    enabled: false
-
-                },
-
-                datalabels: {
-
-                    font: {
-
-                        weight: 'bold'
-
-                    }
-
-                }
-
-            },
-
-            scales: {
-
-                y: {
-
-                    beginAtZero: true
-
-                }
-
-            }
-
-        }
-
-    };
-
-
-
-    var config_pie = {
-
-        type: 'pie',
-
-        data: {
-
-            datasets: [{
-
-                data: [0, 0, 0, 0],
-
-                backgroundColor: [window.chartColors.green, window.chartColors.yellow, window.chartColors.orange, window.chartColors.red],
-
-                label: 'Dataset 1',
-
-            }],
-
-            labels: ["Low", "Medium", "High", "Critical"]
-
-        },
-
-        plugins: [ChartDataLabels],
-
-        options: {
-
-            responsive: true,
-
-            title: {
-
-                display: true,
-
-                text: 'Number of vulnerabilities per severity'
-
-            },
-
-            plugins: {
-
-                legend: {
-
-                    display: true,
-
-                    position: 'bottom'
-
-                },
-
-                tooltip: {
-
-                    enabled: false
-
-                },
-
-                datalabels: {
-
-                    font: {
-
-                        weight: 'bold'
-
-                    }
-
-                }
-
-            }
-
-        }
-
-    };
-
-    
-
-    var myRadar;
-
-    var myBar;
-
-    var myPie;
-
-    
-
-    window.onload = function () {
-
-        //Chart.register(ChartDataLabels);
-
-        myRadar = new Chart(document.getElementById("canvas"), config_radar);
-
-        myBar = new Chart(document.getElementById("canvas_bar"), config_bar);
-
-        myPie = new Chart(document.getElementById("canvas_pie"), config_pie);
-
-        action_bar();
-
-        action_pie();
-
-    };
-
-    var colorNames = Object.keys(window.chartColors);
-
-    
-
-    function download_radar() {
-
-        var a = document.createElement("a"); 
-
-        a.href = myRadar.toBase64Image();
-
-        a.download = "Image.png"; 
-
-        a.click();
-
-    }
-
-
-
-    function download_bar() {
-
-        var a = document.createElement("a"); 
-
-        a.href = myBar.toBase64Image();
-
-        a.download = "Image.png"; 
-
-        a.click();
-
-    }
-
-
-
-    function download_pie() {
-
-        var a = document.createElement("a"); 
-
-        a.href = myPie.toBase64Image();
-
-        a.download = "Image.png"; 
-
-        a.click();
-
-    }
-
-
-
-</script>
-
-
-
-<body>
-
-    <div id="cvssboard"></div>
-
-    <div class="center-box">
-
-        <div id="chartjs-radar"> 
-
-            <canvas id="canvas"></canvas>
-
-            <button class="download" onclick="download_radar()"><span class="material-symbols-outlined">
-
-                download
-
-                </span></button>
-
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Pentest Helper</title>
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+  <link rel="icon" href="./assets/images/icon.ico" type="image/x-icon" />
+  <link href="./css/prism.css" rel="stylesheet" />
+
+  <!-- Fonts and icons -->
+  <script src="./assets/js/plugin/webfont/webfont.min.js"></script>
+  <script>
+    WebFont.load({
+      google: { families: ["Lato:300,400,700,900"] },
+      custom: {
+        families: [
+          "Flaticon",
+          "Font Awesome 5 Solid",
+          "Font Awesome 5 Regular",
+          "Font Awesome 5 Brands",
+          "simple-line-icons",
+        ],
+        urls: ["./assets/css/fonts.min.css"],
+      },
+      active: function () {
+        sessionStorage.fonts = true;
+      },
+    });
+  </script>
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="./assets/css/atlantis.min.css" />
+
+</head>
+<script src="./assets/js/prism.js"></script>
+
+<body data-background-color="dark">
+  <div class="wrapper">
+    <div class="main-header">
+      <!-- Logo Header -->
+      <div class="logo-header" data-background-color="dark2">
+        <a href="/accueil" class="logo">
+          <img src="./assets/images/logo.png" alt="navbar brand" class="navbar-brand" width="70px" />
+        </a>
+        <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse"
+          data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon">
+            <i class="icon-menu"></i>
+          </span>
+        </button>
+        <button class="topbar-toggler more">
+          <i class="icon-options-vertical"></i>
+        </button>
+        <div class="nav-toggle">
+          <button class="btn btn-toggle toggle-sidebar">
+            <i class="icon-menu"></i>
+          </button>
         </div>
+      </div>
+      <!-- End Logo Header -->
 
-    </div>
-
-    <div class="center-box">
-
-        <table class="table">
-
-            <tr>
-
-                <th>Exploitability</th>
-
-                <th>Impact</th>
-
-                <th>Risk</th>
-
-            </tr>
-
-            <tr>
-
-                <td id="exploitability">0</td>
-
-                <td id="impact">0</td>
-
-                <td id="risk">0</td>
-
-            </tr>
-
-        </table>    
-
-    </div>
-
-    <div id="vuln_pres">
-
-        <h2>Number of vulnerabilities per severity</h2>
-
-        <label for="low">Low</label>
-
-        <input type="number" name="low" value="0" id="low" onchange="action_bar(); action_pie()">
-
-        <label for="medium">Medium</label>
-
-        <input type="number" name="medium" value="0" id="medium" onchange="action_bar(); action_pie()">
-
-        <label for="high">High</label>
-
-        <input type="number" name="high" value="0" id="high" onchange="action_bar(); action_pie()">
-
-        <label for="critical">Critical</label>
-
-        <input type="number" name="critical" value="0" id="critical" onchange="action_bar(); action_pie()">
-
-    </div>
-
-    <div class="center-box">
-
-        <div id="chartjs-bar">
-
-            <canvas id="canvas_bar"></canvas>
-
-            <button class="download" onclick="download_bar()"><span class="material-symbols-outlined">
-
-                download
-
-                </span></button>
-
+      <!-- Navbar Header -->
+      <nav class="navbar navbar-header navbar-expand-lg" data-background-color="dark">
+        <div class="container-fluid">
+          <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+            <li class="nav-item dropdown hidden-caret">
+              <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
+                <div class="avatar-sm">
+                  <img src="./assets/images/Darkiros.jpg" alt="..." class="avatar-img rounded-circle" />
+                </div>
+              </a>
+              <ul class="dropdown-menu dropdown-user animated fadeIn">
+                <div class="dropdown-user-scroll scrollbar-outer">
+                  <li>
+                    <div class="user-box">
+                      <div class="avatar-lg ml-auto mr-auto">
+                        <img src="./assets/images/Darkiros.jpg" alt="image profile" class="avatar-img rounded" />
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="https://github.com/Darkiros" target="_blank"
+                      rel="noopener noreferrer">
+                      <div class="avatar-sm ml-auto mr-auto">
+                        <img src="./assets/images/github.png" alt="Github Darkiros" class="avatar-img rounded-circle">
+                      </div>
+                    </a>
+                    <p class="text-center dropdown-header">Made by Darkiros</p>
+                  </li>
+                </div>
+              </ul>
+            </li>
+          </ul>
         </div>
-
+      </nav>
+      <!-- End Navbar -->
     </div>
 
-    <div class="center-box">
-
-        <div id="chartjs-pie">
-
-            <canvas id="canvas_pie"></canvas>
-
-            <button class="download" onclick="download_pie()"><span class="material-symbols-outlined">
-
-                download
-
-                </span></button>
-
+    <div class="sidebar sidebar-style-2" data-background-color="dark2">
+      <div class="sidebar-wrapper scrollbar scrollbar-inner">
+        <div class="sidebar-content">
+          <ul class="nav nav-primary">
+            <li class="nav-item active">
+              <a href="#">
+                <i class="fas fa-home"></i>
+                <p>Accueil</p>
+              </a>
+            </li>
+            <li class="nav-section">
+              <span class="sidebar-mini-icon">
+                <i class="fa fa-ellipsis-h"></i>
+              </span>
+            </li>
+            <li class="nav-item">
+              <a data-toggle="collapse" href="#rapports">
+                <i class="fas fa-layer-group"></i>
+                <p>Rapports</p>
+                <span class="caret"></span>
+              </a>
+              <div class="collapse" id="rapports">
+                <ul class="nav nav-collapse">
+                  <li>
+                    <a href="./calculatrice.html">
+                      <span class="sub-item">Calculatrice CVSS 3.1</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="./graphs.html">
+                      <span class="sub-item">Générateur de graphs</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
         </div>
+      </div>
+    </div>
+    <!-- End Sidebar -->
 
+    <div class="main-panel" id="vanta">
+      <div class="content">
+        <div class="page-inner">
+          <div class="row">
+            <div class="col-md-12">
+              <img src="./assets/images/logo.png" class="img-fluid mb-4 mx-auto d-md-block" alt="...">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
+    <!-- End Custom template -->
+  </div>
+  <!--   Core JS Files   -->
+  <script src="./assets/js/core/jquery.3.2.1.min.js"></script>
+  <script src="./assets/js/core/popper.min.js"></script>
+  <script src="./assets/js/core/bootstrap.min.js"></script>
+
+  <!-- jQuery UI -->
+  <script src="./assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+  <script src="./assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+
+  <!-- jQuery Scrollbar -->
+  <script src="./assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+  <!-- Chart JS -->
+  <script src="./assets/js/plugin/chart.js/chart.min.js"></script>
+
+  <!-- jQuery Sparkline -->
+  <script src="./assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+  <!-- Chart Circle -->
+  <script src="./assets/js/plugin/chart-circle/circles.min.js"></script>
+
+  <!-- Datatables -->
+  <script src="./assets/js/plugin/datatables/datatables.min.js"></script>
+
+  <!-- Bootstrap Notify -->
+  <script src="./assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+  <!-- jQuery Vector Maps -->
+  <script src="./assets/js/plugin/jqvmap/jquery.vmap.min.js"></script>
+  <script src="./assets/js/plugin/jqvmap/maps/jquery.vmap.world.js"></script>
+
+  <!-- Sweet Alert -->
+  <script src="./assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+  <!-- Atlantis JS -->
+  <script src="./assets/js/atlantis.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.halo.min.js"></script>
+  <script>
+    VANTA.HALO({
+      el: "#vanta",
+      mouseControls: false,
+      touchControls: false,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      yOffset: -0.15,
+      backgroundColor: 0x1a2035,
+      amplitudeFactor: 0.0,
+    })
+  </script>
 </body>
 
-<script>
-
-
-
-    var roundUp1 = function Roundup(input) {
-
-        var int_input = Math.round(input * 100000);
-
-        if (int_input % 10000 === 0) {
-
-            return int_input / 100000
-
-        } else {
-
-            return (Math.floor(int_input / 10000) + 1) / 10
-
-        }
-
-    };
-
-
-
-    var c = new CVSS("cvssboard", {
-
-        onchange: function() {
-
-            window.location.hash = c.get().vector;
-
-            c.vector.setAttribute('href', '#' + c.get().vector)
-
-            action()
-
-        }
-
-    });
-
-    if (window.location.hash.substring(1).length > 0) {
-
-        c.set(decodeURIComponent(window.location.hash.substring(1)));
-
-    }
-
-
-
-    
-
-
-
-    function action() {
-
-        console.clear();
-
-        var tmp = c.get().vector.split("/");
-
-        var score = {"AV": 0, "AC": 0, "PR": 0, "UI": 0, "S": 0, "C": 0, "I": 0, "A": 0};
-
-        var radar_point = {"AV": 0, "AC": 0, "PR": 0, "UI": 0, "S": 0, "C": 0, "I": 0, "A": 0};
-
-        for (let index = 1; index < tmp.length; index++) {
-
-            var type = tmp[index].split(":")[0];
-
-            var selection = tmp[index].split(":")[1];
-
-            switch (type) {
-
-                case "AV":
-
-                    switch (selection) {
-
-                        case "N":
-
-                            score[type] = 0.85;
-
-                            radar_point[type] = 2;
-
-                            break;
-
-                        case "A":
-
-                            score[type] = 0.62;
-
-                            radar_point[type] = 1;
-
-                            break;
-
-                        case "L":
-
-                            score[type] = 0.55;
-
-                            radar_point[type] = 0;
-
-                            break;
-
-                        case "P":
-
-                            score[type] = 0.2;
-
-                            radar_point[type] = 0;
-
-                            break;
-
-                        default:
-
-                            break;
-
-                    }
-
-                    break;
-
-                case "AC":
-
-                    switch (selection) {
-
-                        case "H":
-
-                            score[type] = 0.44;
-
-                            radar_point[type] = 0;
-
-                            break;
-
-                        case "L":
-
-                            score[type] = 0.77;
-
-                            radar_point[type] = 2;
-
-                            break;
-
-                        default:
-
-                            break;
-
-                    }
-
-                    break;
-
-                case "PR":
-
-                    switch (selection) {
-
-                        case "N":
-
-                            score[type] = "N";
-
-                            radar_point["PR"] = 2;
-
-                            break;
-
-                        case "L":
-
-                            score[type] = "L";
-
-                            radar_point["PR"] = 1;
-
-                            break;
-
-                        case "H":
-
-                            score[type] = "H";
-
-                            radar_point["PR"] = 0;
-
-                            break;
-
-                        default:
-
-                            break;
-
-                    }
-
-                case "UI":
-
-                    switch (selection) {
-
-                        case "N":
-
-                            score[type] = 0.85;
-
-                            radar_point[type] = 2;
-
-                            break;
-
-                        case "R":
-
-                            score[type] = 0.62;
-
-                            radar_point[type] = 0;
-
-                            break;
-
-                        default:
-
-                            break;
-
-                    }
-
-                    break;
-
-                case "S":
-
-                    switch (selection) {
-
-                        case "U":
-
-                            score[type] = 6.42;
-
-                            radar_point[type] = 0;
-
-                            break;
-
-                        case "C":
-
-                            score[type] = 7.52;
-
-                            radar_point[type] = 2;
-
-                        default:
-
-                            break;
-
-                    }
-
-                    break;
-
-                case "C":
-
-                case "I":
-
-                case "A":
-
-                    switch (selection) {
-
-                        case "N":
-
-                            score[type] = 0.0;
-
-                            radar_point[type] = 0;
-
-                            break;
-
-                        case "L":
-
-                            score[type] = 0.22;
-
-                            radar_point[type] = 1;
-
-                            break;
-
-                        case "H":
-
-                            score[type] = 0.56;
-
-                            radar_point[type] = 2;
-
-                            break;
-
-                        default:
-
-                            break;
-
-                    }
-
-                    break;        
-
-                default:
-
-                    break;
-
-            }
-
-            
-
-        }
-
-
-
-        if (score["S"] == 6.42) {
-
-            switch (score["PR"]) {
-
-                case "N":
-
-                    score["PR"] = 0.85;
-
-                    break;
-
-                case "L": 
-
-                    score["PR"] = 0.62;
-
-                    break;
-
-                case "H":
-
-                    score["PR"] = 0.27;
-
-                    break;
-
-                default:
-
-                    break;
-
-            } 
-
-        }
-
-        else {
-
-            switch (score["PR"]) {
-
-                case "N":
-
-                    score["PR"] = 0.85;
-
-                    break;
-
-                case "L": 
-
-                    score["PR"] = 0.68;
-
-                    break;
-
-                case "H":
-
-                    score["PR"] = 0.5;
-
-                    break;
-
-                default:
-
-                    break;
-
-            }
-
-        }
-
-        
-
-        score_cvss = c.get().score;
-
-
-
-        var impact = 1 - (1 - score["C"]) * (1 - score["I"]) * (1 - score["A"])
-
-        if (score["S"] == 6.42) {
-
-            impact =  6.42 * impact;
-
-        }
-
-        else {
-
-            impact = 7.52 * (impact - 0.029) - 3.25 * Math.pow((impact - 0.02), 15);
-
-        }
-
-
-
-        var exploitability = 8.22 * score["AV"] * score["AC"] * score["PR"] * score["UI"];
-
-
-
-
-
-        impact = Math.round(impact*10)/10
-
-
-
-        var impact_metric = impact;
-
-        console.log("impact : " + impact)
-
-
-
-        if (impact <= 2.5) {
-
-            impact = "Mineur"
-
-            document.getElementById("impact").style.color = window.chartColors.green
-
-        } 
-
-        else if (impact > 2.5 && impact <= 4) {
-
-            impact = "Important"
-
-            document.getElementById("impact").style.color = window.chartColors.yellow
-
-        }
-
-        else if (impact > 4 && impact <= 5.5 ){
-
-            impact = "Majeur"
-
-            document.getElementById("impact").style.color = window.chartColors.orange
-
-        }
-
-        else {
-
-            impact = "Critique"
-
-            document.getElementById("impact").style.color = window.chartColors.red
-
-        }
-
-
-
-        document.getElementById("impact").innerHTML = impact + " " + impact_metric;
-
-        console.log("impact : " + impact)
-
-
-
-        exploitability = Math.round(exploitability*10)/10
-
-        
-
-        var exploitability_metric = exploitability;
-
-        console.log("exploitability : " + exploitability)
-
-
-
-        if (score["S"] == 6.42 && exploitability == 4) {
-
-            exploitability = exploitability - 1
-
-        }
-
-
-
-        virt_exploitability = exploitability
-
-
-
-        if (exploitability <= 1) {
-
-            exploitability = "Difficile"
-
-            document.getElementById("exploitability").style.color = window.chartColors.green
-
-        } 
-
-        else if (exploitability > 1 && exploitability <= 2) {
-
-            exploitability = "Elevee"
-
-            document.getElementById("exploitability").style.color = window.chartColors.yellow
-
-        } 
-
-        else if (exploitability > 2 && exploitability <= 3) {
-
-            exploitability = "Moyen"
-
-            document.getElementById("exploitability").style.color = window.chartColors.orange
-
-        }
-
-        else {
-
-            exploitability = "Facile"
-
-            document.getElementById("exploitability").style.color = window.chartColors.red
-
-        }
-
-
-
-        document.getElementById("exploitability").innerHTML = exploitability + " " + exploitability_metric;
-
-        console.log("exploitability : " + exploitability)
-
-
-
-
-
-        const risk_matrix = {
-
-            "Mineur": {"Difficile": "Mineur", "Elevee": "Mineur", "Moyen": "Important", "Facile": "Important"},
-
-            "Important": {"Difficile": "Mineur", "Elevee": "Important", "Moyen": "Important", "Facile": "Majeur"},
-
-            "Majeur": {"Difficile": "Important", "Elevee": "Important", "Moyen": "Majeur", "Facile": "Critique"},
-
-            "Critique": {"Difficile": "Important", "Elevee": "Majeur", "Moyen": "Critique", "Facile": "Critique"}
-
-        } 
-
-
-
-        var risk = risk_matrix[impact][exploitability]
-
-
-
-        document.getElementById("risk").innerHTML = risk;
-
-        if (risk == "Mineur") {
-
-            document.getElementById("risk").style.color = window.chartColors.green
-
-        }
-
-        else if (risk == "Important") {
-
-            document.getElementById("risk").style.color = window.chartColors.yellow
-
-        }
-
-        else if (risk == "Majeur") {
-
-            document.getElementById("risk").style.color = window.chartColors.orange
-
-        }
-
-        else {
-
-            document.getElementById("risk").style.color = window.chartColors.red
-
-        }
-
-        
-
-        console.log("risk : " + risk)
-
-
-
-        config_radar.data.datasets[0].data[0] = radar_point["I"];
-
-        config_radar.data.datasets[0].data[1] = radar_point["A"];
-
-        config_radar.data.datasets[0].data[2] = radar_point["AV"];
-
-        config_radar.data.datasets[0].data[3] = radar_point["AC"];
-
-        config_radar.data.datasets[0].data[4] = radar_point["PR"];
-
-        config_radar.data.datasets[0].data[5] = radar_point["UI"];
-
-        config_radar.data.datasets[0].data[6] = radar_point["S"];
-
-        config_radar.data.datasets[0].data[7] = radar_point["C"];
-
-
-
-        if (score_cvss <= 3.9) {
-
-            config_radar.data.datasets[0].backgroundColor = color(window.chartColors.green).alpha(0.2).rgbString(),
-
-            config_radar.data.datasets[0].borderColor = window.chartColors.green,
-
-            config_radar.data.datasets[0].pointBackgroundColor = window.chartColors.green
-
-        }
-
-        else if (score_cvss >= 4 && score_cvss <= 6.9) {
-
-            config_radar.data.datasets[0].backgroundColor = color(window.chartColors.yellow).alpha(0.2).rgbString(),
-
-            config_radar.data.datasets[0].borderColor = window.chartColors.yellow,
-
-            config_radar.data.datasets[0].pointBackgroundColor = window.chartColors.yellow
-
-        }
-
-        else if (score_cvss >= 7 && score_cvss <= 8.9) {
-
-            config_radar.data.datasets[0].backgroundColor = color(window.chartColors.orange).alpha(0.2).rgbString(),
-
-            config_radar.data.datasets[0].borderColor = window.chartColors.orange,
-
-            config_radar.data.datasets[0].pointBackgroundColor = window.chartColors.orange
-
-        }
-
-        else {
-
-            config_radar.data.datasets[0].backgroundColor = color(window.chartColors.red).alpha(0.2).rgbString(),
-
-            config_radar.data.datasets[0].borderColor = window.chartColors.red,
-
-            config_radar.data.datasets[0].pointBackgroundColor = window.chartColors.red
-
-        }
-
-        
-
-        if (score["S"] == 6.42) {
-
-            exploitability = virt_exploitability + 1
-
-        }
-
-
-
-        if (exploitability <= 1) {
-
-            exploitability = "Difficile"
-
-        } 
-
-        else if (exploitability > 1 && exploitability <= 2) {
-
-            exploitability = "Elevee"
-
-        } 
-
-        else if (exploitability > 2 && exploitability <= 3) {
-
-            exploitability = "Moyen"
-
-        }
-
-        else {
-
-            exploitability = "Facile"
-
-        }
-
-
-
-        myRadar.update()
-
-
-
-    }
-
-
-
-    function action_bar() {
-
-        config_bar.data.datasets[0].data[0] = document.getElementById("low").value;
-
-        config_bar.data.datasets[0].data[1] = document.getElementById("medium").value;
-
-        config_bar.data.datasets[0].data[2] = document.getElementById("high").value;
-
-        config_bar.data.datasets[0].data[3] = document.getElementById("critical").value;
-
-        myBar.update()
-
-    }
-
-
-
-    function action_pie() {
-
-        config_pie.data.datasets[0].data[0] = document.getElementById("low").value;
-
-        config_pie.data.datasets[0].data[1] = document.getElementById("medium").value;
-
-        config_pie.data.datasets[0].data[2] = document.getElementById("high").value;
-
-        config_pie.data.datasets[0].data[3] = document.getElementById("critical").value;
-
-        myPie.update()
-
-    }
-
-</script>
-
-
-
 </html>
-
