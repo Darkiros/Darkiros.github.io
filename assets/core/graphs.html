@@ -1,4 +1,7 @@
 <html>
+    <head>
+        <meta charset="utf-8">
+    </head>
 <style>
     canvas {
         -moz-user-select: none;
@@ -230,8 +233,7 @@
 </script>
 
 <body>
-    <div id="vuln_pres" style="color: white;">
-        <h2>Number of vulnerabilities per severity</h2>
+    <div class="center-box" style="color: white;">
         <label for="low">Low </label>
         <input type="number" name="low" value="0" id="low" style="width: 5em; text-align: center;"
             onchange="action_bar(); action_pie()">

@@ -3,6 +3,7 @@
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8">
     <title>Pentest Helper - Calculatrice</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="./assets/images/icon.ico" type="image/x-icon" />
@@ -123,15 +124,15 @@
                                 <i class="fa fa-ellipsis-h"></i>
                             </span>
                         </li>
-                        <li class="nav-item active">
-                            <a data-toggle="collapse" href="#rapports">
+                        <li class="nav-item active submenu">
+                            <a data-toggle="collapse" href="#rapports" aria-expanded="true">
                                 <i class="fas fa-layer-group"></i>
                                 <p>Rapports</p>
                                 <span class="caret"></span>
                             </a>
-                            <div class="collapse" id="rapports">
+                            <div class="collapse show" id="rapports">
                                 <ul class="nav nav-collapse">
-                                    <li>
+                                    <li class="active">
                                         <a href="./calculatrice.html">
                                             <span class="sub-item">Calculatrice CVSS 3.1</span>
                                         </a>
@@ -139,6 +140,11 @@
                                     <li>
                                         <a href="./graphs.html">
                                             <span class="sub-item">Générateur de graphs</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="./generateur_vuln.html">
+                                            <span class="sub-item">Générateur de fiche de vulnérabilité</span>
                                         </a>
                                     </li>
                                 </ul>

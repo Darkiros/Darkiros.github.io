@@ -1,4 +1,7 @@
 <html>
+    <head>
+        <meta charset="utf-8">
+    </head>
 <style>
     canvas {
         -moz-user-select: none;
@@ -205,14 +208,7 @@
     var myRadar;
 
     window.onload = function () {
-        //Chart.register(ChartDataLabels);
         myRadar = new Chart(document.getElementById("canvas"), config_radar);
-        document.getElementById("metricsTable").style.visibility = "visible";
-        html2canvas(document.getElementById("metricsTable")).then((canvas) => {
-            document.getElementById("previewImage").innerHTML = "";
-            document.getElementById("previewImage").appendChild(canvas);
-        });
-        document.getElementById("metricsTable").style.visibility = "hidden";
     };
     var colorNames = Object.keys(window.chartColors);
 
@@ -223,11 +219,18 @@
         a.click();
     }
 
-    function download_metrics() {
+    async function download_metrics() {
         var a = document.createElement("a");
-        a.href = document.getElementById("previewImage").childNodes[0].toDataURL();
-        a.download = "Image.png";
-        a.click();
+        await html2canvas(document.getElementById("metricsTable")).then((canvas) => {
+            a.appendChild(canvas);
+        });
+        var b = document.createElement("a");
+        b.href = a.childNodes[0].toDataURL("");
+        b.download = "Image.png";
+        b.click();
+        //remove a and b
+        a.remove();
+        b.remove();
     }
 
     function SelectText(element) {
@@ -245,8 +248,19 @@
         }
     }
 
-    function copy(id) {
-        var canvas = document.getElementById(id);
+    async function copy(id, isTable) {
+        var a
+        var canvas
+        if (isTable){
+            a = document.createElement("a");
+            await html2canvas(document.getElementById(id)).then((canvas) => {
+                a.appendChild(canvas);
+            });
+            canvas = a.childNodes[0];
+        }
+        else {
+            canvas = document.getElementById(id);
+        }
         var img = document.createElement('img');
         img.src = canvas.toDataURL()
         var div = document.createElement('div');
@@ -259,7 +273,7 @@
         document.body.removeChild(div);
         new Notify({
             status: 'success',
-            title: 'Graph copié avec succès',
+            title: 'Elément copié avec succès',
             text: '',
             effect: 'fade',
             speed: 300,
@@ -287,7 +301,7 @@
             <button class="download" onclick="download_radar()"><span class="material-symbols-outlined">
                     download
                 </span></button>
-            <button class="copy" onclick="copy('canvas')"><span class="material-symbols-outlined">
+            <button class="copy" onclick="copy('canvas', false)"><span class="material-symbols-outlined">
                     file_copy
                 </span></button>
         </div>
@@ -298,8 +312,21 @@
             </canvas>
         </div>
     </div>
+    <div class="center-box">
+        <div style="display: inline-flex;
+        margin: auto;
+        margin-bottom: 2%;
+        text-align: center;">
+            <button class="download" onclick="download_metrics()"><span class="material-symbols-outlined">
+                    download
+                </span></button>
+            <button class="copy" onclick="copy('metricsTable', true)"><span class="material-symbols-outlined">
+                    file_copy
+                </span></button>
+        </div>
+    </div>
     <div class="center-box" id="metrics">
-        <table class="table" style="visibility:hidden;" id="metricsTable">
+        <table class="table" id="metricsTable">
             <tr>
                 <th>Exploitability</th>
                 <th>Impact</th>
@@ -312,20 +339,6 @@
             </tr>
         </table>
     </div>
-    <div class="center-box">
-        <div style="display: inline-flex;
-        margin: auto;
-        margin-bottom: 2%;
-        text-align: center;">
-            <button class="download" onclick="download_metrics()"><span class="material-symbols-outlined">
-                    download
-                </span></button>
-            <button class="copy" onclick="copy('metricsTable')"><span class="material-symbols-outlined">
-                    file_copy
-                </span></button>
-        </div>
-    </div>
-    <div class="center-box" id="previewImage"></div>
 </body>
 <script>
 
@@ -639,27 +652,6 @@
             exploitability = "Facile"
         }
 
-        // Convert html table to image   
-
-
-        var getCanvas; // global variable
-
-
-        document.getElementById("metricsTable").style.visibility = "visible";
-        html2canvas(document.getElementById("metricsTable")).then((canvas) => {
-            document.getElementById("previewImage").innerHTML = "";
-            document.getElementById("previewImage").appendChild(canvas);
-        });
-        document.getElementById("metricsTable").style.visibility = "hidden";
-
-
-        /*html2canvas(element, {
-            onrendered: function (canvas) {
-                $("#previewImage").html(""); //Clear the preview image
-                $("#previewImage").append(canvas);
-                getCanvas = canvas;
-            }
-        });*/
         myRadar.update()
 
     }
