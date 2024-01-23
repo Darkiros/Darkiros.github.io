@@ -190,8 +190,9 @@
     <!-- CSS Files -->
     <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="./assets/css/atlantis.min.css" />
-    <link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/gh/cvssjs/cvssjs/cvss.css">
+    <link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/gh/cvssjs/cvssjs/cvss.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
+    <link rel="stylesheet" href="./assets/css/toggle.css" />
 
 
     <style>
@@ -469,25 +470,34 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row mt-1">
+                                        <div class="center-box">
+                                            <div style="display: block ruby; width: 100%">
+                                                <p>FR</p>
+                                                <input type="checkbox" id="switch" onclick="change_language()"/><label style="margin-right: 1%;" class="switch" for="switch">Toggle</label>
+                                                <p>EN</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="card-body" style="border-left: solid; border-left-color: #6c7ae0; padding-left: 1%; padding-top: 0; padding-bottom: 0;" id="fiche">
-                                <h2 style="text-transform: uppercase; text-decoration: underline; color: #6c7ae0;" id="vuln_name">Nom de la vulnérabilité</h2>
-                                <h5 style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">Description :</h5>
+                                <h2 id="name_title" style="text-transform: uppercase; text-decoration: underline; color: #6c7ae0;" id="vuln_name">Nom de la vulnérabilité</h2>
+                                <h5 id="description_title" style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">Description :</h5>
                                 <p id="vuln_description"></p>
-                                <h5 style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">Etapes pour reproduire le résultat :</h5>
+                                <h5 id="step_title" style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">Etapes pour reproduire le résultat :</h5>
                                 <p id="vuln_step"></p>
-                                <h5 style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">Impact :</h5>
+                                <h5 id="impact_title" style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">Impact :</h5>
                                 <p id="vuln_impacts"></p>
-                                <h5 style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">Evaluation du risque :</h5>
+                                <h5 id="evaluation_title" style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">Evaluation du risque :</h5>
                                 <div id="metrics">
                                     <table class="table" id="metricsTable">
                                         <tr>
-                                            <th>Exploitability</th>
-                                            <th>Impact</th>
-                                            <th>Risk</th>
+                                            <th id="exploitability_table">Exploitabilité</th>
+                                            <th id="impact_table">Impact</th>
+                                            <th id="risk_table">Risque</th>
                                         </tr>
                                         <tr>
                                             <td id="exploitability">0</td>
@@ -496,14 +506,14 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <h5 style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">Evaluation CVSS 3.1 :</h5>
+                                <h5 id="cvss_title" style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">Evaluation CVSS 3.1 :</h5>
                                 <div class="center-box">
                                     <div id="chartjs-radar">
                                         <canvas id="canvas">
                                         </canvas>
                                     </div>
                                 </div>
-                                <h5 style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">Recommandations :</h5>
+                                <h5 id="recommandation_title" style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">Recommandations :</h5>
                                 <p id="vuln_recommandation"></p>
                             </div>
                             <div class="center-box">
@@ -557,6 +567,35 @@
 </body>
 
 <script>
+
+    function change_language() {
+        if (document.getElementById("switch").checked) {
+            document.getElementById("name_title").innerHTML = "Vulnerability name";
+            document.getElementById("description_title").innerHTML = "Description :";
+            document.getElementById("step_title").innerHTML = "Steps to reproduce :";
+            document.getElementById("impact_title").innerHTML = "Impact :";
+            document.getElementById("evaluation_title").innerHTML = "Risk evaluation :";
+            document.getElementById("exploitability_table").innerHTML = "Exploitability";
+            document.getElementById("impact_table").innerHTML = "Impact";
+            document.getElementById("risk_table").innerHTML = "Risk";
+            document.getElementById("cvss_title").innerHTML = "CVSS 3.1 evaluation :";
+            document.getElementById("exploitability_table").innerHTML = "Exploitability";
+            document.getElementById("impact_table").innerHTML = "Impact";
+            document.getElementById("risk_table").innerHTML = "Risk";
+        }
+        else {
+            document.getElementById("name_title").innerHTML = "Nom de la vulnérabilité";
+            document.getElementById("description").innerHTML = "Description de la vulnérabilité";
+            document.getElementById("step_title").innerHTML = "Etapes pour reproduire le résultat :";
+            document.getElementById("impact_title").innerHTML = "Impact :";
+            document.getElementById("evaluation_title").innerHTML = "Evaluation du risque :";
+            document.getElementById("exploitability_table").innerHTML = "Exploitabilité";
+            document.getElementById("impact_table").innerHTML = "Impact";
+            document.getElementById("risk_table").innerHTML = "Risque";
+            document.getElementById("cvss_title").innerHTML = "Evaluation CVSS 3.1 :";
+        }
+        action();
+    }
 
     function fill_vuln() {
         vuln_name = document.getElementById("vuln_name");
@@ -785,7 +824,12 @@
         console.log("impact : " + impact)
 
         if (impact <= 2.5) {
-            impact = "Mineur"
+            if (document.getElementById("switch").checked) {
+                impact = "Minor"
+            }
+            else {
+                impact = "Mineur"
+            }
             document.getElementById("impact").style.color = window.chartColors.green
         }
         else if (impact > 2.5 && impact <= 4) {
@@ -793,11 +837,21 @@
             document.getElementById("impact").style.color = window.chartColors.yellow
         }
         else if (impact > 4 && impact <= 5.5) {
-            impact = "Majeur"
+            if (document.getElementById("switch").checked) {
+                impact = "Major"
+            }
+            else {
+                impact = "Majeur"
+            }
             document.getElementById("impact").style.color = window.chartColors.orange
         }
         else {
-            impact = "Critique"
+            if (document.getElementById("switch").checked) {
+                impact = "Critical"
+            }
+            else {
+                impact = "Critique"
+            }
             document.getElementById("impact").style.color = window.chartColors.red
         }
 
@@ -816,19 +870,39 @@
         virt_exploitability = exploitability
 
         if (exploitability <= 1) {
-            exploitability = "Difficile"
+            if (document.getElementById("switch").checked) {
+                exploitability = "Very hard"
+            }
+            else {
+                exploitability = "Difficile"
+            }
             document.getElementById("exploitability").style.color = window.chartColors.green
         }
         else if (exploitability > 1 && exploitability <= 2) {
-            exploitability = "Elevee"
+            if (document.getElementById("switch").checked) {
+                exploitability = "Hard"
+            }
+            else {
+                exploitability = "Elevée"
+            }
             document.getElementById("exploitability").style.color = window.chartColors.yellow
         }
         else if (exploitability > 2 && exploitability <= 3) {
-            exploitability = "Moyen"
+            if (document.getElementById("switch").checked) {
+                exploitability = "Medium"
+            }
+            else {
+                exploitability = "Moyen"
+            }
             document.getElementById("exploitability").style.color = window.chartColors.orange
         }
         else {
-            exploitability = "Facile"
+            if (document.getElementById("switch").checked) {
+                exploitability = "Easy"
+            }
+            else {
+                exploitability = "Facile"
+            }
             document.getElementById("exploitability").style.color = window.chartColors.red
         }
 
@@ -836,23 +910,37 @@
         console.log("exploitability : " + exploitability)
 
 
-        const risk_matrix = {
-            "Mineur": { "Difficile": "Mineur", "Elevee": "Mineur", "Moyen": "Important", "Facile": "Important" },
-            "Important": { "Difficile": "Mineur", "Elevee": "Important", "Moyen": "Important", "Facile": "Majeur" },
-            "Majeur": { "Difficile": "Important", "Elevee": "Important", "Moyen": "Majeur", "Facile": "Critique" },
-            "Critique": { "Difficile": "Important", "Elevee": "Majeur", "Moyen": "Critique", "Facile": "Critique" }
+        const risk_matrix_fr = {
+            "Mineur": { "Difficile": "Mineur", "Elevée": "Mineur", "Moyen": "Important", "Facile": "Important" },
+            "Important": { "Difficile": "Mineur", "Elevée": "Important", "Moyen": "Important", "Facile": "Majeur" },
+            "Majeur": { "Difficile": "Important", "Elevée": "Important", "Moyen": "Majeur", "Facile": "Critique" },
+            "Critique": { "Difficile": "Important", "Elevée": "Majeur", "Moyen": "Critique", "Facile": "Critique" }
+        }
+        const risk_matrix_en = {
+            "Minor": { "Very hard": "Minor", "Hard": "Minor", "Medium": "Important", "Easy": "Important" },
+            "Important": { "Very hard": "Minor", "Hard": "Important", "Medium": "Important", "Easy": "Major" },
+            "Major": { "Very hard": "Important", "Hard": "Important", "Medium": "Major", "Easy": "Critical" },
+            "Critical": { "Very hard": "Important", "Hard": "Major", "Medium": "Critical", "Easy": "Critical" }
         }
 
+        var risk_matrix;
+
+        if (document.getElementById("switch").checked) {
+            risk_matrix = risk_matrix_en
+        }
+        else {
+            risk_matrix = risk_matrix_fr
+        }
         var risk = risk_matrix[impact][exploitability]
 
         document.getElementById("risk").innerHTML = risk;
-        if (risk == "Mineur") {
+        if (risk == "Mineur" || risk == "Minor") {
             document.getElementById("risk").style.color = window.chartColors.green
         }
         else if (risk == "Important") {
             document.getElementById("risk").style.color = window.chartColors.yellow
         }
-        else if (risk == "Majeur") {
+        else if (risk == "Majeur" || risk == "Major") {
             document.getElementById("risk").style.color = window.chartColors.orange
         }
         else {
