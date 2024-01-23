@@ -484,7 +484,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="card-body" style="border-left: solid; border-left-color: #6c7ae0; padding-left: 1%; padding-top: 0; padding-bottom: 0;" id="fiche">
-                                <h2 id="name_title" style="text-transform: uppercase; text-decoration: underline; color: #6c7ae0;" id="vuln_name">Nom de la vulnérabilité</h2>
+                                <h2 style="text-transform: uppercase; text-decoration: underline; color: #6c7ae0;" id="vuln_name">Nom de la vulnérabilité</h2>
                                 <h5 id="description_title" style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">Description :</h5>
                                 <p id="vuln_description"></p>
                                 <h5 id="step_title" style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">Etapes pour reproduire le résultat :</h5>
@@ -570,7 +570,9 @@
 
     function change_language() {
         if (document.getElementById("switch").checked) {
-            document.getElementById("name_title").innerHTML = "Vulnerability name";
+            if (document.getElementById("name").value == "") {
+                document.getElementById("vuln_name").innerHTML = "Vulnerability name";
+            }
             document.getElementById("description_title").innerHTML = "Description :";
             document.getElementById("step_title").innerHTML = "Steps to reproduce :";
             document.getElementById("impact_title").innerHTML = "Impact :";
@@ -584,7 +586,9 @@
             document.getElementById("risk_table").innerHTML = "Risk";
         }
         else {
-            document.getElementById("name_title").innerHTML = "Nom de la vulnérabilité";
+            if (document.getElementById("name").value == "") {
+                document.getElementById("vuln_name").innerHTML = "Nom de la vulnérabilité";
+            }
             document.getElementById("description").innerHTML = "Description de la vulnérabilité";
             document.getElementById("step_title").innerHTML = "Etapes pour reproduire le résultat :";
             document.getElementById("impact_title").innerHTML = "Impact :";
