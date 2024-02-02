@@ -251,7 +251,9 @@
         }
 
         .download,
-        .copy {
+        .copy,
+        .exporter,
+        .importer{
             margin-left: 3%;
             background-color: transparent;
             border: none;
@@ -261,8 +263,15 @@
             color: white;
         }
 
+        .exporter,
+        .importer {
+            margin-top: 1em;
+        }
+
         .download:hover,
-        .copy:hover {
+        .copy:hover,
+        .exporter:hover,
+        .importer:hover {
             cursor: pointer;
             color: blue;
         }
@@ -520,6 +529,9 @@
                                 <button class="btn btn-primary download" onclick="download('fiche')">Télécharger la fiche</button>
                                 <button class="btn btn-primary copy" onclick="copy('fiche')">Copier la fiche</button>
                             </div>
+                            <div class="center-box">
+                                <button class="btn btn-primary exporter" onclick="exporter()">Exporter la fiche</button>
+                                <button class="btn btn-primary importer" onclick="importer()">Importer une fiche</button>
                         </div>
                     </div>
                 </div>
@@ -567,6 +579,85 @@
 </body>
 
 <script>
+
+    function exporter() {
+        var vuln_name = document.getElementById("vuln_name").textContent;
+        var vuln_description = document.getElementById("vuln_description").innerHTML;
+        var vuln_step = document.getElementById("vuln_step").innerHTML;
+        var vuln_impacts = document.getElementById("vuln_impacts").innerHTML;
+        var exploitability = document.getElementById("exploitability").innerHTML;
+        var impact = document.getElementById("impact").innerHTML;
+        var risk = document.getElementById("risk").innerHTML;
+        var vuln_cvss = c.get().vector;
+        var vuln_recommandation = document.getElementById("vuln_recommandation").innerHTML;
+        var data = {
+            "vuln_name": vuln_name,
+            "vuln_description": vuln_description,
+            "vuln_step": vuln_step,
+            "vuln_impacts": vuln_impacts,
+            "exploitability": exploitability,
+            "impact": impact,
+            "risk": risk,
+            "vuln_cvss": vuln_cvss,
+            "vuln_recommandation": vuln_recommandation
+        }
+        vuln_name = vuln_name.replace(/\s/g, "_");
+        var filename = vuln_name + ".json";
+        var blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+        saveAs(blob, filename);
+    }
+
+    function importer() {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.onchange = e => {
+            var file = e.target.files[0];
+            var reader = new FileReader();
+            reader.readAsText(file, 'UTF-8');
+            reader.onload = readerEvent => {
+                var content = readerEvent.target.result;
+                var data = JSON.parse(content);
+                //Replace name
+                document.getElementById("name").value = data.vuln_name;
+                document.getElementById("vuln_name").innerHTML = data.vuln_name;
+                //Replace description
+                document.getElementById("description").innerHTML = data.vuln_description;
+                document.getElementById("vuln_description").innerHTML = data.vuln_description;
+                //Replace steps
+                document.getElementById("step").innerHTML = data.vuln_step;
+                document.getElementById("vuln_step").innerHTML = data.vuln_step;
+                //Replace impacts
+                document.getElementById("impacts").innerHTML = data.vuln_impacts;
+                document.getElementById("vuln_impacts").innerHTML = data.vuln_impacts;
+                //Replace metrics
+                document.getElementById("exploitability").innerHTML = data.exploitability;
+                document.getElementById("impact").innerHTML = data.impact;
+                document.getElementById("risk").innerHTML = data.risk;
+                //Set CVSS
+                c.set(data.vuln_cvss);
+                //Replace recommandation
+                document.getElementById("recommandation").innerHTML = data.vuln_recommandation;
+                document.getElementById("vuln_recommandation").innerHTML = data.vuln_recommandation;
+            }
+        }
+        input.click();
+    }
+
+    function saveAs(blob, filename) {
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = filename || 'download';
+        var clickHandler = function () {
+            setTimeout(function () {
+                URL.revokeObjectURL(url);
+                this.removeEventListener('click', clickHandler);
+            }, 150);
+        };
+        a.addEventListener('click', clickHandler, false);
+        a.click();
+        return a;
+    }
 
     function change_language() {
         if (document.getElementById("switch").checked) {
