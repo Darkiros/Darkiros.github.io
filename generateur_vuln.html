@@ -193,6 +193,7 @@
     <link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/gh/cvssjs/cvssjs/cvss.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
     <link rel="stylesheet" href="./assets/css/toggle.css" />
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
 
 
     <style>
@@ -344,6 +345,11 @@
                     </div>
 
                     <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+                        <li class="nav-item hidden-caret">
+                            <a class="github-button" href="https://github.com/Darkiros/Darkiros.github.io" data-color-scheme="no-preference: dark; light: light; dark: dark;" data-show-count="true" data-icon="octicon-star" data-size="large" aria-label="Star Darkiros/Darkiros.github.io on GitHub">
+                              Star
+                            </a>
+                        </li>
                         <li class="nav-item dropdown hidden-caret">
                             <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#"
                                 aria-expanded="false">
@@ -481,10 +487,11 @@
                                     </div>
                                     <div class="row mt-1">
                                         <div class="center-box">
-                                            <div style="display: block ruby; width: 100%">
-                                                <p>FR</p>
-                                                <input type="checkbox" id="switch" onclick="change_language()"/><label style="margin-right: 1%;" class="switch" for="switch">Toggle</label>
-                                                <p>EN</p>
+                                            <div style="width: 100%; display: inline-flex;">
+                                                <span>FR</span>
+                                                <input type="checkbox" id="switch" onclick="change_language()"/>
+                                                <label style="margin-right: 1%;" class="switch" for="switch">Toggle</label>
+                                                <span>EN</span>
                                             </div>
                                         </div>
                                     </div>
