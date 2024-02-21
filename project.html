@@ -1,0 +1,1922 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8">
+    <title>Pentest Helper - Project</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+    <script src="https://cdn.jsdelivr.net/gh/cvssjs/cvssjs/cvss.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+    <script src="./assets/js/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src=https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js></script>
+
+
+    <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+    <script src="./assets/js/html2canvas.min.js"></script>
+
+
+    <!-- Fonts and icons -->
+    <script src="./assets/js/plugin/webfont/webfont.min.js"></script>
+    <link rel="icon" href="./assets/images/icon.ico" type="image/x-icon" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <script>
+        WebFont.load({
+            google: { families: ["Lato:300,400,700,900"] },
+            custom: {
+                families: [
+                    "Flaticon",
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["./assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+
+        var score_cvss = 0.0;
+        var image;
+
+        window.chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(162, 213, 114)',
+            blue: 'rgb(54, 162, 235)'
+        };
+
+        var color = Chart.helpers.color;
+
+        const centerText = {
+            beforeDraw: function (chart) {
+                const width = chart.width
+                const height = chart.height
+                const ctx = chart.ctx
+                ctx.restore()
+                const fontSize = (height / 114).toFixed(2)
+                ctx.font = 'bold ' + fontSize + 'em sans-serif'
+                ctx.textBaseline = 'middle'
+                ctx.fillStyle = 'white'
+                ctx.strokeStyle = 'black'
+                const text = score_cvss
+                const textX = Math.round((width - (ctx.measureText(text).width)) / 2 - 16)
+                const textY = height / 2
+                ctx.fillText(text, textX, textY)
+                ctx.strokeText(text, textX, textY)
+                ctx.save()
+            }
+        }
+
+        var config_radar = {
+            type: 'radar',
+            data: {
+                labels: [
+                    "Integrity", "Availability", "Access vector", "Attack complexity", "Privileges required", "User interaction", "Scope", "Confidentiality"],
+                datasets: [{
+                    label: "Score",
+                    backgroundColor: color(window.chartColors.red).alpha(0.2).rgbString(),
+                    borderColor: window.chartColors.red,
+                    pointBackgroundColor: window.chartColors.red,
+                    data: [1, 1, 1, 1, 1, 1, 1, 1],
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'CVSS Score'
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                },
+                scales: {
+                    r: {
+                        min: -1,
+                        max: 2,
+                        ticks: {
+                            display: false,
+                            stepSize: 1
+                        }
+                    }
+                }
+            },
+            plugins: [centerText]
+        };
+
+
+        var myRadar;
+
+        window.onload = function () {
+
+            var list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+
+            myRadar = new Chart(document.getElementById("canvas"), config_radar);
+            $('#add-row').DataTable({
+                "pageLength": 10,
+            });
+
+            const project_name = localStorage.getItem('project_name');
+
+            if (project_name) {
+                document.getElementById("title").innerHTML = project_name;
+                document.getElementById("project_name").value = project_name;
+            }
+
+            if (list_vuln) {
+                list_vuln.forEach(vuln => {
+                    addRow(vuln);
+                });
+                var cvss = list_vuln.map(vuln => vuln.score);
+                var cvss_color = cvss.map(score => {
+                    if (parseFloat(score) <= 3.9) {
+                        return "green";
+                    }
+                    else if (parseFloat(score) <= 6.9) {
+                        return "yellow";
+                    }
+                    else if (parseFloat(score) <= 8.9) {
+                        return "orange";
+                    }
+                    else {
+                        return "red";
+                    }
+                });
+                var rows = document.getElementById("add-row").rows;
+                if (list_vuln.length !== 0) {
+                    for (var i = 1; i < rows.length; i++) {
+                        rows[i].cells[3].style.color = cvss_color[i - 1];
+                    }
+                }
+            }
+            else {
+                localStorage.setItem('list_vuln', JSON.stringify([]));
+            }
+        };
+
+        var colorNames = Object.keys(window.chartColors);
+
+        function SelectText(element) {
+            var doc = document;
+            if (doc.body.createTextRange) {
+                var range = document.body.createTextRange();
+                range.moveToElementText(element);
+                range.select();
+            } else if (window.getSelection) {
+                var selection = window.getSelection();
+                var range = document.createRange();
+                range.selectNodeContents(element);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        }
+
+    </script>
+
+    <style>
+        th {
+            color: white;
+        }
+
+        .scroll {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .parameters {
+            margin-top: 1em;
+        }
+
+        .scroll {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            margin: auto;
+            width: 300px !important;
+            height: 300px !important;
+        }
+
+        #cvssboard {
+            text-align: center;
+        }
+
+        #chartjs-tooltip {
+            opacity: 1;
+            position: absolute;
+            background: rgba(0, 0, 0, .7);
+            color: white;
+            border-radius: 3px;
+            -webkit-transition: all .1s ease;
+            transition: all .1s ease;
+            pointer-events: none;
+            -webkit-transform: translate(-50%, 0);
+            transform: translate(-50%, 0);
+        }
+
+        #chartjs-radar {
+            margin-top: 2%;
+            display: inline-flex;
+            margin: auto;
+            text-align: center;
+        }
+
+        #vuln_pres {
+            margin: auto;
+            text-align: center;
+        }
+
+        .chartjs-tooltip-key {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin-right: 10px;
+        }
+
+        .download,
+        .copy,
+        .exporter,
+        .importer {
+            margin-left: 3%;
+            background-color: transparent;
+            border: none;
+            height: fit-content;
+            margin-top: 1em;
+            margin-bottom: auto;
+            color: white;
+        }
+
+        .exporter,
+        .importer {
+            margin-top: 1em;
+        }
+
+        .download:hover,
+        .copy:hover,
+        .exporter:hover,
+        .importer:hover {
+            cursor: pointer;
+            color: blue;
+        }
+
+        .center-box {
+            margin: auto;
+            text-align: center;
+        }
+
+        #metricsTable {
+            margin: auto;
+            border-collapse: collapse;
+        }
+
+        #metricsTable th {
+            padding: 5px;
+            color: white;
+            background-color: #6c7ae0;
+            text-align: center;
+            height: 3em;
+        }
+
+        #metricsTable td {
+            padding: 5px;
+            text-align: center;
+            background-color: whitesmoke;
+            font-weight: bold;
+            height: 3em;
+        }
+
+        dd>label {
+            color: black !important;
+        }
+    </style>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./assets/css/atlantis.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/gh/cvssjs/cvssjs/cvss.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
+    <link rel="stylesheet" href="./assets/css/toggle.css" />
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+</head>
+
+
+<body data-background-color="dark">
+    <div class="wrapper">
+        <div class="main-header">
+            <!-- Logo Header -->
+            <div class="logo-header" data-background-color="dark2">
+                <a href="./index.html" class="logo">
+                    <img src="./assets/images/logo.png" alt="navbar brand" class="navbar-brand" width="70px" />
+                </a>
+                <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse"
+                    data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon">
+                        <i class="icon-menu"></i>
+                    </span>
+                </button>
+                <button class="topbar-toggler more">
+                    <i class="icon-options-vertical"></i>
+                </button>
+                <div class="nav-toggle">
+                    <button class="btn btn-toggle toggle-sidebar">
+                        <i class="icon-menu"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- End Logo Header -->
+
+            <!-- Navbar Header -->
+            <nav class="navbar navbar-header navbar-expand-lg" data-background-color="dark">
+                <div class="container-fluid">
+
+                    <div style="margin-left: auto; color: white;">
+                        <h2 class="text-center" id="title">Project</h1>
+                    </div>
+
+                    <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+                        <li class="nav-item hidden-caret">
+                            <a class="github-button" href="https://github.com/Darkiros/Darkiros.github.io"
+                                data-color-scheme="no-preference: dark; light: light; dark: dark;"
+                                data-show-count="true" data-icon="octicon-star" data-size="large"
+                                aria-label="Star Darkiros/Darkiros.github.io on GitHub">
+                                Star
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown hidden-caret">
+                            <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#"
+                                aria-expanded="false">
+                                <div class="avatar-sm">
+                                    <img src="./assets/images/Darkiros.jpg" alt="..."
+                                        class="avatar-img rounded-circle" />
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user animated fadeIn">
+                                <div class="dropdown-user-scroll scrollbar-outer">
+                                    <li>
+                                        <div class="user-box">
+                                            <div class="avatar-lg ml-auto mr-auto">
+                                                <img src="./assets/images/Darkiros.jpg" alt="image profile"
+                                                    class="avatar-img rounded" />
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="https://github.com/Darkiros" target="_blank"
+                                            rel="noopener noreferrer">
+                                            <div class="avatar-sm ml-auto mr-auto">
+                                                <img src="./assets/images/github.png" alt="Github Darkiros"
+                                                    class="avatar-img rounded-circle">
+                                            </div>
+                                        </a>
+                                        <p class="text-center dropdown-header">Made by Darkiros</p>
+                                    </li>
+                                </div>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- End Navbar -->
+        </div>
+
+        <div class="sidebar sidebar-style-2" data-background-color="dark2">
+            <div class="sidebar-wrapper scrollbar scrollbar-inner">
+                <div class="sidebar-content">
+                    <ul class="nav nav-primary">
+                        <li class="nav-item">
+                            <a href="./index.html">
+                                <i class="fas fa-home"></i>
+                                <p>Home</p>
+                            </a>
+                        </li>
+                        <li class="nav-section">
+                            <span class="sidebar-mini-icon">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a data-toggle="collapse" href="#rapports" aria-expanded="false">
+                                <i class="fas fa-wrench"></i>
+                                <p>Tools</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse" id="rapports">
+                                <ul class="nav nav-collapse">
+                                    <li>
+                                        <a href="./calculatrice.html">
+                                            <span class="sub-item">CVSS 3.1 calculator</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="./graphs.html">
+                                            <span class="sub-item">Graphs generator</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="./generateur_vuln.html">
+                                            <span class="sub-item">Vulnerability sheet generator</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item active submenu">
+                            <a data-toggle="collapse" href="#project" aria-expanded="true">
+                                <i class="fas fa-list"></i>
+                                <p>Project</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse show" id="project">
+                                <ul class="nav nav-collapse ">
+                                    <li class="active">
+                                        <a href="./project.html">
+                                            <span class="sub-item">Vulnerability list</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- End Sidebar -->
+
+        <div class="main-panel" style="margin-top: 6em;">
+            <div class="content">
+                <div class="page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group mb-3">
+                                <h3 class="input-group-text" style="width: 12em;">Project name</h3>
+                                <input type="text" id="project_name" class="form-control" />
+                                <button class="btn btn-primary" style="position: relative; right: 0;"
+                                    onclick="setProject()">Save</button>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="d-flex">
+                                        <h4 class="card-title">Vulnerability list</h4>
+                                        <div class="ml-auto">
+                                            <button class="btn btn-round" onclick="importer()"
+                                                style="position: relative; right: 10%;"><i
+                                                    class="fas fa-file-import"></i></button>
+                                            <button class="btn btn-round" onclick="exporter()"
+                                                style="position: relative; right: 9%;"><i
+                                                    class="fas fa-file-export"></i></button>
+                                            <button class="btn btn-primary btn-round" data-toggle="modal"
+                                                data-target="#addRowModal" onclick="clean()">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Modal in full screen -->
+                                    <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog"
+                                        aria-labelledby="addRowModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document" style="max-width: 100%; margin: 2%;">
+                                            <div class="modal-content" style="background-color: #1a2035;">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <div class="d-flex align-items-center">
+                                                            <h4 class="card-title
+                                                            " style="margin-left: auto; margin-right: auto;">Add new
+                                                                vulnerability</h4>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                                <span aria-hidden="true">×</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="card">
+                                                                    <div class="card-body" id="fiche_control">
+                                                                        <div class="row">
+                                                                            <div class="form-group"
+                                                                                style="width: 100%;">
+                                                                                <div class="input-group">
+                                                                                    <h3 class="input-group-text"
+                                                                                        style="width: 12em;">
+                                                                                        Vulnerability name</h3>
+                                                                                    <input type="text" id="name"
+                                                                                        class="form-control"
+                                                                                        onkeyup="fill_vuln()" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="form-group"
+                                                                                style="width: 100%;">
+                                                                                <div class="input-group">
+                                                                                    <h3 class="input-group-text"
+                                                                                        style="width: 12em;">Description
+                                                                                    </h3>
+                                                                                    <div class="form-control scroll"
+                                                                                        id="description"
+                                                                                        contenteditable="true"
+                                                                                        style="height: fit-content; min-height: 10em;">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="form-group"
+                                                                                style="width: 100%;">
+                                                                                <div class="input-group">
+                                                                                    <h3 class="input-group-text"
+                                                                                        style="width: 12em;">Steps to
+                                                                                        reproduce</h3>
+                                                                                    <div class="form-control scroll"
+                                                                                        id="step" contenteditable="true"
+                                                                                        style="height: fit-content; min-height: 10em;">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="form-group"
+                                                                                style="width: 100%;">
+                                                                                <div class="input-group">
+                                                                                    <h3 class="input-group-text"
+                                                                                        style="width: 12em;">Impact</h3>
+                                                                                    <div class="form-control scroll"
+                                                                                        id="impacts"
+                                                                                        contenteditable="true"
+                                                                                        style="height: fit-content; min-height: 6em;">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row mt-3 mb-3">
+                                                                            <div id="cvssboard" style="color: black;">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="form-group"
+                                                                                style="width: 100%;">
+                                                                                <div class="input-group">
+                                                                                    <h3 class="input-group-text"
+                                                                                        style="width: 12em;">
+                                                                                        Recommandations
+                                                                                    </h3>
+                                                                                    <div class="form-control scroll"
+                                                                                        id="recommandation"
+                                                                                        contenteditable="true"
+                                                                                        style="height: fit-content; min-height: 6em;">
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="card-body"
+                                                                    style="border-left: solid; border-left-color: #6c7ae0; padding-left: 1%; padding-top: 0; padding-bottom: 0;"
+                                                                    id="fiche">
+                                                                    <h2 style="text-transform: uppercase; text-decoration: underline; color: #6c7ae0;"
+                                                                        id="vuln_name">Vulnerability name</h2>
+                                                                    <h5 id="description_title"
+                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                        Description :</h5>
+                                                                    <p id="vuln_description"></p>
+                                                                    <h5 id="step_title"
+                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                        Steps to reproduce :</h5>
+                                                                    <p id="vuln_step"></p>
+                                                                    <h5 id="impact_title"
+                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                        Impact :</h5>
+                                                                    <p id="vuln_impacts"></p>
+                                                                    <h5 id="evaluation_title"
+                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                        Risk evaluation :</h5>
+                                                                    <div id="metrics">
+                                                                        <table class="table" id="metricsTable">
+                                                                            <tr>
+                                                                                <th id="exploitability_table">
+                                                                                    Exploitability</th>
+                                                                                <th id="impact_table">Impact</th>
+                                                                                <th id="risk_table">Risk</th>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td id="exploitability">0</td>
+                                                                                <td id="impact">0</td>
+                                                                                <td id="risk">0</td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </div>
+                                                                    <h5 id="cvss_title"
+                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                        CVSS 3.1 evaluation :</h5>
+                                                                    <div class="center-box">
+                                                                        <div id="chartjs-radar">
+                                                                            <canvas id="canvas">
+                                                                            </canvas>
+                                                                        </div>
+                                                                    </div>
+                                                                    <h5 id="recommandation_title"
+                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                        Recommandations :</h5>
+                                                                    <p id="vuln_recommandation"></p>
+                                                                </div>
+                                                                <div class="center-box">
+                                                                    <button class="btn btn-danger download"
+                                                                        style="width:160px" data-dismiss="modal"
+                                                                        aria-label="Close">Cancel</button>
+                                                                    <button class="btn btn-primary copy" id="save"
+                                                                        onclick="save()"
+                                                                        style="width:160px">Validate</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Modal in full screen -->
+                                    <div class="table-responsive">
+                                        <div id="add-row_wrapper"
+                                            class="dataTables_wrapper container-fluid dt-bootstrap4">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <table id="add-row"
+                                                        class="display table table-striped table-hover dataTable"
+                                                        role="grid" aria-describedby="add-row_info">
+                                                        <thead>
+                                                            <tr role="row">
+                                                                <th>ID</th>
+                                                                <th>Name</th>
+                                                                <th>Description</th>
+                                                                <th>CVSS Score</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="center-box">
+                                        <button class="btn btn-primary" onclick="generateDocx()">Generate Docx</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- End Custom template -->
+                    </div>
+                    <!--   Core JS Files   -->
+                    <script src="./assets/js/core/jquery.3.2.1.min.js"></script>
+                    <script src="./assets/js/core/popper.min.js"></script>
+                    <script src="./assets/js/core/bootstrap.min.js"></script>
+
+                    <!-- jQuery UI -->
+                    <script src="./assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+                    <script src="./assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+
+                    <!-- jQuery Scrollbar -->
+                    <script src="./assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+                    <!-- jQuery Sparkline -->
+                    <script src="./assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+                    <!-- Chart Circle -->
+                    <script src="./assets/js/plugin/chart-circle/circles.min.js"></script>
+
+                    <!-- Datatables -->
+                    <script src="./assets/js/plugin/datatables/datatables.min.js"></script>
+
+                    <!-- Bootstrap Notify -->
+                    <script src="./assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+                    <!-- jQuery Vector Maps -->
+                    <script src="./assets/js/plugin/jqvmap/jquery.vmap.min.js"></script>
+                    <script src="./assets/js/plugin/jqvmap/maps/jquery.vmap.world.js"></script>
+
+                    <!-- Sweet Alert -->
+                    <script src="./assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+                    <!-- Atlantis JS -->
+                    <script src="./assets/js/atlantis.min.js"></script>
+
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.halo.min.js"></script>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+
+    function addRow(vuln) {
+        $("#add-row").dataTable().fnAddData([
+            vuln.id,
+            vuln.name,
+            vuln.description,
+            vuln.score,
+            `
+            <div class="form-button-action">
+                <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                    data-original-title="Edit Task" onclick="edit(` + vuln.id + `)">
+                    <i class="fa fa-edit
+                    "></i>
+                </button>
+                <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                    data-original-title="Remove">
+                    <i class="fa fa-times" onclick="removeVuln(${vuln.id})"></i>
+                </button>
+            </div>
+            `
+        ]);
+    }
+
+    function clean() {
+        document.getElementById("name").value = "";
+        document.getElementById("vuln_name").innerHTML = "Vulenrability name";
+        document.getElementById("description").innerHTML = "";
+        document.getElementById("vuln_description").innerHTML = "";
+        document.getElementById("step").innerHTML = "";
+        document.getElementById("vuln_step").innerHTML = "";
+        document.getElementById("impacts").innerHTML = "";
+        document.getElementById("vuln_impacts").innerHTML = "";
+        document.getElementById("recommandation").innerHTML = "";
+        document.getElementById("vuln_recommandation").innerHTML = "";
+        c.set("CVSS:3.1/AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_");
+        score_cvss = 0.0;
+        document.getElementById("canvas").src = "";
+        document.getElementById("exploitability").innerHTML = "0";
+        document.getElementById("impact").innerHTML = "0";
+        document.getElementById("risk").innerHTML = "0";
+        document.getElementById("save").setAttribute("onclick", "save()");
+    }
+
+    function removeVuln(id) {
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this vulnerability!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    // Supprimer la vulnérabilité
+                    const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+                    const new_list_vuln = list_vuln.filter(vuln => vuln.id !== id);
+                    localStorage.setItem('list_vuln', JSON.stringify(new_list_vuln));
+                    // reload table without refreshing the page
+                    var table = $('#add-row').DataTable();
+                    table.clear().draw();
+                    new_list_vuln.forEach(vuln => {
+                        addRow(vuln);
+                    });
+                    if (new_list_vuln.length !== 0) {
+                        colorCVSS();
+                    }
+                    new Notify({
+                        status: 'success',
+                        title: 'Vulnerability deleted',
+                        text: '',
+                        effect: 'fade',
+                        speed: 300,
+                        customClass: '',
+                        customIcon: '',
+                        showIcon: true,
+                        showCloseButton: true,
+                        autoclose: true,
+                        autotimeout: 1500,
+                        gap: 20,
+                        distance: 20,
+                        type: 1,
+                        position: 'top right'
+                    });
+                }
+            });
+    }
+
+    function edit(id) {
+        const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+        const vuln = list_vuln.find(vuln => vuln.id === id);
+                    
+        document.getElementById("name").value = vuln.name;
+        document.getElementById("vuln_name").innerHTML = vuln.name;
+        document.getElementById("vuln_description").innerHTML = vuln.description;
+        document.getElementById("description").innerHTML = vuln.description;
+        document.getElementById("vuln_step").innerHTML = vuln.steps;
+        document.getElementById("step").innerHTML = vuln.steps;
+        document.getElementById("vuln_impacts").innerHTML = vuln.impacts;
+        document.getElementById("impacts").innerHTML = vuln.impacts;
+        document.getElementById("vuln_recommandation").innerHTML = vuln.recommandation;
+        document.getElementById("recommandation").innerHTML = vuln.recommandation;
+        c.set(vuln.cvss);
+        score_cvss = vuln.score;
+        document.getElementById("canvas").src = vuln.cvss_graph;
+        document.getElementById("exploitability").innerHTML = vuln.exploitability;
+        document.getElementById("impact").innerHTML = vuln.impact;
+        document.getElementById("risk").innerHTML = vuln.risk;
+        $('#addRowModal').modal('show');
+        //Change the button to validate
+        document.getElementById("save").setAttribute("onclick", "save(" + id + ")");
+    }
+
+    function setProject() {
+        var project = document.getElementById("project_name").value;
+        localStorage.setItem('project_name', project);
+        document.getElementById("title").innerHTML = project;
+    }
+
+    async function save(id) {
+        // Change text color of content of description steps impacts recommandations in black
+        var content = document.getElementById("vuln_description")
+        content.style.color = "black";
+        content = document.getElementById("vuln_step")
+        content.style.color = "black";
+        content = document.getElementById("vuln_impacts")
+        content.style.color = "black";
+        content = document.getElementById("vuln_recommandation")
+        content.style.color = "black";
+
+
+        if (id === undefined) {
+            const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+            id = list_vuln.reduce((max, vuln) => vuln.id > max ? vuln.id : max, 0);
+            
+            const vuln = {
+                id: id + 1,
+                name: document.getElementById("name").value,
+                description: document.getElementById("vuln_description").innerHTML,
+                steps: document.getElementById("vuln_step").innerHTML,
+                impacts: document.getElementById("vuln_impacts").innerHTML,
+                recommandation: document.getElementById("vuln_recommandation").innerHTML,
+                cvss: c.get().vector,
+                exploitability: document.getElementById("exploitability").innerHTML,
+                impact: document.getElementById("impact").innerHTML,
+                risk: document.getElementById("risk").innerHTML,
+                cvss_graph: document.getElementById("canvas").toDataURL(),
+                score: score_cvss
+            };
+            list_vuln.push(vuln);
+            var a = document.createElement("a");
+            await html2canvas(document.getElementById("fiche")).then((canvas) => {
+                a.appendChild(canvas);
+            });
+            var fiche = a.childNodes[0].toDataURL("");
+            vuln.fiche = fiche;
+            vuln.fiche_width = a.childNodes[0].width;
+            vuln.fiche_height = a.childNodes[0].height;
+            localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
+            addRow(vuln);
+        }
+        else {
+            const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+            const vuln = list_vuln.find(vuln => vuln.id === id);
+            vuln.name = document.getElementById("name").value;
+            vuln.description = document.getElementById("vuln_description").innerHTML;
+            vuln.steps = document.getElementById("vuln_step").innerHTML;
+            vuln.impacts = document.getElementById("vuln_impacts").innerHTML;
+            vuln.recommandation = document.getElementById("vuln_recommandation").innerHTML;
+            vuln.cvss = c.get().vector;
+            vuln.exploitability = document.getElementById("exploitability").innerHTML;
+            vuln.impact = document.getElementById("impact").innerHTML;
+            vuln.risk = document.getElementById("risk").innerHTML;
+            vuln.cvss_graph = document.getElementById("canvas").toDataURL();
+            vuln.score = score_cvss;
+            var a = document.createElement("a");
+            await html2canvas(document.getElementById("fiche")).then((canvas) => {
+                a.appendChild(canvas);
+            });
+            var fiche = a.childNodes[0].toDataURL("");
+            vuln.fiche = fiche;
+            vuln.fiche_width = a.childNodes[0].width;
+            vuln.fiche_height = a.childNodes[0].height;
+            localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
+            // reload table without refreshing the page
+            var table = $('#add-row').DataTable();
+            table.clear().draw();
+            list_vuln.forEach(vuln => {
+                addRow(vuln);
+            });
+        }
+        clean();
+        //revert
+        var content = document.getElementById("vuln_description")
+        content.style.color = "rgba(169, 175, 187, 0.82)";
+        content = document.getElementById("vuln_step")
+        content.style.color = "rgba(169, 175, 187, 0.82)";
+        content = document.getElementById("vuln_impacts")
+        content.style.color = "rgba(169, 175, 187, 0.82)";
+        content = document.getElementById("vuln_recommandation")
+        content.style.color = "rgba(169, 175, 187, 0.82)";
+        $('#addRowModal').modal('hide');
+        colorCVSS();
+    }
+
+    function colorCVSS() {
+        const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+        var cvss = list_vuln.map(vuln => vuln.score);
+        var cvss_color = cvss.map(score => {
+            if (parseFloat(score) <= 3.9) {
+                return "green";
+            }
+            else if (parseFloat(score) <= 6.9) {
+                return "yellow";
+            }
+            else if (parseFloat(score) <= 8.9) {
+                return "orange";
+            }
+            else {
+                return "red";
+            }
+        });
+        var rows = document.getElementById("add-row").rows;
+        for (var i = 1; i < rows.length; i++) {
+            rows[i].cells[3].style.color = cvss_color[i - 1];
+        }
+    }
+
+    function exporter() {
+        const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+        var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(list_vuln));
+        var a = document.createElement('a');
+        a.href = 'data:' + data;
+        if (localStorage.getItem('project_name')) {
+            a.download = localStorage.getItem('project_name') + '.json';
+        }
+        else {
+            a.download = 'Project.json';
+        }
+        a.innerHTML = 'download JSON';
+        a.click();
+    }
+
+    function generateDocx() {
+
+        const risk_color = {
+            "Minor": "A2D572",
+            "Important": "FFCD56",
+            "Major": "FF9F40",
+            "Critical": "FF6384"
+        };
+        const exploitability_color = {
+            "Very hard": "A2D572",
+            "Hard": "FFCD56",
+            "Medium": "FF9F40",
+            "Easy": "FF6384"
+        };
+        const impact_color = {
+            "Minor": "A2D572",
+            "Important": "FFCD56",
+            "Major": "FF9F40",
+            "Critical": "FF6384"
+        };
+
+        const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+        var doc = new docx.Document({
+            sections: [{
+                properties: {
+                    type: docx.SectionType.CONTINUOUS,
+                },
+                footers: {
+                    default: new docx.Footer({
+                        children: [
+                            new docx.Paragraph({
+                                alignment: docx.AlignmentType.CENTER,
+                                children: [
+                                    new docx.TextRun("Pentest of " + localStorage.getItem('project_name')),
+                                    new docx.TextRun({
+                                        children: ["Page ", docx.PageNumber.CURRENT],
+                                    }),
+                                    new docx.TextRun({
+                                        children: [" of ", docx.PageNumber.TOTAL_PAGES],
+                                    }),
+                                ],
+                            }),
+                        ],
+                    }),
+                },
+                children: [
+                    new docx.Paragraph({
+                        children: [
+                            new docx.TextRun("Pentest report of " + localStorage.getItem('project_name')),
+                        ],
+                        heading: docx.HeadingLevel.TITLE,
+                        alignment: docx.AlignmentType.CENTER,
+                    }),
+                    new docx.Paragraph({
+                        children: [
+                            new docx.TextRun(
+                                {
+                                    text: "Vulnerability list : ",
+                                    break: 1,
+                                }),
+                        ],
+                        heading: docx.HeadingLevel.HEADING_3,
+                    }),
+                ],
+            }],
+        });
+        list_vuln.forEach(vuln => {
+            doc.addSection({
+                properties: {type: docx.SectionType.CONTINUOUS, },
+                children: [
+                    new docx.Paragraph({
+                        children: [
+                            new docx.TextRun(
+                                {
+                                    text: vuln.name,
+                                    underline: {},
+                                    allCaps: true,
+                                    color: "#6c7ae0"
+                                }
+                            ),
+                            new docx.TextRun(
+                                {
+                                    text: " " + vuln.score,
+                                    color: risk_color[vuln.risk.split(" ")[0]],
+                                }
+                            ),
+                            new docx.TextRun(
+                                {
+                                    text: " ➔ " 
+                                }
+                            ),
+                            new docx.TextRun(
+                                {
+                                    text: vuln.risk,
+                                    color: risk_color[vuln.risk.split(" ")[0]],
+                                }
+                            ),
+                        ],
+                        anchor: vuln.name,
+                        bullet: {
+                            level: 0
+                        }
+                    })
+                ]
+            });
+        });
+        list_vuln.forEach(vuln => {
+            doc.addSection({
+                properties: {},
+                children: [
+                    new docx.Paragraph({
+                        children: [
+                            new docx.ImageRun({
+                                data: vuln.fiche,
+                                transformation: {
+                                    width: 650,
+                                    height: vuln.fiche_height,
+                                },
+                            }),
+                        ],
+                    })
+                ]
+            })
+        })
+        /*list_vuln.forEach(vuln => {
+            doc.addSection({
+                properties: {},
+                children: [
+                    new docx.Table({
+                        width: {
+                            size: 100,
+                            type: docx.WidthType.PERCENTAGE,
+                        },
+                        rows: [
+                            new docx.TableRow({
+                                children: [
+                                    new docx.TableCell({
+                                        children: [
+                                            new docx.Paragraph({
+                                                children: [
+                                                    new docx.Bookmark(
+                                                        {
+                                                            id: vuln.name,
+                                                            children: [
+                                                                new docx.TextRun(
+                                                                    {
+                                                                        text: vuln.name,
+                                                                        underline: {},
+                                                                        allCaps: true,
+                                                                        color: "#6c7ae0"
+                                                                    }),
+                                                            ],
+                                                        }),
+                                                ],
+                                            }),
+                                            new docx.Paragraph({
+                                                children: [
+                                                    new docx.TextRun(
+                                                        {
+                                                            text: "Description : ",
+                                                            allCaps: true,
+                                                            color: "#6c7ae0",
+                                                            break: 1
+                                                        }),
+                                                    new docx.TextRun(
+                                                        {
+                                                            text: vuln.description,
+                                                            break: 1
+                                                        }),
+                                                ],
+                                            }),
+                                            new docx.Paragraph({
+                                                children: [
+                                                    new docx.TextRun(
+                                                        {
+                                                            text: "Steps to reproduce : ",
+                                                            allCaps: true,
+                                                            color: "#6c7ae0",
+                                                            break: 1
+                                                        }),
+                                                    new docx.TextRun(
+                                                        {
+                                                            text: vuln.steps,
+                                                            break: 1
+                                                        }),
+                                                ],
+                                            }),
+                                            new docx.Paragraph({
+                                                children: [
+                                                    new docx.TextRun(
+                                                        {
+                                                            text: "Impact : ",
+                                                            allCaps: true,
+                                                            color: "#6c7ae0",
+                                                            break: 1
+                                                        }),
+                                                    new docx.TextRun(
+                                                        {
+                                                            text: vuln.impacts,
+                                                            break: 1
+                                                        }),
+                                                ],
+                                            }),
+                                            new docx.Paragraph({
+                                                children: [
+                                                    new docx.TextRun(
+                                                        {
+                                                            text: "Risk evaluation : ",
+                                                            allCaps: true,
+                                                            color: "#6c7ae0",
+                                                            break: 1
+                                                        }),
+                                                ],
+                                            }),
+                                            new docx.Table({
+                                                width: {
+                                                    size: 100,
+                                                    type: docx.WidthType.PERCENTAGE,
+                                                },
+                                                rows: [
+                                                    new docx.TableRow({
+                                                        children: [
+                                                            new docx.TableCell({
+                                                                children: [new docx.Paragraph({
+                                                                    children: [
+                                                                        new docx.TextRun(
+                                                                            {
+                                                                                text: "Exploitability",
+                                                                                color: "FFFFFF",
+                                                                            }
+                                                                        )],
+                                                                    alignment: docx.AlignmentType.CENTER
+                                                                })],
+                                                                shading: {
+                                                                    fill: "#6c7ae0",
+                                                                },
+                                                                borders: {
+                                                                    top: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    bottom: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    left: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    right: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                }
+                                                            }),
+                                                            new docx.TableCell({
+                                                                children: [new docx.Paragraph({
+                                                                    children: [
+                                                                        new docx.TextRun(
+                                                                            {
+                                                                                text: "Impact",
+                                                                                color: "FFFFFF",
+                                                                            }
+                                                                        )],
+                                                                    alignment: docx.AlignmentType.CENTER
+                                                                })],
+                                                                shading: {
+                                                                    fill: "#6c7ae0",
+                                                                },
+                                                                borders: {
+                                                                    top: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    bottom: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    left: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    right: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                }
+                                                            }),
+                                                            new docx.TableCell({
+                                                                children: [new docx.Paragraph({
+                                                                    children: [
+                                                                        new docx.TextRun(
+                                                                            {
+                                                                                text: "Risk",
+                                                                                color: "FFFFFF",
+                                                                            }
+                                                                        )],
+                                                                    alignment: docx.AlignmentType.CENTER
+                                                                })],
+                                                                shading: {
+                                                                    fill: "#6c7ae0",
+                                                                },
+                                                                borders: {
+                                                                    top: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    bottom: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    left: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    right: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                }
+                                                            }),
+                                                        ],
+                                                    }),
+                                                    new docx.TableRow({
+                                                        children: [
+                                                            new docx.TableCell({
+                                                                children: [new docx.Paragraph(
+                                                                    {
+                                                                        children: [
+                                                                            new docx.TextRun(
+                                                                                {
+                                                                                    text: vuln.exploitability.split(" ")[0],
+                                                                                    color: exploitability_color[vuln.exploitability.split(" ")[0]],
+                                                                                }
+                                                                            )],
+                                                                        alignment: docx.AlignmentType.CENTER
+                                                                    }
+                                                                )],
+                                                                shading: {
+                                                                    fill: "F5F5F5",
+                                                                },
+                                                                borders: {
+                                                                    top: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    bottom: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    left: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    right: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                }
+                                                            }),
+                                                            new docx.TableCell({
+                                                                children: [new docx.Paragraph(
+                                                                    {
+                                                                        children: [
+                                                                            new docx.TextRun(
+                                                                                {
+                                                                                    text: vuln.impact.split(" ")[0],
+                                                                                    color: impact_color[vuln.impact.split(" ")[0]],
+                                                                                }
+                                                                            )],
+                                                                        alignment: docx.AlignmentType.CENTER
+                                                                    }
+                                                                )],
+                                                                shading: {
+                                                                    fill: "F5F5F5",
+                                                                },
+                                                                borders: {
+                                                                    top: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    bottom: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    left: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    right: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                }
+                                                            }),
+                                                            new docx.TableCell({
+                                                                children: [new docx.Paragraph(
+                                                                    {
+                                                                        children: [
+                                                                            new docx.TextRun(
+                                                                                {
+                                                                                    text: vuln.risk.split(" ")[0],
+                                                                                    color: risk_color[vuln.risk.split(" ")[0]],
+                                                                                }
+                                                                            )],
+                                                                        alignment: docx.AlignmentType.CENTER
+                                                                    }
+                                                                )],
+                                                                shading: {
+                                                                    fill: "F5F5F5",
+                                                                },
+                                                                borders: {
+                                                                    top: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    bottom: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    left: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                    right: {
+                                                                        style: docx.BorderStyle.SINGLE,
+                                                                        size: 0,
+                                                                        color: "FFFFFF"
+                                                                    },
+                                                                }
+                                                            }),
+                                                        ],
+                                                    }),
+                                                ],
+                                            }),
+                                            new docx.Paragraph({
+                                                children: [
+                                                    new docx.ImageRun({
+                                                        data: vuln.cvss_graph,
+                                                        transformation: {
+                                                            width: 300,
+                                                            height: 300
+                                                        }
+                                                    }),
+                                                ],
+                                                alignment: docx.AlignmentType.CENTER
+                                            }),
+                                            new docx.Paragraph({
+                                                children: [
+                                                    new docx.TextRun(
+                                                        {
+                                                            text: "Recommandations : ",
+                                                            allCaps: true,
+                                                            color: "#6c7ae0",
+                                                            break: 1
+                                                        }),
+                                                    new docx.TextRun(
+                                                        {
+                                                            text: vuln.recommandation,
+                                                            break: 1
+                                                        }),
+                                                ],
+                                            }),
+                                        ],
+                                        margins: {
+                                            top: 0,
+                                            bottom: 0,
+                                            left: 100,
+                                            right: 0,
+                                        },
+                                        borders: {
+                                            top: {
+                                                style: docx.BorderStyle.SINGLE,
+                                                size: 1,
+                                                color: "FFFFFF"
+                                            },
+                                            bottom: {
+                                                style: docx.BorderStyle.SINGLE,
+                                                size: 1,
+                                                color: "FFFFFF"
+                                            },
+                                            left: {
+                                                style: docx.BorderStyle.SINGLE,
+                                                size: 25,
+                                                color: "6c7ae0"
+                                            },
+                                            right: {
+                                                style: docx.BorderStyle.SINGLE,
+                                                size: 0,
+                                                color: "FFFFFF"
+                                            },
+                                        }
+                                    }),
+                                ]
+                            }),
+                        ],
+                    }),
+
+                ],
+            });
+        });*/
+        docx.Packer.toBlob(doc).then(blob => {
+            saveAs(blob, "Pentest-" + localStorage.getItem('project_name') + ".docx");
+        });
+    }
+
+    function importer() {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.onchange = e => {
+            var file = e.target.files[0];
+            var reader = new FileReader();
+            reader.readAsText(file, 'UTF-8');
+            reader.onload = readerEvent => {
+                var content = readerEvent.target.result;
+                localStorage.setItem('list_vuln', content);
+                var table = $('#add-row').DataTable();
+                table.clear().draw();
+                JSON.parse(content).forEach(vuln => {
+                    addRow(vuln);
+                });
+                colorCVSS();
+            }
+            if (localStorage.getItem('project_name')) {
+                document.getElementById("project_name").value = localStorage.getItem('project_name');
+            }
+            else {
+                document.getElementById("project_name").value = file.name.split(".")[0];
+            }
+        }
+        input.click();
+    }
+
+    function fill_vuln() {
+        vuln_name = document.getElementById("vuln_name");
+
+        vuln_name.innerHTML = document.getElementById("name").value;
+        if (vuln_name.innerHTML == "") {
+            vuln_name.innerHTML = "Vulnerability name";
+        }
+    }
+
+    var step = document.getElementById("step");
+    var description = document.getElementById("description");
+    var impacts = document.getElementById("impacts");
+    var recommandation = document.getElementById("recommandation");
+
+
+    function listener_step(evt) {
+        // if there is an image and if is too big, it will be resized and centered
+        var images = this.getElementsByTagName("img");
+        for (let index = 0; index < images.length; index++) {
+            if (images[index].width > 500) {
+                images[index].width = 500;
+            }
+        }
+        
+        vuln_step = document.getElementById("vuln_step");
+        vuln_step.innerHTML = this.innerHTML;
+    }
+
+    function listener_description(evt) {
+        // if there is an image and if is too big, it will be resized and centered
+        var images = this.getElementsByTagName("img");
+        for (let index = 0; index < images.length; index++) {
+            if (images[index].width > 500) {
+                images[index].width = 500;
+            }
+        }
+        vuln_description = document.getElementById("vuln_description");
+        vuln_description.innerHTML = this.innerHTML;
+    }
+
+    function listener_impacts(evt) {
+        // if there is an image and if is too big, it will be resized and centered
+        var images = this.getElementsByTagName("img");
+        for (let index = 0; index < images.length; index++) {
+            if (images[index].width > 500) {
+                images[index].width = 500;
+            }
+        }
+        vuln_impacts = document.getElementById("vuln_impacts");
+        vuln_impacts.innerHTML = this.innerHTML;
+    }
+
+    function listener_recommandation(evt) {
+        // if there is an image and if is too big, it will be resized and centered
+        var images = this.getElementsByTagName("img");
+        for (let index = 0; index < images.length; index++) {
+            if (images[index].width > 500) {
+                images[index].width = 500;
+            }
+        }
+        vuln_recommandation = document.getElementById("vuln_recommandation");
+        vuln_recommandation.innerHTML = this.innerHTML;
+    }
+
+    step.addEventListener("keyup", listener_step, false);
+    description.addEventListener("keyup", listener_description, false);
+    impacts.addEventListener("keyup", listener_impacts, false);
+    recommandation.addEventListener("keyup", listener_recommandation, false);
+
+    var roundUp1 = function Roundup(input) {
+        var int_input = Math.round(input * 100000);
+        if (int_input % 10000 === 0) {
+            return int_input / 100000
+        } else {
+            return (Math.floor(int_input / 10000) + 1) / 10
+        }
+    };
+
+    var c = new CVSS("cvssboard", {
+        onchange: function () {
+            window.location.hash = c.get().vector;
+            c.vector.setAttribute('href', '#' + c.get().vector)
+            action()
+        }
+    });
+    if (window.location.hash.substring(1).length > 0) {
+        c.set(decodeURIComponent(window.location.hash.substring(1)));
+    }
+
+
+    function action() {
+        var tmp = c.get().vector.split("/");
+        var score = { "AV": 0, "AC": 0, "PR": 0, "UI": 0, "S": 0, "C": 0, "I": 0, "A": 0 };
+        var radar_point = { "AV": 0, "AC": 0, "PR": 0, "UI": 0, "S": 0, "C": 0, "I": 0, "A": 0 };
+        for (let index = 1; index < tmp.length; index++) {
+            var type = tmp[index].split(":")[0];
+            var selection = tmp[index].split(":")[1];
+            switch (type) {
+                case "AV":
+                    switch (selection) {
+                        case "N":
+                            score[type] = 0.85;
+                            radar_point[type] = 2;
+                            break;
+                        case "A":
+                            score[type] = 0.62;
+                            radar_point[type] = 1;
+                            break;
+                        case "L":
+                            score[type] = 0.55;
+                            radar_point[type] = 0;
+                            break;
+                        case "P":
+                            score[type] = 0.2;
+                            radar_point[type] = 0;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case "AC":
+                    switch (selection) {
+                        case "H":
+                            score[type] = 0.44;
+                            radar_point[type] = 0;
+                            break;
+                        case "L":
+                            score[type] = 0.77;
+                            radar_point[type] = 2;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case "PR":
+                    switch (selection) {
+                        case "N":
+                            score[type] = "N";
+                            radar_point["PR"] = 2;
+                            break;
+                        case "L":
+                            score[type] = "L";
+                            radar_point["PR"] = 1;
+                            break;
+                        case "H":
+                            score[type] = "H";
+                            radar_point["PR"] = 0;
+                            break;
+                        default:
+                            break;
+                    }
+                case "UI":
+                    switch (selection) {
+                        case "N":
+                            score[type] = 0.85;
+                            radar_point[type] = 2;
+                            break;
+                        case "R":
+                            score[type] = 0.62;
+                            radar_point[type] = 0;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case "S":
+                    switch (selection) {
+                        case "U":
+                            score[type] = 6.42;
+                            radar_point[type] = 0;
+                            break;
+                        case "C":
+                            score[type] = 7.52;
+                            radar_point[type] = 2;
+                        default:
+                            break;
+                    }
+                    break;
+                case "C":
+                case "I":
+                case "A":
+                    switch (selection) {
+                        case "N":
+                            score[type] = 0.0;
+                            radar_point[type] = 0;
+                            break;
+                        case "L":
+                            score[type] = 0.22;
+                            radar_point[type] = 1;
+                            break;
+                        case "H":
+                            score[type] = 0.56;
+                            radar_point[type] = 2;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        if (score["S"] == 6.42) {
+            switch (score["PR"]) {
+                case "N":
+                    score["PR"] = 0.85;
+                    break;
+                case "L":
+                    score["PR"] = 0.62;
+                    break;
+                case "H":
+                    score["PR"] = 0.27;
+                    break;
+                default:
+                    break;
+            }
+        }
+        else {
+            switch (score["PR"]) {
+                case "N":
+                    score["PR"] = 0.85;
+                    break;
+                case "L":
+                    score["PR"] = 0.68;
+                    break;
+                case "H":
+                    score["PR"] = 0.5;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        score_cvss = c.get().score;
+
+        var impact = 1 - (1 - score["C"]) * (1 - score["I"]) * (1 - score["A"])
+        if (score["S"] == 6.42) {
+            impact = 6.42 * impact;
+        }
+        else {
+            impact = 7.52 * (impact - 0.029) - 3.25 * Math.pow((impact - 0.02), 15);
+        }
+
+        var exploitability = 8.22 * score["AV"] * score["AC"] * score["PR"] * score["UI"];
+
+
+        impact = Math.round(impact * 10) / 10
+
+        var impact_metric = impact;
+
+        if (impact <= 2.5) {
+            impact = "Minor"
+            document.getElementById("impact").style.color = window.chartColors.green
+        }
+        else if (impact > 2.5 && impact <= 4) {
+            impact = "Important"
+            document.getElementById("impact").style.color = window.chartColors.yellow
+        }
+        else if (impact > 4 && impact <= 5.5) {
+            impact = "Major"
+            document.getElementById("impact").style.color = window.chartColors.orange
+        }
+        else {
+            impact = "Critical"
+            document.getElementById("impact").style.color = window.chartColors.red
+        }
+
+        document.getElementById("impact").innerHTML = impact + " " + impact_metric;
+
+        exploitability = Math.round(exploitability * 10) / 10
+
+        var exploitability_metric = exploitability;
+
+        if (score["S"] == 6.42 && exploitability == 4) {
+            exploitability = exploitability - 1
+        }
+
+        virt_exploitability = exploitability
+
+        if (exploitability <= 1) {
+            exploitability = "Very hard"
+            document.getElementById("exploitability").style.color = window.chartColors.green
+        }
+        else if (exploitability > 1 && exploitability <= 2) {
+            exploitability = "Hard"
+            document.getElementById("exploitability").style.color = window.chartColors.yellow
+        }
+        else if (exploitability > 2 && exploitability <= 3) {
+            exploitability = "Medium"
+            document.getElementById("exploitability").style.color = window.chartColors.orange
+        }
+        else {
+            exploitability = "Easy"
+            document.getElementById("exploitability").style.color = window.chartColors.red
+        }
+
+        document.getElementById("exploitability").innerHTML = exploitability + " " + exploitability_metric;
+
+
+        const risk_matrix_fr = {
+            "Mineur": { "Difficile": "Mineur", "Elevée": "Mineur", "Moyen": "Important", "Facile": "Important" },
+            "Important": { "Difficile": "Mineur", "Elevée": "Important", "Moyen": "Important", "Facile": "Majeur" },
+            "Majeur": { "Difficile": "Important", "Elevée": "Important", "Moyen": "Majeur", "Facile": "Critique" },
+            "Critique": { "Difficile": "Important", "Elevée": "Majeur", "Moyen": "Critique", "Facile": "Critique" }
+        }
+        const risk_matrix_en = {
+            "Minor": { "Very hard": "Minor", "Hard": "Minor", "Medium": "Important", "Easy": "Important" },
+            "Important": { "Very hard": "Minor", "Hard": "Important", "Medium": "Important", "Easy": "Major" },
+            "Major": { "Very hard": "Important", "Hard": "Important", "Medium": "Major", "Easy": "Critical" },
+            "Critical": { "Very hard": "Important", "Hard": "Major", "Medium": "Critical", "Easy": "Critical" }
+        }
+
+        var risk_matrix;
+
+        risk_matrix = risk_matrix_en
+        var risk = risk_matrix[impact][exploitability]
+
+        document.getElementById("risk").innerHTML = risk;
+        if (risk == "Mineur" || risk == "Minor") {
+            document.getElementById("risk").style.color = window.chartColors.green
+        }
+        else if (risk == "Important") {
+            document.getElementById("risk").style.color = window.chartColors.yellow
+        }
+        else if (risk == "Majeur" || risk == "Major") {
+            document.getElementById("risk").style.color = window.chartColors.orange
+        }
+        else {
+            document.getElementById("risk").style.color = window.chartColors.red
+        }
+
+
+        config_radar.data.datasets[0].data[0] = radar_point["I"];
+        config_radar.data.datasets[0].data[1] = radar_point["A"];
+        config_radar.data.datasets[0].data[2] = radar_point["AV"];
+        config_radar.data.datasets[0].data[3] = radar_point["AC"];
+        config_radar.data.datasets[0].data[4] = radar_point["PR"];
+        config_radar.data.datasets[0].data[5] = radar_point["UI"];
+        config_radar.data.datasets[0].data[6] = radar_point["S"];
+        config_radar.data.datasets[0].data[7] = radar_point["C"];
+
+        if (score_cvss <= 3.9) {
+            config_radar.data.datasets[0].backgroundColor = color(window.chartColors.green).alpha(0.2).rgbString(),
+                config_radar.data.datasets[0].borderColor = window.chartColors.green,
+                config_radar.data.datasets[0].pointBackgroundColor = window.chartColors.green
+        }
+        else if (score_cvss >= 4 && score_cvss <= 6.9) {
+            config_radar.data.datasets[0].backgroundColor = color(window.chartColors.yellow).alpha(0.2).rgbString(),
+                config_radar.data.datasets[0].borderColor = window.chartColors.yellow,
+                config_radar.data.datasets[0].pointBackgroundColor = window.chartColors.yellow
+        }
+        else if (score_cvss >= 7 && score_cvss <= 8.9) {
+            config_radar.data.datasets[0].backgroundColor = color(window.chartColors.orange).alpha(0.2).rgbString(),
+                config_radar.data.datasets[0].borderColor = window.chartColors.orange,
+                config_radar.data.datasets[0].pointBackgroundColor = window.chartColors.orange
+        }
+        else {
+            config_radar.data.datasets[0].backgroundColor = color(window.chartColors.red).alpha(0.2).rgbString(),
+                config_radar.data.datasets[0].borderColor = window.chartColors.red,
+                config_radar.data.datasets[0].pointBackgroundColor = window.chartColors.red
+        }
+
+        if (score["S"] == 6.42) {
+            exploitability = virt_exploitability + 1
+        }
+
+        if (exploitability <= 1) {
+            exploitability = "Difficile"
+        }
+        else if (exploitability > 1 && exploitability <= 2) {
+            exploitability = "Elevee"
+        }
+        else if (exploitability > 2 && exploitability <= 3) {
+            exploitability = "Moyen"
+        }
+        else {
+            exploitability = "Facile"
+        }
+
+        myRadar.update()
+
+    }
+
+</script>
+
+</html>
