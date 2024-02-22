@@ -963,6 +963,7 @@
 
     function exporter() {
         const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+
         var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(list_vuln));
         var a = document.createElement('a');
         a.href = 'data:' + data;
@@ -1091,8 +1092,8 @@
                             new docx.ImageRun({
                                 data: vuln.fiche,
                                 transformation: {
-                                    width: 650,
-                                    height: vuln.fiche_height,
+                                    width: 580,
+                                    height: (vuln.fiche_height / vuln.fiche_width) * 580,
                                 },
                             }),
                         ],
@@ -1528,6 +1529,7 @@
             else {
                 document.getElementById("project_name").value = file.name.split(".")[0];
             }
+            setProject();
         }
         input.click();
     }
