@@ -849,7 +849,12 @@
     function setProject() {
         var project = document.getElementById("project_name").value;
         localStorage.setItem('project_name', project);
-        document.getElementById("title").innerHTML = project;
+        if (project !== "")
+        {
+            document.getElementById("title").innerHTML = project;
+        } else {
+            document.getElementById("title").innerHTML = "Project";
+        }
     }
 
     async function save(id) {
@@ -1502,7 +1507,12 @@
             });
         });*/
         docx.Packer.toBlob(doc).then(blob => {
-            saveAs(blob, "Pentest-" + localStorage.getItem('project_name') + ".docx");
+            if (localStorage.getItem('project_name')) {
+                saveAs(blob, "Pentest-" + localStorage.getItem('project_name') + ".docx");
+            }
+            else {
+                saveAs(blob, "Pentest.docx");
+            }
         });
     }
 
