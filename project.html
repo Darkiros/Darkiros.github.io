@@ -137,6 +137,7 @@
 
             if (list_vuln) {
                 list_vuln.forEach(vuln => {
+                    vuln.description = vuln.description.replace(/\n/g, "<br>");
                     addRow(vuln);
                 });
                 var cvss = list_vuln.map(vuln => vuln.score);
@@ -532,11 +533,11 @@
                                                                                     <h3 class="input-group-text"
                                                                                         style="width: 12em;">Description
                                                                                     </h3>
-                                                                                    <div class="form-control scroll"
+                                                                                    <textarea class="form-control scroll"
                                                                                         id="description"
-                                                                                        contenteditable="true"
-                                                                                        style="height: fit-content; min-height: 10em;">
-                                                                                    </div>
+                                                                                        style="height: fit-content; min-height: 10em;"
+                                                                                        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
+                                                                                    </textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -547,10 +548,11 @@
                                                                                     <h3 class="input-group-text"
                                                                                         style="width: 12em;">Steps to
                                                                                         reproduce</h3>
-                                                                                    <div class="form-control scroll"
-                                                                                        id="step" contenteditable="true"
-                                                                                        style="height: fit-content; min-height: 10em;">
-                                                                                    </div>
+                                                                                    <textarea class="form-control scroll"
+                                                                                        id="step"
+                                                                                        style="height: fit-content; min-height: 10em;"
+                                                                                        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
+                                                                                    </textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -560,11 +562,11 @@
                                                                                 <div class="input-group">
                                                                                     <h3 class="input-group-text"
                                                                                         style="width: 12em;">Impact</h3>
-                                                                                    <div class="form-control scroll"
+                                                                                    <textarea class="form-control scroll"
                                                                                         id="impacts"
-                                                                                        contenteditable="true"
-                                                                                        style="height: fit-content; min-height: 6em;">
-                                                                                    </div>
+                                                                                        style="height: fit-content; min-height: 6em;"
+                                                                                        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
+                                                                                    </textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -580,11 +582,11 @@
                                                                                         style="width: 12em;">
                                                                                         Recommandations
                                                                                     </h3>
-                                                                                    <div class="form-control scroll"
+                                                                                    <textarea class="form-control scroll"
                                                                                         id="recommandation"
-                                                                                        contenteditable="true"
-                                                                                        style="height: fit-content; min-height: 6em;">
-                                                                                    </div>
+                                                                                        style="height: fit-content; min-height: 6em;"
+                                                                                        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
+                                                                                    </textarea>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -760,13 +762,13 @@
     function clean() {
         document.getElementById("name").value = "";
         document.getElementById("vuln_name").innerHTML = "Vulenrability name";
-        document.getElementById("description").innerHTML = "";
+        document.getElementById("description").value = "";
         document.getElementById("vuln_description").innerHTML = "";
-        document.getElementById("step").innerHTML = "";
+        document.getElementById("step").value = "";
         document.getElementById("vuln_step").innerHTML = "";
-        document.getElementById("impacts").innerHTML = "";
+        document.getElementById("impacts").value = "";
         document.getElementById("vuln_impacts").innerHTML = "";
-        document.getElementById("recommandation").innerHTML = "";
+        document.getElementById("recommandation").value = "";
         document.getElementById("vuln_recommandation").innerHTML = "";
         c.set("CVSS:3.1/AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_");
         score_cvss = 0.0;
@@ -775,6 +777,7 @@
         document.getElementById("impact").innerHTML = "0";
         document.getElementById("risk").innerHTML = "0";
         document.getElementById("save").setAttribute("onclick", "save()");
+        cleanSelect();
     }
 
     function removeVuln(id) {
@@ -787,7 +790,7 @@
         })
             .then((willDelete) => {
                 if (willDelete) {
-                    // Supprimer la vulnérabilité
+                    // remove the vulnerability from the list
                     const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
                     const new_list_vuln = list_vuln.filter(vuln => vuln.id !== id);
                     localStorage.setItem('list_vuln', JSON.stringify(new_list_vuln));
@@ -827,14 +830,14 @@
                     
         document.getElementById("name").value = vuln.name;
         document.getElementById("vuln_name").innerHTML = vuln.name;
-        document.getElementById("vuln_description").innerHTML = vuln.description;
-        document.getElementById("description").innerHTML = vuln.description;
-        document.getElementById("vuln_step").innerHTML = vuln.steps;
-        document.getElementById("step").innerHTML = vuln.steps;
-        document.getElementById("vuln_impacts").innerHTML = vuln.impacts;
-        document.getElementById("impacts").innerHTML = vuln.impacts;
-        document.getElementById("vuln_recommandation").innerHTML = vuln.recommandation;
-        document.getElementById("recommandation").innerHTML = vuln.recommandation;
+        document.getElementById("vuln_description").innerHTML = vuln.description.replace(/\n\r?/g, "<br>");
+        document.getElementById("description").value = vuln.description;
+        document.getElementById("vuln_step").innerHTML = vuln.steps.replace(/\n\r?/g, "<br>");
+        document.getElementById("step").value = vuln.steps;
+        document.getElementById("vuln_impacts").innerHTML = vuln.impacts.replace(/\n\r?/g, "<br>");
+        document.getElementById("impacts").value = vuln.impacts;
+        document.getElementById("vuln_recommandation").innerHTML = vuln.recommandation.replace(/\n\r?/g, "<br>");
+        document.getElementById("recommandation").value = vuln.recommandation;
         c.set(vuln.cvss);
         score_cvss = vuln.score;
         document.getElementById("canvas").src = vuln.cvss_graph;
@@ -844,6 +847,73 @@
         $('#addRowModal').modal('show');
         //Change the button to validate
         document.getElementById("save").setAttribute("onclick", "save(" + id + ")");
+
+        //Add <select> to choose the fiche_control content
+        addSelect(list_vuln, id);
+
+    }
+
+    function addSelect(list_vuln, vuln_id) {
+        // if the select doesn't exist, add it
+        if (document.getElementById("id") === null)
+        {
+            var fiche_control = document.getElementById("fiche_control");
+            var div = document.createElement("div");
+            div.className = "row";
+            div.id = "select_id";
+            var div2 = document.createElement("div");
+            div2.className = "form-group";
+            div2.style.width = "100%";
+            var div3 = document.createElement("div");
+            div3.className = "input-group";
+            var h3 = document.createElement("h3");
+            h3.className = "input-group-text";
+            h3.style.width = "12em";
+            h3.innerHTML = "Change ID";
+            var select = document.createElement("select");
+            select.className = "form-control";
+            select.id = "id";
+            for (var i = 1; i <= list_vuln.length; i++) {
+                var option = document.createElement("option");
+                option.value = i;
+                if (i === vuln_id) {
+                    option.setAttribute("selected", "selected");
+                    option.innerHTML = i + " (current)";
+                }
+                else {
+                    option.innerHTML = i + " - " + list_vuln.find(vuln => vuln.id === i).name;
+                }
+                select.appendChild(option);
+            }
+            div3.appendChild(h3);
+            div3.appendChild(select);
+            div2.appendChild(div3);
+            div.appendChild(div2);
+            fiche_control.appendChild(div);
+        } else {
+            // if the select already exists, update it
+            var select = document.getElementById("id");
+            select.innerHTML = "";
+            for (var i = 1; i <= list_vuln.length; i++) {
+                var option = document.createElement("option");
+                option.value = i;
+                if (i === vuln_id) {
+                    option.setAttribute("selected", "selected");
+                    option.innerHTML = i + " (current)";
+                }
+                else {
+                    option.innerHTML = i + " - " + list_vuln.find(vuln => vuln.id === i).name;
+                }
+                select.appendChild(option);
+            }
+        }
+    }
+
+    function cleanSelect() {
+        var select = document.getElementById("select_id");
+        if (select !== null) {
+            select.remove();
+        }
     }
 
     function setProject() {
@@ -859,6 +929,7 @@
 
     async function save(id) {
         // Change text color of content of description steps impacts recommandations in black
+        // to avoid the color change when saving
         var content = document.getElementById("vuln_description")
         content.style.color = "black";
         content = document.getElementById("vuln_step")
@@ -876,10 +947,10 @@
             const vuln = {
                 id: id + 1,
                 name: document.getElementById("name").value,
-                description: document.getElementById("vuln_description").innerHTML,
-                steps: document.getElementById("vuln_step").innerHTML,
-                impacts: document.getElementById("vuln_impacts").innerHTML,
-                recommandation: document.getElementById("vuln_recommandation").innerHTML,
+                description: document.getElementById("description").value,
+                steps: document.getElementById("step").value,
+                impacts: document.getElementById("impacts").value,
+                recommandation: document.getElementById("recommandation").value,
                 cvss: c.get().vector,
                 exploitability: document.getElementById("exploitability").innerHTML,
                 impact: document.getElementById("impact").innerHTML,
@@ -902,17 +973,29 @@
         else {
             const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
             const vuln = list_vuln.find(vuln => vuln.id === id);
+
             vuln.name = document.getElementById("name").value;
-            vuln.description = document.getElementById("vuln_description").innerHTML;
-            vuln.steps = document.getElementById("vuln_step").innerHTML;
-            vuln.impacts = document.getElementById("vuln_impacts").innerHTML;
-            vuln.recommandation = document.getElementById("vuln_recommandation").innerHTML;
+            vuln.description = document.getElementById("description").value;
+            vuln.steps = document.getElementById("step").value;
+            vuln.impacts = document.getElementById("impacts").value;
+            vuln.recommandation = document.getElementById("recommandation").value;
             vuln.cvss = c.get().vector;
             vuln.exploitability = document.getElementById("exploitability").innerHTML;
             vuln.impact = document.getElementById("impact").innerHTML;
             vuln.risk = document.getElementById("risk").innerHTML;
             vuln.cvss_graph = document.getElementById("canvas").toDataURL();
             vuln.score = score_cvss;
+
+            // Swap the id of the vulnerability if it has changed
+            if (id !== parseInt(document.getElementById("id").value)) {
+                const new_id = parseInt(document.getElementById("id").value);
+                const vulnToChange = list_vuln.find(vuln => vuln.id === new_id);
+                vuln.id = new_id;
+                vulnToChange.id = id;
+                list_vuln.sort((a, b) => a.id - b.id);
+                localStorage.setItem('list_vuln', JSON.stringify(list_vuln));              
+            }
+
             var a = document.createElement("a");
             await html2canvas(document.getElementById("fiche")).then((canvas) => {
                 a.appendChild(canvas);
@@ -926,6 +1009,7 @@
             var table = $('#add-row').DataTable();
             table.clear().draw();
             list_vuln.forEach(vuln => {
+                vuln.description = vuln.description.replace(/\n\r?/g, "<br>");
                 addRow(vuln);
             });
         }
@@ -1017,7 +1101,7 @@
                                 children: [
                                     new docx.TextRun("Pentest of " + localStorage.getItem('project_name')),
                                     new docx.TextRun({
-                                        children: ["Page ", docx.PageNumber.CURRENT],
+                                        children: [" Page ", docx.PageNumber.CURRENT],
                                     }),
                                     new docx.TextRun({
                                         children: [" of ", docx.PageNumber.TOTAL_PAGES],
@@ -1088,7 +1172,7 @@
                 ]
             });
         });
-        list_vuln.forEach(vuln => {
+        /*list_vuln.forEach(vuln => {
             doc.addSection({
                 properties: {},
                 children: [
@@ -1105,8 +1189,8 @@
                     })
                 ]
             })
-        })
-        /*list_vuln.forEach(vuln => {
+        })*/
+        list_vuln.forEach(vuln => {
             doc.addSection({
                 properties: {},
                 children: [
@@ -1505,7 +1589,7 @@
 
                 ],
             });
-        });*/
+        });
         docx.Packer.toBlob(doc).then(blob => {
             if (localStorage.getItem('project_name')) {
                 saveAs(blob, "Pentest-" + localStorage.getItem('project_name') + ".docx");
@@ -1560,20 +1644,12 @@
 
 
     function listener_step(evt) {
-        // if there is an image and if is too big, it will be resized and centered
-        var images = this.getElementsByTagName("img");
-        for (let index = 0; index < images.length; index++) {
-            if (images[index].width > 500) {
-                images[index].width = 500;
-            }
-        }
-        
         vuln_step = document.getElementById("vuln_step");
-        vuln_step.innerHTML = this.innerHTML;
+        vuln_step.innerHTML = this.value.replace(/\n\r?/g, "<br>");
     }
 
     function listener_description(evt) {
-        // if there is an image and if is too big, it will be resized and centered
+        /*// if there is an image and if is too big, it will be resized and centered
         var images = this.getElementsByTagName("img");
         for (let index = 0; index < images.length; index++) {
             if (images[index].width > 500) {
@@ -1581,31 +1657,19 @@
             }
         }
         vuln_description = document.getElementById("vuln_description");
-        vuln_description.innerHTML = this.innerHTML;
+        vuln_description.innerHTML = this.innerHTML;*/
+        vuln_description = document.getElementById("vuln_description");
+        vuln_description.innerHTML = this.value.replace(/\n\r?/g, "<br>");
     }
 
     function listener_impacts(evt) {
-        // if there is an image and if is too big, it will be resized and centered
-        var images = this.getElementsByTagName("img");
-        for (let index = 0; index < images.length; index++) {
-            if (images[index].width > 500) {
-                images[index].width = 500;
-            }
-        }
         vuln_impacts = document.getElementById("vuln_impacts");
-        vuln_impacts.innerHTML = this.innerHTML;
+        vuln_impacts.innerHTML = this.value.replace(/\n\r?/g, "<br>");
     }
 
     function listener_recommandation(evt) {
-        // if there is an image and if is too big, it will be resized and centered
-        var images = this.getElementsByTagName("img");
-        for (let index = 0; index < images.length; index++) {
-            if (images[index].width > 500) {
-                images[index].width = 500;
-            }
-        }
         vuln_recommandation = document.getElementById("vuln_recommandation");
-        vuln_recommandation.innerHTML = this.innerHTML;
+        vuln_recommandation.innerHTML = this.value.replace(/\n\r?/g, "<br>");
     }
 
     step.addEventListener("keyup", listener_step, false);
