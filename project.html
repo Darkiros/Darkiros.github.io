@@ -478,10 +478,10 @@
                                         <h4 class="card-title">Vulnerability list</h4>
                                         <div class="ml-auto">
                                             <button class="btn btn-round" onclick="importer()"
-                                                style="position: relative; right: 10%;"><i
+                                                style="position: relative; right: 10%;" data-toggle="tooltip" data-placement="top" title="Import vulnerability"><i
                                                     class="fas fa-file-import"></i></button>
                                             <button class="btn btn-round" onclick="exporter()"
-                                                style="position: relative; right: 9%;"><i
+                                                style="position: relative; right: 9%;" data-toggle="tooltip" data-placement="top" title="Export vulnerability"><i
                                                     class="fas fa-file-export"></i></button>
                                             <button class="btn btn-primary btn-round" data-toggle="modal"
                                                 data-target="#addRowModal" onclick="clean()">
@@ -502,6 +502,13 @@
                                                             <h4 class="card-title
                                                             " style="margin-left: auto; margin-right: auto;">Add new
                                                                 vulnerability</h4>
+                                                            <button id="import_vuln" type="button" class="btn btn-icon btn-link" onclick="import_vuln()" onmouseover="this.style.color='#1572e8'" onmouseleave="this.style.color='white'" style="margin-right: 2px; color: white;" data-toggle="tooltip" data-placement="top" title="Import vulnerability">
+                                                                <i class="fas fa-file-import"></i>
+                                                            </button>
+                                                            <button type="button" class="btn btn-icon btn-link" onclick="export_vuln()" onmouseover="this.style.color='#1572e8'" onmouseleave="this.style.color='white'" style="margin-right: 2%; color: white;" data-toggle="tooltip" data-placement="top" title="Export vulnerability">
+                                                                <i class="fas fa-file-export"></i>
+                                                            
+                                                            </button>
                                                             <button type="button" class="close" data-dismiss="modal"
                                                                 aria-label="Close">
                                                                 <span aria-hidden="true">×</span>
@@ -777,6 +784,7 @@
         document.getElementById("impact").innerHTML = "0";
         document.getElementById("risk").innerHTML = "0";
         document.getElementById("save").setAttribute("onclick", "save()");
+        document.getElementById("import_vuln").setAttribute("onclick", "import_vuln()");
         cleanSelect();
     }
 
@@ -847,6 +855,7 @@
         $('#addRowModal').modal('show');
         //Change the button to validate
         document.getElementById("save").setAttribute("onclick", "save(" + id + ")");
+        document.getElementById("import_vuln").setAttribute("onclick", "import_vuln(" + id + ")");
 
         //Add <select> to choose the fiche_control content
         addSelect(list_vuln, id);
@@ -1598,6 +1607,73 @@
                 saveAs(blob, "Pentest.docx");
             }
         });
+    }
+
+    function import_vuln(id) {
+        var input = document.createElement('input');
+        var list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+        input.type = 'file';
+        input.onchange = e => {
+            var file = e.target.files[0];
+            var reader = new FileReader();
+            reader.readAsText(file, 'UTF-8');
+            reader.onload = readerEvent => {
+                var content = readerEvent.target.result;
+                var data = JSON.parse(content);
+                // Complete Name
+                document.getElementById("name").value = data.vuln_name;
+                document.getElementById("vuln_name").innerHTML = data.vuln_name;
+                // Complete Description
+                document.getElementById("description").value = data.vuln_description
+                document.getElementById("vuln_description").innerHTML = data.vuln_description.replace(/\n\r?/g, "<br>");
+                // Complete Steps
+                document.getElementById("step").value = data.vuln_step;
+                document.getElementById("vuln_step").innerHTML = data.vuln_step.replace(/\n\r?/g, "<br>");
+                // Complete Impacts
+                document.getElementById("impacts").value = data.vuln_impacts;
+                document.getElementById("vuln_impacts").innerHTML = data.vuln_impacts.replace(/\n\r?/g, "<br>");
+                // Complete Recommandation
+                document.getElementById("recommandation").value = data.vuln_recommandation;
+                document.getElementById("vuln_recommandation").innerHTML = data.vuln_recommandation.replace(/\n\r?/g, "<br>");
+                // Complete CVSS
+                c.set(data.vuln_cvss);
+                // Complete metrics
+                document.getElementById("exploitability").innerHTML = data.exploitability;
+                document.getElementById("impact").innerHTML = data.impact;
+                document.getElementById("risk").innerHTML = data.risk;
+                
+                //Add <select> to choose the fiche_control content
+                addSelect(list_vuln, id);
+            }
+        }
+        input.click();
+    }
+
+    function export_vuln() {
+        var vuln_name = document.getElementById("name").value;
+        var vuln_description = document.getElementById("description").value;
+        var vuln_step = document.getElementById("step").value;
+        var vuln_impacts = document.getElementById("impacts").value;
+        var exploitability = document.getElementById("exploitability").innerHTML;
+        var impact = document.getElementById("impact").innerHTML;
+        var risk = document.getElementById("risk").innerHTML;
+        var vuln_cvss = c.get().vector;
+        var vuln_recommandation = document.getElementById("recommandation").value;
+        var data = {
+            "vuln_name": vuln_name,
+            "vuln_description": vuln_description,
+            "vuln_step": vuln_step,
+            "vuln_impacts": vuln_impacts,
+            "exploitability": exploitability,
+            "impact": impact,
+            "risk": risk,
+            "vuln_cvss": vuln_cvss,
+            "vuln_recommandation": vuln_recommandation
+        }
+        vuln_name = vuln_name.replace(/\s/g, "_");
+        var filename = vuln_name + ".json";
+        var blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+        saveAs(blob, filename);
     }
 
     function importer() {

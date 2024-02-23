@@ -469,7 +469,8 @@
                                         <div class="form-group" style="width: 100%;">
                                             <div class="input-group">
                                                 <h3 class="input-group-text" style="width: 17em;">Description de la vulnérabilité</h3>
-                                                <div class="form-control scroll" id="description" contenteditable="true" style="height: fit-content; min-height: 10em;"></div>
+                                                <textarea id="description" class="form-control scroll" style="height: fit-content; min-height: 10em;"
+                                                oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -477,7 +478,8 @@
                                         <div class="form-group" style="width: 100%;">
                                             <div class="input-group">
                                                 <h3 class="input-group-text" style="width: 17em;">Etapes pour reproduire le résultat</h3>
-                                                <div class="form-control scroll" id="step" contenteditable="true" style="height: fit-content; min-height: 10em;"></div>
+                                                <textarea id="step" class="form-control scroll" style="height: fit-content; min-height: 10em;"
+                                                oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -485,7 +487,8 @@
                                         <div class="form-group" style="width: 100%;">
                                             <div class="input-group">
                                                 <h3 class="input-group-text" style="width: 17em;">Impact de la vulnérabilité</h3>
-                                                <div class="form-control scroll" id="impacts" contenteditable="true" style="height: fit-content; min-height: 6em;"></div>
+                                                <textarea id="impacts" class="form-control scroll" style="height: fit-content; min-height: 6em;"
+                                                oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -496,7 +499,8 @@
                                         <div class="form-group" style="width: 100%;">
                                             <div class="input-group">
                                                 <h3 class="input-group-text" style="width: 17em;">Recommandations de correction</h3>
-                                                <div class="form-control scroll" id="recommandation" contenteditable="true" style="height: fit-content; min-height: 6em;"></div>
+                                                <textarea id="recommandation" class="form-control scroll" style="height: fit-content; min-height: 6em;"
+                                                oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -603,15 +607,15 @@
 <script>
 
     function exporter() {
-        var vuln_name = document.getElementById("vuln_name").textContent;
-        var vuln_description = document.getElementById("vuln_description").innerHTML;
-        var vuln_step = document.getElementById("vuln_step").innerHTML;
-        var vuln_impacts = document.getElementById("vuln_impacts").innerHTML;
+        var vuln_name = document.getElementById("name").value;
+        var vuln_description = document.getElementById("description").value;
+        var vuln_step = document.getElementById("step").value;
+        var vuln_impacts = document.getElementById("impacts").value;
         var exploitability = document.getElementById("exploitability").innerHTML;
         var impact = document.getElementById("impact").innerHTML;
         var risk = document.getElementById("risk").innerHTML;
         var vuln_cvss = c.get().vector;
-        var vuln_recommandation = document.getElementById("vuln_recommandation").innerHTML;
+        var vuln_recommandation = document.getElementById("recommandation").value;
         var data = {
             "vuln_name": vuln_name,
             "vuln_description": vuln_description,
@@ -643,14 +647,14 @@
                 document.getElementById("name").value = data.vuln_name;
                 document.getElementById("vuln_name").innerHTML = data.vuln_name;
                 //Replace description
-                document.getElementById("description").innerHTML = data.vuln_description;
-                document.getElementById("vuln_description").innerHTML = data.vuln_description;
+                document.getElementById("description").value = data.vuln_description;
+                document.getElementById("vuln_description").innerHTML = data.vuln_description.replace(/\n\r?/g, "<br>");
                 //Replace steps
-                document.getElementById("step").innerHTML = data.vuln_step;
-                document.getElementById("vuln_step").innerHTML = data.vuln_step;
+                document.getElementById("step").value = data.vuln_step;
+                document.getElementById("vuln_step").innerHTML = data.vuln_step.replace(/\n\r?/g, "<br>");
                 //Replace impacts
-                document.getElementById("impacts").innerHTML = data.vuln_impacts;
-                document.getElementById("vuln_impacts").innerHTML = data.vuln_impacts;
+                document.getElementById("impacts").value = data.vuln_impacts;
+                document.getElementById("vuln_impacts").innerHTML = data.vuln_impacts.replace(/\n\r?/g, "<br>");
                 //Replace metrics
                 document.getElementById("exploitability").innerHTML = data.exploitability;
                 document.getElementById("impact").innerHTML = data.impact;
@@ -658,8 +662,8 @@
                 //Set CVSS
                 c.set(data.vuln_cvss);
                 //Replace recommandation
-                document.getElementById("recommandation").innerHTML = data.vuln_recommandation;
-                document.getElementById("vuln_recommandation").innerHTML = data.vuln_recommandation;
+                document.getElementById("recommandation").value = data.vuln_recommandation;
+                document.getElementById("vuln_recommandation").innerHTML = data.vuln_recommandation.replace(/\n\r?/g, "<br>");
             }
         }
         input.click();
@@ -730,22 +734,22 @@
 
     function listener_step(evt){
         vuln_step = document.getElementById("vuln_step");
-        vuln_step.innerHTML = this.innerHTML;
+        vuln_step.innerHTML = this.value.replace(/\n\r?/g, "<br>");
     }
 
     function listener_description(evt){
         vuln_description = document.getElementById("vuln_description");
-        vuln_description.innerHTML = this.innerHTML;
+        vuln_description.innerHTML = this.value.replace(/\n\r?/g, "<br>");
     }
 
     function listener_impacts(evt){
         vuln_impacts = document.getElementById("vuln_impacts");
-        vuln_impacts.innerHTML = this.innerHTML;
+        vuln_impacts.innerHTML = this.value.replace(/\n\r?/g, "<br>");
     }
 
     function listener_recommandation(evt){
         vuln_recommandation = document.getElementById("vuln_recommandation");
-        vuln_recommandation.innerHTML = this.innerHTML;
+        vuln_recommandation.innerHTML = this.value.replace(/\n\r?/g, "<br>");
     }
         
     step.addEventListener("keyup", listener_step, false);
