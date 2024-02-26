@@ -499,8 +499,8 @@
                                                 <div class="card">
                                                     <div class="card-header">
                                                         <div class="d-flex align-items-center">
-                                                            <h4 class="card-title
-                                                            " style="margin-left: auto; margin-right: auto;">Add new
+                                                            <h4 class="card-title" id="vuln_title"
+                                                                style="margin-left: auto; margin-right: auto;">Add new
                                                                 vulnerability</h4>
                                                             <button id="import_vuln" type="button" class="btn btn-icon btn-link" onclick="import_vuln()" onmouseover="this.style.color='#1572e8'" onmouseleave="this.style.color='white'" style="margin-right: 2px; color: white;" data-toggle="tooltip" data-placement="top" title="Import vulnerability">
                                                                 <i class="fas fa-file-import"></i>
@@ -767,6 +767,7 @@
     }
 
     function clean() {
+        document.getElementById("vuln_title").innerHTML = "Add new vulnerability";
         document.getElementById("name").value = "";
         document.getElementById("vuln_name").innerHTML = "Vulenrability name";
         document.getElementById("description").value = "";
@@ -835,6 +836,8 @@
     function edit(id) {
         const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
         const vuln = list_vuln.find(vuln => vuln.id === id);
+
+        document.getElementById("vuln_title").innerHTML = "Edit vulnerability - " + vuln.name;
                     
         document.getElementById("name").value = vuln.name;
         document.getElementById("vuln_name").innerHTML = vuln.name;
