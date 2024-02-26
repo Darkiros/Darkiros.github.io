@@ -516,147 +516,172 @@
                                                         </div>
                                                     </div>
                                                     <div class="card-body">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="card">
-                                                                    <div class="card-body" id="fiche_control">
-                                                                        <div class="row">
-                                                                            <div class="form-group"
-                                                                                style="width: 100%;">
-                                                                                <div class="input-group">
-                                                                                    <h3 class="input-group-text"
-                                                                                        style="width: 12em;">
-                                                                                        Vulnerability name</h3>
-                                                                                    <input type="text" id="name"
-                                                                                        class="form-control"
-                                                                                        onkeyup="fill_vuln()" />
+                                                        <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
+                                                            <li class="nav-item submenu">
+                                                                <a class="nav-link active show" id="pills-home-tab-nobd" data-toggle="pill" href="#pills-issue-nobd" role="tab" aria-controls="pills-home-nobd" aria-selected="true" onclick="display_issue()">Issue</a>
+                                                            </li>
+                                                            <li class="nav-item submenu" id="poc_menu" style="display: none;">
+                                                                <a class="nav-link" id="pills-profile-tab-nobd" data-toggle="pill" href="#pills-poc-nobd" role="tab" aria-controls="pills-profile-nobd" aria-selected="false" onclick="display_poc()">POC</a>
+                                                            </li>
+                                                        </ul>
+                                                        <div class="tab-content">
+                                                            <div class="row fade active show" id="pills-issue-nobd" role="tabpanel" aria-labelledby="pills-issue-tab-nobd" style="display: flex !important;">
+                                                                <div class="col-md-6">
+                                                                    <div class="card">
+                                                                        <div class="card-body" id="fiche_control">
+                                                                            <div class="row">
+                                                                                <div class="form-group"
+                                                                                    style="width: 100%;">
+                                                                                    <div class="input-group">
+                                                                                        <h3 class="input-group-text"
+                                                                                            style="width: 12em;">
+                                                                                            Vulnerability name</h3>
+                                                                                        <input type="text" id="name"
+                                                                                            class="form-control"
+                                                                                            onkeyup="fill_vuln()" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="form-group"
+                                                                                    style="width: 100%;">
+                                                                                    <div class="input-group">
+                                                                                        <h3 class="input-group-text"
+                                                                                            style="width: 12em;">Description
+                                                                                        </h3>
+                                                                                        <textarea class="form-control scroll"
+                                                                                            id="description"
+                                                                                            style="height: fit-content; min-height: 10em;"
+                                                                                            oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
+                                                                                        </textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="form-group"
+                                                                                    style="width: 100%;">
+                                                                                    <div class="input-group">
+                                                                                        <h3 class="input-group-text"
+                                                                                            style="width: 12em;">Steps to
+                                                                                            reproduce</h3>
+                                                                                        <textarea class="form-control scroll"
+                                                                                            id="step"
+                                                                                            style="height: fit-content; min-height: 10em;"
+                                                                                            oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
+                                                                                        </textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="form-group"
+                                                                                    style="width: 100%;">
+                                                                                    <div class="input-group">
+                                                                                        <h3 class="input-group-text"
+                                                                                            style="width: 12em;">Impact</h3>
+                                                                                        <textarea class="form-control scroll"
+                                                                                            id="impacts"
+                                                                                            style="height: fit-content; min-height: 6em;"
+                                                                                            oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
+                                                                                        </textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row mt-3 mb-3">
+                                                                                <div id="cvssboard" style="color: black;">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="form-group"
+                                                                                    style="width: 100%;">
+                                                                                    <div class="input-group">
+                                                                                        <h3 class="input-group-text"
+                                                                                            style="width: 12em;">
+                                                                                            Recommandations
+                                                                                        </h3>
+                                                                                        <textarea class="form-control scroll"
+                                                                                            id="recommandation"
+                                                                                            style="height: fit-content; min-height: 6em;"
+                                                                                            oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
+                                                                                        </textarea>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="row">
-                                                                            <div class="form-group"
-                                                                                style="width: 100%;">
-                                                                                <div class="input-group">
-                                                                                    <h3 class="input-group-text"
-                                                                                        style="width: 12em;">Description
-                                                                                    </h3>
-                                                                                    <textarea class="form-control scroll"
-                                                                                        id="description"
-                                                                                        style="height: fit-content; min-height: 10em;"
-                                                                                        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
-                                                                                    </textarea>
-                                                                                </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="card-body"
+                                                                        style="border-left: solid; border-left-color: #6c7ae0; padding-left: 1%; padding-top: 0; padding-bottom: 0;"
+                                                                        id="fiche">
+                                                                        <h2 style="text-transform: uppercase; text-decoration: underline; color: #6c7ae0;"
+                                                                            id="vuln_name">Vulnerability name</h2>
+                                                                        <h5 id="description_title"
+                                                                            style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                            Description :</h5>
+                                                                        <p id="vuln_description"></p>
+                                                                        <h5 id="step_title"
+                                                                            style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                            Steps to reproduce :</h5>
+                                                                        <p id="vuln_step"></p>
+                                                                        <h5 id="impact_title"
+                                                                            style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                            Impact :</h5>
+                                                                        <p id="vuln_impacts"></p>
+                                                                        <h5 id="evaluation_title"
+                                                                            style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                            Risk evaluation :</h5>
+                                                                        <div id="metrics">
+                                                                            <table class="table" id="metricsTable">
+                                                                                <tr>
+                                                                                    <th id="exploitability_table">
+                                                                                        Exploitability</th>
+                                                                                    <th id="impact_table">Impact</th>
+                                                                                    <th id="risk_table">Risk</th>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td id="exploitability">0</td>
+                                                                                    <td id="impact">0</td>
+                                                                                    <td id="risk">0</td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </div>
+                                                                        <h5 id="cvss_title"
+                                                                            style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                            CVSS 3.1 evaluation :</h5>
+                                                                        <div class="center-box">
+                                                                            <div id="chartjs-radar">
+                                                                                <canvas id="canvas">
+                                                                                </canvas>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="row">
-                                                                            <div class="form-group"
-                                                                                style="width: 100%;">
-                                                                                <div class="input-group">
-                                                                                    <h3 class="input-group-text"
-                                                                                        style="width: 12em;">Steps to
-                                                                                        reproduce</h3>
-                                                                                    <textarea class="form-control scroll"
-                                                                                        id="step"
-                                                                                        style="height: fit-content; min-height: 10em;"
-                                                                                        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
-                                                                                    </textarea>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="form-group"
-                                                                                style="width: 100%;">
-                                                                                <div class="input-group">
-                                                                                    <h3 class="input-group-text"
-                                                                                        style="width: 12em;">Impact</h3>
-                                                                                    <textarea class="form-control scroll"
-                                                                                        id="impacts"
-                                                                                        style="height: fit-content; min-height: 6em;"
-                                                                                        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
-                                                                                    </textarea>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row mt-3 mb-3">
-                                                                            <div id="cvssboard" style="color: black;">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="form-group"
-                                                                                style="width: 100%;">
-                                                                                <div class="input-group">
-                                                                                    <h3 class="input-group-text"
-                                                                                        style="width: 12em;">
-                                                                                        Recommandations
-                                                                                    </h3>
-                                                                                    <textarea class="form-control scroll"
-                                                                                        id="recommandation"
-                                                                                        style="height: fit-content; min-height: 6em;"
-                                                                                        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
-                                                                                    </textarea>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
+                                                                        <h5 id="recommandation_title"
+                                                                            style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                            Recommandations :</h5>
+                                                                        <p id="vuln_recommandation"></p>
+                                                                    </div>
+                                                                    <div class="center-box">
+                                                                        <button class="btn btn-danger download"
+                                                                            style="width:160px" data-dismiss="modal"
+                                                                            aria-label="Close">Cancel</button>
+                                                                        <button class="btn btn-primary copy" id="save"
+                                                                            onclick="save()"
+                                                                            style="width:160px">Validate</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-6">
-                                                                <div class="card-body"
-                                                                    style="border-left: solid; border-left-color: #6c7ae0; padding-left: 1%; padding-top: 0; padding-bottom: 0;"
-                                                                    id="fiche">
-                                                                    <h2 style="text-transform: uppercase; text-decoration: underline; color: #6c7ae0;"
-                                                                        id="vuln_name">Vulnerability name</h2>
-                                                                    <h5 id="description_title"
-                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
-                                                                        Description :</h5>
-                                                                    <p id="vuln_description"></p>
-                                                                    <h5 id="step_title"
-                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
-                                                                        Steps to reproduce :</h5>
-                                                                    <p id="vuln_step"></p>
-                                                                    <h5 id="impact_title"
-                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
-                                                                        Impact :</h5>
-                                                                    <p id="vuln_impacts"></p>
-                                                                    <h5 id="evaluation_title"
-                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
-                                                                        Risk evaluation :</h5>
-                                                                    <div id="metrics">
-                                                                        <table class="table" id="metricsTable">
-                                                                            <tr>
-                                                                                <th id="exploitability_table">
-                                                                                    Exploitability</th>
-                                                                                <th id="impact_table">Impact</th>
-                                                                                <th id="risk_table">Risk</th>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td id="exploitability">0</td>
-                                                                                <td id="impact">0</td>
-                                                                                <td id="risk">0</td>
-                                                                            </tr>
-                                                                        </table>
-                                                                    </div>
-                                                                    <h5 id="cvss_title"
-                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
-                                                                        CVSS 3.1 evaluation :</h5>
-                                                                    <div class="center-box">
-                                                                        <div id="chartjs-radar">
-                                                                            <canvas id="canvas">
-                                                                            </canvas>
+                                                            <div class="row fade" id="pills-poc-nobd" role="tabpanel" aria-labelledby="pills-poc-tab-nobd" style="display: flex !important;">
+                                                                <div class="col-md-12">
+                                                                    <div class="row">
+                                                                        <div class="form-group">
+                                                                            <div class="input-group">
+                                                                                <label for="poc" style="width: 12em;">Proof of concept</label>
+                                                                                <input type="file" id="poc" class="form-control-file" accept="image/png, image/jpg, image/jpeg"/>
+                                                                                <button id="add_poc" class="btn btn-primary" onclick="add_poc()">Add</button>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                    <h5 id="recommandation_title"
-                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
-                                                                        Recommandations :</h5>
-                                                                    <p id="vuln_recommandation"></p>
-                                                                </div>
-                                                                <div class="center-box">
-                                                                    <button class="btn btn-danger download"
-                                                                        style="width:160px" data-dismiss="modal"
-                                                                        aria-label="Close">Cancel</button>
-                                                                    <button class="btn btn-primary copy" id="save"
-                                                                        onclick="save()"
-                                                                        style="width:160px">Validate</button>
+                                                                    <div class="row" id="poc_display">
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -766,8 +791,154 @@
         ]);
     }
 
+    function display_issue() {
+        document.getElementById('pills-issue-nobd').style.display = "flex";
+        document.getElementById('pills-poc-nobd').style.display = "none";
+    }
+
+    function display_poc() {
+        document.getElementById('pills-issue-nobd').style.display = "none";
+        document.getElementById('pills-poc-nobd').style.display = "flex";
+
+        // Display all proof of concept 
+        const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+        const poc_display = document.getElementById('poc_display');
+        poc_display.innerHTML = "";
+        list_vuln.forEach(vuln => {
+            if (vuln.poc) {
+                for (let i = 0; i < vuln.poc.length; i++) {
+                    const div = document.createElement('div');
+                    const img = document.createElement('img');
+                    const delete_button = document.createElement('button');
+                    
+                    delete_button.innerHTML = "Delete";
+                    delete_button.setAttribute("onclick", "delete_poc(" + vuln.id + ", " + i + ")");
+                    delete_button.style.marginLeft = "auto";
+                    delete_button.style.marginRight = "auto";
+                    delete_button.classList.add("btn");
+                    delete_button.classList.add("btn-danger");
+                    delete_button.style.display = "block";
+
+                    img.src = vuln.poc[i];
+                    // check if the browser is firefox
+                    if (navigator.userAgent.indexOf("Firefox") != -1) {
+                        img.style.width = "-moz-available";
+                    }
+                    else {
+                        img.style.width = "-webkit-fill-available";  
+                    }                 
+                    //img.style.height = "auto";
+                    img.style.marginBottom = "1%";
+                    img.style.marginLeft = "1em";
+                    
+                    div.style.width = "24%";
+                    div.style.marginBottom = "1%";
+
+                    div.appendChild(img);
+                    div.appendChild(delete_button);
+                    poc_display.appendChild(div);
+                }
+            }
+        });
+    }
+
+    function readFileAsBase64(file) {
+        return new Promise(function(resolve, reject) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                base64Result = e.target.result;
+                resolve(base64Result);
+            };
+
+            reader.onerror = function (error) {
+                reject(error);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function add_poc(id) {
+        alert(id)
+        const poc = document.getElementById('poc');
+        const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+        const vuln = list_vuln.find(vuln => vuln.id === parseInt(id));
+        if (vuln === undefined) {
+            swal({
+                title: "Error",
+                text: "Please save the vulnerability before adding a proof of concept",
+                icon: "error",
+                button: "Ok",
+            });
+            return;
+        }
+
+        if (poc.files.length > 0) {
+            var file = poc.files[0];
+            readFileAsBase64(file).then(function(result) {
+                if (vuln.poc === undefined) {
+                    vuln.poc = [];
+                }
+                vuln.poc.push(result);
+                alert(vuln.poc)
+                list_vuln[list_vuln.findIndex(vuln => vuln.id === parseInt(id))] = vuln;
+                localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
+                display_poc();
+            }).catch(function(error) {
+                swal({
+                    title: "Error",
+                    text: "An error occured while reading the file",
+                    icon: "error",
+                    button: "Ok",
+                });
+            });
+        }
+        poc.value = "";
+    }
+
+    function delete_poc(id, index) {
+
+        // demande de confirmation
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this proof of concept!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+                const vuln = list_vuln.find(vuln => vuln.id === id);
+                vuln.poc.splice(index, 1);
+                list_vuln[list_vuln.findIndex(vuln => vuln.id === id)] = vuln;
+                localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
+                display_poc();
+                new Notify({
+                        status: 'success',
+                        title: 'POC deleted',
+                        text: '',
+                        effect: 'fade',
+                        speed: 300,
+                        customClass: '',
+                        customIcon: '',
+                        showIcon: true,
+                        showCloseButton: true,
+                        autoclose: true,
+                        autotimeout: 1500,
+                        gap: 20,
+                        distance: 20,
+                        type: 1,
+                        position: 'top right'
+                    });
+            }
+        });
+    }
+
     function clean() {
         document.getElementById("vuln_title").innerHTML = "Add new vulnerability";
+        document.getElementById("poc_menu").style.display = "none";
         document.getElementById("name").value = "";
         document.getElementById("vuln_name").innerHTML = "Vulenrability name";
         document.getElementById("description").value = "";
@@ -838,6 +1009,8 @@
         const vuln = list_vuln.find(vuln => vuln.id === id);
 
         document.getElementById("vuln_title").innerHTML = "Edit vulnerability - " + vuln.name;
+        document.getElementById("add_poc").setAttribute("onclick", "add_poc(" + id + ")");
+        document.getElementById("poc_menu").style.display = "block";
                     
         document.getElementById("name").value = vuln.name;
         document.getElementById("vuln_name").innerHTML = vuln.name;
@@ -1203,6 +1376,33 @@
             })
         })*/
         list_vuln.forEach(vuln => {
+            doc.addSection({
+                properties: {},
+                children: [
+                    new docx.Paragraph({
+                        text: vuln.name,
+                        heading: docx.HeadingLevel.HEADING_1,
+                    })
+                ]
+            })
+            for (let i = 0; i < vuln.poc.length; i++) {
+                doc.addSection({
+                    properties: {type: docx.SectionType.CONTINUOUS,},
+                    children: [
+                        new docx.Paragraph({
+                            children: [
+                                new docx.ImageRun({
+                                    data: vuln.poc[i],
+                                    transformation: {
+                                        width: 580,
+                                        height: (vuln.fiche_height / vuln.fiche_width) * 500,
+                                    },
+                                }),
+                            ],
+                        })
+                    ]
+                })
+            }
             doc.addSection({
                 properties: {},
                 children: [
@@ -1671,7 +1871,7 @@
             "impact": impact,
             "risk": risk,
             "vuln_cvss": vuln_cvss,
-            "vuln_recommandation": vuln_recommandation
+            "vuln_recommandation": vuln_recommandation,
         }
         vuln_name = vuln_name.replace(/\s/g, "_");
         var filename = vuln_name + ".json";
