@@ -860,7 +860,6 @@
     }
 
     function add_poc(id) {
-        alert(id)
         const poc = document.getElementById('poc');
         const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
         const vuln = list_vuln.find(vuln => vuln.id === parseInt(id));
@@ -881,7 +880,6 @@
                     vuln.poc = [];
                 }
                 vuln.poc.push(result);
-                alert(vuln.poc)
                 list_vuln[list_vuln.findIndex(vuln => vuln.id === parseInt(id))] = vuln;
                 localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
                 display_poc();
