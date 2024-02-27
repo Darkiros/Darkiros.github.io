@@ -16,7 +16,7 @@ if (document.cookie.split('=')[0] !== 'localStorage_checked') {
     // set the cookie "localStorage" to "false" for 1 day
     var now = new Date();
     var time = now.getTime();
-    var expireTime = time + 1000*10;
+    var expireTime = time + 1000*36000;
     now.setTime(expireTime);
     document.cookie = 'localStorage_checked=true;expires='+now.toUTCString()+';path=/;SameSite=Strict';
 }
