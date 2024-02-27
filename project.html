@@ -797,7 +797,7 @@
         document.getElementById('pills-poc-nobd').style.display = "none";
     }
 
-    function display_poc() {
+    function display_poc(id) {
         document.getElementById('pills-issue-nobd').style.display = "none";
         document.getElementById('pills-poc-nobd').style.display = "flex";
 
@@ -806,7 +806,7 @@
         const poc_display = document.getElementById('poc_display');
         poc_display.innerHTML = "";
         list_vuln.forEach(vuln => {
-            if (vuln.poc) {
+            if (vuln.poc !== undefined && vuln.id === id) {
                 for (let i = 0; i < vuln.poc.length; i++) {
                     const div = document.createElement('div');
                     const img = document.createElement('img');
@@ -883,7 +883,7 @@
                 vuln.poc.push(result);
                 list_vuln[list_vuln.findIndex(vuln => vuln.id === parseInt(id))] = vuln;
                 localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
-                display_poc();
+                display_poc(id);
             }).catch(function(error) {
                 swal({
                     title: "Error",
@@ -913,7 +913,7 @@
                 vuln.poc.splice(index, 1);
                 list_vuln[list_vuln.findIndex(vuln => vuln.id === id)] = vuln;
                 localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
-                display_poc();
+                display_poc(id);
                 new Notify({
                         status: 'success',
                         title: 'POC deleted',
@@ -956,6 +956,13 @@
         document.getElementById("risk").innerHTML = "0";
         document.getElementById("save").setAttribute("onclick", "save()");
         document.getElementById("import_vuln").setAttribute("onclick", "import_vuln()");
+        document.getElementById("pills-issue-nobd").classList.add("active");
+        document.getElementById("pills-issue-nobd").classList.add("show");
+        document.getElementById("pills-home-tab-nobd").classList.add("active");
+        document.getElementById("pills-home-tab-nobd").classList.add("show");
+        document.getElementById("pills-profile-tab-nobd").classList.remove("active");
+        document.getElementById("pills-profile-tab-nobd").classList.remove("show");
+        display_issue();
         cleanSelect();
     }
 
@@ -1010,6 +1017,7 @@
         document.getElementById("vuln_title").innerHTML = "Edit vulnerability - " + vuln.name;
         document.getElementById("add_poc").setAttribute("onclick", "add_poc(" + id + ")");
         document.getElementById("poc_menu").style.display = "block";
+        document.getElementById("pills-profile-tab-nobd").setAttribute("onclick", "display_poc(" + id + ")");
                     
         document.getElementById("name").value = vuln.name;
         document.getElementById("vuln_name").innerHTML = vuln.name;
