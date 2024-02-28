@@ -462,261 +462,293 @@
         <!-- End Sidebar -->
 
         <div class="main-panel" style="margin-top: 6em;">
-            <div class="content">
-                <div class="page-inner">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="input-group mb-3">
-                                <h3 class="input-group-text" style="width: 12em;">Project name</h3>
-                                <input type="text" id="project_name" class="form-control" />
-                                <button class="btn btn-primary" style="position: relative; right: 0;"
-                                    onclick="setProject()">Save</button>
+            <div class="page-inner">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group mb-3">
+                            <h3 class="input-group-text" style="width: 12em;">Project name</h3>
+                            <input type="text" id="project_name" class="form-control" />
+                            <button class="btn btn-primary" style="position: relative; right: 0;"
+                                onclick="setProject()">Save</button>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="d-flex">
+                                    <h4 class="card-title">Vulnerability list</h4>
+                                    <div class="ml-auto">
+                                        <button class="btn btn-round" onclick="importer()"
+                                            style="position: relative; right: 10%;" data-toggle="tooltip"
+                                            data-placement="top" title="Import vulnerability"><i
+                                                class="fas fa-file-import"></i></button>
+                                        <button class="btn btn-round" onclick="exporter()"
+                                            style="position: relative; right: 9%;" data-toggle="tooltip"
+                                            data-placement="top" title="Export vulnerability"><i
+                                                class="fas fa-file-export"></i></button>
+                                        <button class="btn btn-primary btn-round" data-toggle="modal"
+                                            data-target="#addRowModal" onclick="clean()">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="d-flex">
-                                        <h4 class="card-title">Vulnerability list</h4>
-                                        <div class="ml-auto">
-                                            <button class="btn btn-round" onclick="importer()"
-                                                style="position: relative; right: 10%;" data-toggle="tooltip" data-placement="top" title="Import vulnerability"><i
-                                                    class="fas fa-file-import"></i></button>
-                                            <button class="btn btn-round" onclick="exporter()"
-                                                style="position: relative; right: 9%;" data-toggle="tooltip" data-placement="top" title="Export vulnerability"><i
-                                                    class="fas fa-file-export"></i></button>
-                                            <button class="btn btn-primary btn-round" data-toggle="modal"
-                                                data-target="#addRowModal" onclick="clean()">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
+                            <div class="card-body">
+                                <!-- Modal in full screen -->
+                                <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog"
+                                    aria-labelledby="addRowModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document" style="max-width: 100%; margin: 2%;">
+                                        <div class="modal-content" style="background-color: #1a2035;">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <div class="d-flex align-items-center">
+                                                        <h4 class="card-title" id="vuln_title"
+                                                            style="margin-left: auto; margin-right: auto;">Add new
+                                                            vulnerability</h4>
+                                                        <button id="import_vuln" type="button"
+                                                            class="btn btn-icon btn-link" onclick="import_vuln()"
+                                                            onmouseover="this.style.color='#1572e8'"
+                                                            onmouseleave="this.style.color='white'"
+                                                            style="margin-right: 2px; color: white;"
+                                                            data-toggle="tooltip" data-placement="top"
+                                                            title="Import vulnerability">
+                                                            <i class="fas fa-file-import"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-icon btn-link"
+                                                            onclick="export_vuln()"
+                                                            onmouseover="this.style.color='#1572e8'"
+                                                            onmouseleave="this.style.color='white'"
+                                                            style="margin-right: 2%; color: white;"
+                                                            data-toggle="tooltip" data-placement="top"
+                                                            title="Export vulnerability">
+                                                            <i class="fas fa-file-export"></i>
+
+                                                        </button>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul class="nav nav-pills nav-secondary nav-pills-no-bd"
+                                                        id="pills-tab-without-border" role="tablist">
+                                                        <li class="nav-item submenu">
+                                                            <a class="nav-link active show" id="pills-home-tab-nobd"
+                                                                data-toggle="pill" href="#pills-issue-nobd" role="tab"
+                                                                aria-controls="pills-home-nobd" aria-selected="true"
+                                                                onclick="display_issue()">Issue</a>
+                                                        </li>
+                                                        <li class="nav-item submenu" id="poc_menu"
+                                                            style="display: none;">
+                                                            <a class="nav-link" id="pills-profile-tab-nobd"
+                                                                data-toggle="pill" href="#pills-poc-nobd" role="tab"
+                                                                aria-controls="pills-profile-nobd" aria-selected="false"
+                                                                onclick="display_poc()">POC</a>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="tab-content">
+                                                        <div class="row fade active show" id="pills-issue-nobd"
+                                                            role="tabpanel" aria-labelledby="pills-issue-tab-nobd"
+                                                            style="display: flex !important;">
+                                                            <div class="col-md-6">
+                                                                <div class="card">
+                                                                    <div class="card-body" id="fiche_control">
+                                                                        <div class="row">
+                                                                            <div class="form-group"
+                                                                                style="width: 100%;">
+                                                                                <div class="input-group">
+                                                                                    <h3 class="input-group-text"
+                                                                                        style="width: 12em;">
+                                                                                        Vulnerability name</h3>
+                                                                                    <input type="text" id="name"
+                                                                                        class="form-control"
+                                                                                        onkeyup="fill_vuln()" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="form-group"
+                                                                                style="width: 100%;">
+                                                                                <div class="input-group">
+                                                                                    <h3 class="input-group-text"
+                                                                                        style="width: 12em;">Description
+                                                                                    </h3>
+                                                                                    <textarea
+                                                                                        class="form-control scroll"
+                                                                                        id="description"
+                                                                                        style="height: fit-content; min-height: 10em;"
+                                                                                        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
+                                                                                    </textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="form-group"
+                                                                                style="width: 100%;">
+                                                                                <div class="input-group">
+                                                                                    <h3 class="input-group-text"
+                                                                                        style="width: 12em;">Steps to
+                                                                                        reproduce</h3>
+                                                                                    <textarea
+                                                                                        class="form-control scroll"
+                                                                                        id="step"
+                                                                                        style="height: fit-content; min-height: 10em;"
+                                                                                        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
+                                                                                    </textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="form-group"
+                                                                                style="width: 100%;">
+                                                                                <div class="input-group">
+                                                                                    <h3 class="input-group-text"
+                                                                                        style="width: 12em;">Impact</h3>
+                                                                                    <textarea
+                                                                                        class="form-control scroll"
+                                                                                        id="impacts"
+                                                                                        style="height: fit-content; min-height: 6em;"
+                                                                                        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
+                                                                                    </textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row mt-3 mb-3">
+                                                                            <div id="cvssboard" style="color: black;">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="form-group"
+                                                                                style="width: 100%;">
+                                                                                <div class="input-group">
+                                                                                    <h3 class="input-group-text"
+                                                                                        style="width: 12em;">
+                                                                                        Recommandations
+                                                                                    </h3>
+                                                                                    <textarea
+                                                                                        class="form-control scroll"
+                                                                                        id="recommandation"
+                                                                                        style="height: fit-content; min-height: 6em;"
+                                                                                        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
+                                                                                    </textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="card-body"
+                                                                    style="border-left: solid; border-left-color: #6c7ae0; padding-left: 1%; padding-top: 0; padding-bottom: 0;"
+                                                                    id="fiche">
+                                                                    <h2 style="text-transform: uppercase; text-decoration: underline; color: #6c7ae0;"
+                                                                        id="vuln_name">Vulnerability name</h2>
+                                                                    <h5 id="description_title"
+                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                        Description :</h5>
+                                                                    <p id="vuln_description"></p>
+                                                                    <h5 id="step_title"
+                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                        Steps to reproduce :</h5>
+                                                                    <p id="vuln_step"></p>
+                                                                    <h5 id="impact_title"
+                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                        Impact :</h5>
+                                                                    <p id="vuln_impacts"></p>
+                                                                    <h5 id="evaluation_title"
+                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                        Risk evaluation :</h5>
+                                                                    <div id="metrics">
+                                                                        <table class="table" id="metricsTable">
+                                                                            <tr>
+                                                                                <th id="exploitability_table">
+                                                                                    Exploitability</th>
+                                                                                <th id="impact_table">Impact</th>
+                                                                                <th id="risk_table">Risk</th>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td id="exploitability">0</td>
+                                                                                <td id="impact">0</td>
+                                                                                <td id="risk">0</td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </div>
+                                                                    <h5 id="cvss_title"
+                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                        CVSS 3.1 evaluation :</h5>
+                                                                    <div class="center-box">
+                                                                        <div id="chartjs-radar">
+                                                                            <canvas id="canvas">
+                                                                            </canvas>
+                                                                        </div>
+                                                                    </div>
+                                                                    <h5 id="recommandation_title"
+                                                                        style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
+                                                                        Recommandations :</h5>
+                                                                    <p id="vuln_recommandation"></p>
+                                                                </div>
+                                                                <div class="center-box">
+                                                                    <button class="btn btn-danger download"
+                                                                        style="width:160px" data-dismiss="modal"
+                                                                        aria-label="Close">Cancel</button>
+                                                                    <button class="btn btn-primary copy" id="save"
+                                                                        onclick="save()"
+                                                                        style="width:160px">Validate</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row fade" id="pills-poc-nobd" role="tabpanel"
+                                                            aria-labelledby="pills-poc-tab-nobd"
+                                                            style="display: flex !important;">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="form-group">
+                                                                        <div class="input-group">
+                                                                            <label for="poc" style="width: 12em;">Proof
+                                                                                of concept</label>
+                                                                            <input type="file" id="poc"
+                                                                                class="form-control-file"
+                                                                                accept="image/png, image/jpg, image/jpeg" />
+                                                                            <button id="add_poc" class="btn btn-primary"
+                                                                                onclick="add_poc()">Add</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" id="poc_display">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <!-- Modal in full screen -->
-                                    <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog"
-                                        aria-labelledby="addRowModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document" style="max-width: 100%; margin: 2%;">
-                                            <div class="modal-content" style="background-color: #1a2035;">
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <div class="d-flex align-items-center">
-                                                            <h4 class="card-title" id="vuln_title"
-                                                                style="margin-left: auto; margin-right: auto;">Add new
-                                                                vulnerability</h4>
-                                                            <button id="import_vuln" type="button" class="btn btn-icon btn-link" onclick="import_vuln()" onmouseover="this.style.color='#1572e8'" onmouseleave="this.style.color='white'" style="margin-right: 2px; color: white;" data-toggle="tooltip" data-placement="top" title="Import vulnerability">
-                                                                <i class="fas fa-file-import"></i>
-                                                            </button>
-                                                            <button type="button" class="btn btn-icon btn-link" onclick="export_vuln()" onmouseover="this.style.color='#1572e8'" onmouseleave="this.style.color='white'" style="margin-right: 2%; color: white;" data-toggle="tooltip" data-placement="top" title="Export vulnerability">
-                                                                <i class="fas fa-file-export"></i>
-                                                            
-                                                            </button>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                                <span aria-hidden="true">×</span>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <ul class="nav nav-pills nav-secondary nav-pills-no-bd" id="pills-tab-without-border" role="tablist">
-                                                            <li class="nav-item submenu">
-                                                                <a class="nav-link active show" id="pills-home-tab-nobd" data-toggle="pill" href="#pills-issue-nobd" role="tab" aria-controls="pills-home-nobd" aria-selected="true" onclick="display_issue()">Issue</a>
-                                                            </li>
-                                                            <li class="nav-item submenu" id="poc_menu" style="display: none;">
-                                                                <a class="nav-link" id="pills-profile-tab-nobd" data-toggle="pill" href="#pills-poc-nobd" role="tab" aria-controls="pills-profile-nobd" aria-selected="false" onclick="display_poc()">POC</a>
-                                                            </li>
-                                                        </ul>
-                                                        <div class="tab-content">
-                                                            <div class="row fade active show" id="pills-issue-nobd" role="tabpanel" aria-labelledby="pills-issue-tab-nobd" style="display: flex !important;">
-                                                                <div class="col-md-6">
-                                                                    <div class="card">
-                                                                        <div class="card-body" id="fiche_control">
-                                                                            <div class="row">
-                                                                                <div class="form-group"
-                                                                                    style="width: 100%;">
-                                                                                    <div class="input-group">
-                                                                                        <h3 class="input-group-text"
-                                                                                            style="width: 12em;">
-                                                                                            Vulnerability name</h3>
-                                                                                        <input type="text" id="name"
-                                                                                            class="form-control"
-                                                                                            onkeyup="fill_vuln()" />
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="form-group"
-                                                                                    style="width: 100%;">
-                                                                                    <div class="input-group">
-                                                                                        <h3 class="input-group-text"
-                                                                                            style="width: 12em;">Description
-                                                                                        </h3>
-                                                                                        <textarea class="form-control scroll"
-                                                                                            id="description"
-                                                                                            style="height: fit-content; min-height: 10em;"
-                                                                                            oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
-                                                                                        </textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="form-group"
-                                                                                    style="width: 100%;">
-                                                                                    <div class="input-group">
-                                                                                        <h3 class="input-group-text"
-                                                                                            style="width: 12em;">Steps to
-                                                                                            reproduce</h3>
-                                                                                        <textarea class="form-control scroll"
-                                                                                            id="step"
-                                                                                            style="height: fit-content; min-height: 10em;"
-                                                                                            oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
-                                                                                        </textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="form-group"
-                                                                                    style="width: 100%;">
-                                                                                    <div class="input-group">
-                                                                                        <h3 class="input-group-text"
-                                                                                            style="width: 12em;">Impact</h3>
-                                                                                        <textarea class="form-control scroll"
-                                                                                            id="impacts"
-                                                                                            style="height: fit-content; min-height: 6em;"
-                                                                                            oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
-                                                                                        </textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row mt-3 mb-3">
-                                                                                <div id="cvssboard" style="color: black;">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row">
-                                                                                <div class="form-group"
-                                                                                    style="width: 100%;">
-                                                                                    <div class="input-group">
-                                                                                        <h3 class="input-group-text"
-                                                                                            style="width: 12em;">
-                                                                                            Recommandations
-                                                                                        </h3>
-                                                                                        <textarea class="form-control scroll"
-                                                                                            id="recommandation"
-                                                                                            style="height: fit-content; min-height: 6em;"
-                                                                                            oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
-                                                                                        </textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="card-body"
-                                                                        style="border-left: solid; border-left-color: #6c7ae0; padding-left: 1%; padding-top: 0; padding-bottom: 0;"
-                                                                        id="fiche">
-                                                                        <h2 style="text-transform: uppercase; text-decoration: underline; color: #6c7ae0;"
-                                                                            id="vuln_name">Vulnerability name</h2>
-                                                                        <h5 id="description_title"
-                                                                            style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
-                                                                            Description :</h5>
-                                                                        <p id="vuln_description"></p>
-                                                                        <h5 id="step_title"
-                                                                            style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
-                                                                            Steps to reproduce :</h5>
-                                                                        <p id="vuln_step"></p>
-                                                                        <h5 id="impact_title"
-                                                                            style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
-                                                                            Impact :</h5>
-                                                                        <p id="vuln_impacts"></p>
-                                                                        <h5 id="evaluation_title"
-                                                                            style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
-                                                                            Risk evaluation :</h5>
-                                                                        <div id="metrics">
-                                                                            <table class="table" id="metricsTable">
-                                                                                <tr>
-                                                                                    <th id="exploitability_table">
-                                                                                        Exploitability</th>
-                                                                                    <th id="impact_table">Impact</th>
-                                                                                    <th id="risk_table">Risk</th>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td id="exploitability">0</td>
-                                                                                    <td id="impact">0</td>
-                                                                                    <td id="risk">0</td>
-                                                                                </tr>
-                                                                            </table>
-                                                                        </div>
-                                                                        <h5 id="cvss_title"
-                                                                            style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
-                                                                            CVSS 3.1 evaluation :</h5>
-                                                                        <div class="center-box">
-                                                                            <div id="chartjs-radar">
-                                                                                <canvas id="canvas">
-                                                                                </canvas>
-                                                                            </div>
-                                                                        </div>
-                                                                        <h5 id="recommandation_title"
-                                                                            style="text-transform: uppercase; color: #6c7ae0; margin-bottom: 0;">
-                                                                            Recommandations :</h5>
-                                                                        <p id="vuln_recommandation"></p>
-                                                                    </div>
-                                                                    <div class="center-box">
-                                                                        <button class="btn btn-danger download"
-                                                                            style="width:160px" data-dismiss="modal"
-                                                                            aria-label="Close">Cancel</button>
-                                                                        <button class="btn btn-primary copy" id="save"
-                                                                            onclick="save()"
-                                                                            style="width:160px">Validate</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row fade" id="pills-poc-nobd" role="tabpanel" aria-labelledby="pills-poc-tab-nobd" style="display: flex !important;">
-                                                                <div class="col-md-12">
-                                                                    <div class="row">
-                                                                        <div class="form-group">
-                                                                            <div class="input-group">
-                                                                                <label for="poc" style="width: 12em;">Proof of concept</label>
-                                                                                <input type="file" id="poc" class="form-control-file" accept="image/png, image/jpg, image/jpeg"/>
-                                                                                <button id="add_poc" class="btn btn-primary" onclick="add_poc()">Add</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row" id="poc_display">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                <!-- End Modal in full screen -->
+                                <div class="table-responsive">
+                                    <div id="add-row_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table id="add-row"
+                                                    class="display table table-striped table-hover dataTable"
+                                                    role="grid" aria-describedby="add-row_info">
+                                                    <thead>
+                                                        <tr role="row">
+                                                            <th>ID</th>
+                                                            <th>Name</th>
+                                                            <th>Description</th>
+                                                            <th>CVSS Score</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- End Modal in full screen -->
-                                    <div class="table-responsive">
-                                        <div id="add-row_wrapper"
-                                            class="dataTables_wrapper container-fluid dt-bootstrap4">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <table id="add-row"
-                                                        class="display table table-striped table-hover dataTable"
-                                                        role="grid" aria-describedby="add-row_info">
-                                                        <thead>
-                                                            <tr role="row">
-                                                                <th>ID</th>
-                                                                <th>Name</th>
-                                                                <th>Description</th>
-                                                                <th>CVSS Score</th>
-                                                                <th>Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="center-box">
-                                        <button class="btn btn-primary" onclick="generateDocx()">Generate Docx</button>
+                                </div>
+                                <div class="center-box">
+                                    <button class="btn btn-primary" onclick="generateDocx()">Generate Docx</button>
                                 </div>
                             </div>
                         </div>
@@ -765,7 +797,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </body>
 
 <script>
@@ -811,7 +842,7 @@
                     const div = document.createElement('div');
                     const img = document.createElement('img');
                     const delete_button = document.createElement('button');
-                    
+
                     delete_button.innerHTML = "Delete";
                     delete_button.setAttribute("onclick", "delete_poc(" + vuln.id + ", " + i + ")");
                     delete_button.style.marginLeft = "auto";
@@ -826,12 +857,12 @@
                         img.style.width = "-moz-available";
                     }
                     else {
-                        img.style.width = "-webkit-fill-available";  
-                    }                 
+                        img.style.width = "-webkit-fill-available";
+                    }
                     //img.style.height = "auto";
                     img.style.marginBottom = "1%";
                     img.style.marginLeft = "1em";
-                    
+
                     div.style.width = "24%";
                     div.style.marginBottom = "1%";
 
@@ -844,7 +875,7 @@
     }
 
     function readFileAsBase64(file) {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             var reader = new FileReader();
 
             reader.onload = function (e) {
@@ -876,7 +907,7 @@
 
         if (poc.files.length > 0) {
             var file = poc.files[0];
-            readFileAsBase64(file).then(function(result) {
+            readFileAsBase64(file).then(function (result) {
                 if (vuln.poc === undefined) {
                     vuln.poc = [];
                 }
@@ -884,7 +915,7 @@
                 list_vuln[list_vuln.findIndex(vuln => vuln.id === parseInt(id))] = vuln;
                 localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
                 display_poc(id);
-            }).catch(function(error) {
+            }).catch(function (error) {
                 swal({
                     title: "Error",
                     text: "An error occured while reading the file",
@@ -906,15 +937,15 @@
             buttons: true,
             dangerMode: true,
         })
-        .then((willDelete) => {
-            if (willDelete) {
-                const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
-                const vuln = list_vuln.find(vuln => vuln.id === id);
-                vuln.poc.splice(index, 1);
-                list_vuln[list_vuln.findIndex(vuln => vuln.id === id)] = vuln;
-                localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
-                display_poc(id);
-                new Notify({
+            .then((willDelete) => {
+                if (willDelete) {
+                    const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+                    const vuln = list_vuln.find(vuln => vuln.id === id);
+                    vuln.poc.splice(index, 1);
+                    list_vuln[list_vuln.findIndex(vuln => vuln.id === id)] = vuln;
+                    localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
+                    display_poc(id);
+                    new Notify({
                         status: 'success',
                         title: 'POC deleted',
                         text: '',
@@ -931,8 +962,8 @@
                         type: 1,
                         position: 'top right'
                     });
-            }
-        });
+                }
+            });
     }
 
     function clean() {
@@ -1018,7 +1049,7 @@
         document.getElementById("add_poc").setAttribute("onclick", "add_poc(" + id + ")");
         document.getElementById("poc_menu").style.display = "block";
         document.getElementById("pills-profile-tab-nobd").setAttribute("onclick", "display_poc(" + id + ")");
-                    
+
         document.getElementById("name").value = vuln.name;
         document.getElementById("vuln_name").innerHTML = vuln.name;
         document.getElementById("vuln_description").innerHTML = vuln.description.replace(/\n\r?/g, "<br>");
@@ -1047,8 +1078,7 @@
 
     function addSelect(list_vuln, vuln_id) {
         // if the select doesn't exist, add it
-        if (document.getElementById("id") === null)
-        {
+        if (document.getElementById("id") === null) {
             var fiche_control = document.getElementById("fiche_control");
             var div = document.createElement("div");
             div.className = "row";
@@ -1111,8 +1141,7 @@
     function setProject() {
         var project = document.getElementById("project_name").value;
         localStorage.setItem('project_name', project);
-        if (project !== "")
-        {
+        if (project !== "") {
             document.getElementById("title").innerHTML = project;
         } else {
             document.getElementById("title").innerHTML = "Project";
@@ -1135,7 +1164,7 @@
         if (id === undefined) {
             const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
             id = list_vuln.reduce((max, vuln) => vuln.id > max ? vuln.id : max, 0);
-            
+
             const vuln = {
                 id: id + 1,
                 name: document.getElementById("name").value,
@@ -1185,7 +1214,7 @@
                 vuln.id = new_id;
                 vulnToChange.id = id;
                 list_vuln.sort((a, b) => a.id - b.id);
-                localStorage.setItem('list_vuln', JSON.stringify(list_vuln));              
+                localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
             }
 
             var a = document.createElement("a");
@@ -1326,7 +1355,7 @@
         });
         list_vuln.forEach(vuln => {
             doc.addSection({
-                properties: {type: docx.SectionType.CONTINUOUS, },
+                properties: { type: docx.SectionType.CONTINUOUS, },
                 children: [
                     new docx.Paragraph({
                         children: [
@@ -1346,7 +1375,7 @@
                             ),
                             new docx.TextRun(
                                 {
-                                    text: " ➔ " 
+                                    text: " ➔ "
                                 }
                             ),
                             new docx.TextRun(
@@ -1394,7 +1423,7 @@
             })
             for (let i = 0; i < vuln.poc.length; i++) {
                 doc.addSection({
-                    properties: {type: docx.SectionType.CONTINUOUS,},
+                    properties: { type: docx.SectionType.CONTINUOUS, },
                     children: [
                         new docx.Paragraph({
                             children: [
@@ -1851,7 +1880,7 @@
                 document.getElementById("exploitability").innerHTML = data.exploitability;
                 document.getElementById("impact").innerHTML = data.impact;
                 document.getElementById("risk").innerHTML = data.risk;
-                
+
                 //Add <select> to choose the fiche_control content
                 addSelect(list_vuln, id);
             }
