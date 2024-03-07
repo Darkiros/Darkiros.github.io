@@ -1288,7 +1288,34 @@
         a.click();
     }
 
-    function generateDocx() {
+    async function generateDocx() {
+
+        if (localStorage.getItem('project_name') === null || localStorage.getItem('project_name') === ""){
+            new Notify({
+                status: 'error',
+                title: 'Project name missing',
+                text: 'Please enter a project name before generating the report',
+                effect: 'fade',
+                speed: 300,
+                customClass: '',
+                customIcon: '',
+                showIcon: true,
+                showCloseButton: true,
+                autoclose: true,
+                autotimeout: 1500,
+                gap: 20,
+                distance: 20,
+                type: 1,
+                position: 'top right'
+            });
+            // make the project name input red during 1.5s
+            document.getElementById("project_name").style.borderColor = "red";
+            setTimeout(() => {
+                document.getElementById("project_name").style.borderColor = "";
+            }, 1500);
+            return;
+        }
+
 
         const risk_color = {
             "Minor": "A2D572",
@@ -1835,7 +1862,6 @@
                             }),
                         ],
                     }),
-
                 ],
             });
         });
