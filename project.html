@@ -1338,6 +1338,18 @@
 
         const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
         var doc = new docx.Document({
+            styles: {
+                default: {
+                    document: {
+                        run: {
+                            font: "Arial",
+                        },
+                        paragraph: {
+                            font: "Arial",
+                        },
+                    }
+                }
+            },
             sections: [{
                 properties: {
                     type: docx.SectionType.CONTINUOUS,
@@ -1368,18 +1380,92 @@
                         heading: docx.HeadingLevel.TITLE,
                         alignment: docx.AlignmentType.CENTER,
                     }),
+                    new docx.Paragraph({}),
                     new docx.Paragraph({
                         children: [
                             new docx.TextRun(
                                 {
-                                    text: "Vulnerability list : ",
-                                    break: 1,
+                                    text: "Executive summary: ",
                                 }),
                         ],
-                        heading: docx.HeadingLevel.HEADING_3,
+                        heading: docx.HeadingLevel.HEADING_1,
                     }),
+                    new docx.Paragraph({
+                        children: [
+                            new docx.TextRun(
+                                {
+                                    text: "The pentest of " + localStorage.getItem('project_name') + " has been conducted by the security team. The following report contains the list of vulnerabilities found during the pentest, their description, their risk evaluation and the steps to reproduce them. The report also contains the proof of concept of each vulnerability.",
+                                break: 1
+                            }),
+                            new docx.TextRun(
+                                {
+                                    text: "The audit consists of " + list_vuln.length + " vulnerabilities, including " + list_vuln.filter(vuln => vuln.score >= 7).length + " vulnerabilities with a risk greater than or equal to high. The vulnerabilities are classified according to their risk score.",
+                                    break: 1
+                            }),
+                        ],
+                    }),
+                    new docx.Paragraph({}),
                 ],
             }],
+        });
+        // add the list of vuln >= high
+        list_vuln.forEach(vuln => {
+            if (vuln.score >= 7) {
+                doc.addSection({
+                    properties: { type: docx.SectionType.CONTINUOUS, },
+                    children: [
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun(
+                                    {
+                                        text: vuln.name,
+                                        underline: {},
+                                        allCaps: true,
+                                        color: "#6c7ae0"
+                                    }
+                                ),
+                                new docx.TextRun(
+                                    {
+                                        text: " " + vuln.score,
+                                        color: risk_color[vuln.risk.split(" ")[0]],
+                                    }
+                                ),
+                                new docx.TextRun(
+                                    {
+                                        text: " ➔ "
+                                    }
+                                ),
+                                new docx.TextRun(
+                                    {
+                                        text: vuln.risk,
+                                        color: risk_color[vuln.risk.split(" ")[0]],
+                                    }
+                                ),
+                            ],
+                            anchor: vuln.name,
+                            bullet: {
+                                level: 0
+                            }
+                        })
+                    ]
+                });
+            }
+        });
+        doc.addSection({
+            properties: { type: docx.SectionType.CONTINUOUS, },
+            children: [
+                new docx.Paragraph({}),
+                new docx.Paragraph({
+                    children: [
+                        new docx.TextRun(
+                            {
+                                text: "Vulnerability summary: ",
+                            }),
+                    ],
+                    heading: docx.HeadingLevel.HEADING_1,
+                }),
+                new docx.Paragraph({}),
+            ]
         });
         list_vuln.forEach(vuln => {
             doc.addSection({
@@ -1421,6 +1507,15 @@
                 ]
             });
         });
+        doc.addSection({
+            properties: {},
+            children: [
+                new docx.TableOfContents("Table of Contents", {
+                    hyperlink: true,
+                    headingStyleRange: "1-3",
+                }),
+            ]
+        });
         /*list_vuln.forEach(vuln => {
             doc.addSection({
                 properties: {},
@@ -1440,15 +1535,41 @@
             })
         })*/
         list_vuln.forEach(vuln => {
-            doc.addSection({
-                properties: {},
-                children: [
-                    new docx.Paragraph({
-                        text: vuln.name,
-                        heading: docx.HeadingLevel.HEADING_1,
-                    })
-                ]
-            })
+            if (vuln.id == 1) {
+                doc.addSection({
+                    properties: {},
+                    children: [
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun(
+                                    {
+                                        text: "Vulnerability list : ",
+                                    }),
+                            ],
+                            heading: docx.HeadingLevel.HEADING_1,
+                        }),
+                    ]
+                })
+                doc.addSection({
+                    properties: {type: docx.SectionType.CONTINUOUS, },
+                    children: [
+                        new docx.Paragraph({
+                            text: vuln.name,
+                            heading: docx.HeadingLevel.HEADING_2,
+                        })
+                    ]
+                })
+            } else {
+                doc.addSection({
+                    properties: {},
+                    children: [
+                        new docx.Paragraph({
+                            text: vuln.name,
+                            heading: docx.HeadingLevel.HEADING_2,
+                        })
+                    ]
+                })
+            }
             for (let i = 0; i < vuln.poc.length; i++) {
                 doc.addSection({
                     properties: { type: docx.SectionType.CONTINUOUS, },
@@ -1864,6 +1985,86 @@
                     }),
                 ],
             });
+        });
+        const sub_metrics = await fetch('./assets/images/sub_metrics.png').then(response => response.blob()).then(blob => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        });
+        const resulting_risk = await fetch('./assets/images/resulting_risk.png').then(response => response.blob()).then(blob => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        });
+        doc.addSection({
+            properties: {},
+            children: [
+                new docx.Paragraph({
+                    text: "Risk ratings:",
+                    heading: docx.HeadingLevel.HEADING_1
+                }),
+                new docx.Paragraph({
+                    text: "Sub metrics ",
+                    heading: docx.HeadingLevel.HEADING_2,
+                }),
+                new docx.Paragraph({
+                    children: [
+                        new docx.ImageRun({
+                            data: sub_metrics,
+                            transformation: {
+                                width: 635,
+                                height: 438,
+                            },
+                        }),
+                    ],
+                    alignment: docx.AlignmentType.CENTER,
+                }),
+                new docx.Paragraph({
+                    text: "Resulting risk ",
+                    heading: docx.HeadingLevel.HEADING_2,
+                }),
+                new docx.Paragraph({
+                    children: [
+                        new docx.ImageRun({             
+                            data: resulting_risk,
+                            transformation: {
+                                width: 567,
+                                height: 262
+                            }
+                        }),
+                    ],
+                    alignment: docx.AlignmentType.CENTER,
+                }),
+            ]
+        });
+        doc.addSection({
+            properties: {},
+            children: [
+                new docx.Paragraph({
+                    text: "CVSS V3 Ratings",
+                    heading: docx.HeadingLevel.HEADING_1,
+                }),
+                new docx.Paragraph({
+                    children: [
+                        new docx.TextRun(
+                        {
+                            text: "CVSS v3 is the third version of the Common Vulnerability Scoring System developed by the Forum of Incident Response Security Teams.",
+                            break: 1,
+                        }),
+                        new docx.TextRun(
+                        {
+                            text: "Specification can be read on: https://www.first.org/cvss/specification-document",
+                            break: 1,
+                        }),
+                    ],
+                }),
+            ],
         });
         docx.Packer.toBlob(doc).then(blob => {
             if (localStorage.getItem('project_name')) {
