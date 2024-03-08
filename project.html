@@ -872,6 +872,48 @@
             </div>
             `
         ]);
+        // add attribute to the row
+        var rows = document.getElementById("add-row").rows;
+        rows[rows.length - 1].setAttribute("draggable", "true");
+        rows[rows.length - 1].setAttribute("ondragstart", "start()");
+        rows[rows.length - 1].setAttribute("ondragover", "dragover()");
+    }
+
+    var row;
+
+    function start(){  
+        row = event.target; 
+    }
+    
+    function dragover(){
+        var e = event;
+        var list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+        e.preventDefault(); 
+        
+        let children= Array.from(e.target.parentNode.parentNode.children);
+        
+        if(children.indexOf(e.target.parentNode)>children.indexOf(row)) {
+            e.target.parentNode.after(row);
+        } else {
+            e.target.parentNode.before(row);
+        }
+
+        // Change the order of the vulnerabilities in the local storage to fit with the new order
+        var new_list_vuln = [];
+        children = Array.from(e.target.parentNode.parentNode.children);
+        children.forEach(child => {
+            var id = parseInt(child.cells[0].innerHTML);
+            new_list_vuln.push(list_vuln.find(vuln => vuln.id === id));
+        });
+        // Modify the id based on its position in the table
+        for (let i = 0; i < new_list_vuln.length; i++) {
+            new_list_vuln[i].id = i + 1;
+        }
+        // Update the id in the table
+        for (let i = 0; i < new_list_vuln.length; i++) {
+            children[i].cells[0].innerHTML = i + 1;
+        }
+        localStorage.setItem('list_vuln', JSON.stringify(new_list_vuln));
     }
 
     function validateDate(){
