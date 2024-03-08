@@ -165,6 +165,29 @@
             else {
                 localStorage.setItem('list_vuln', JSON.stringify([]));
             }
+
+            if (localStorage.getItem('pentester')) {
+                document.getElementById('pentester').value = localStorage.getItem('pentester');
+            }
+            else {
+                localStorage.setItem('pentester', "");
+            }
+
+            if (localStorage.getItem('dateFrom')) {
+                document.getElementById('dateFrom').value = localStorage.getItem('dateFrom');
+            }
+            else {
+                document.getElementById('dateFrom').value = new Date().toISOString().split('T')[0];
+                localStorage.setItem('dateFrom', document.getElementById('dateFrom').value);
+            }
+
+            if (localStorage.getItem('dateTo')) {
+                document.getElementById('dateTo').value = localStorage.getItem('dateTo');
+            }
+            else {
+                document.getElementById('dateTo').value = new Date().toISOString().split('T')[0];
+                localStorage.setItem('dateTo', document.getElementById('dateTo').value);
+            }
         };
 
         var colorNames = Object.keys(window.chartColors);
@@ -465,11 +488,39 @@
             <div class="page-inner">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="input-group mb-3">
-                            <h3 class="input-group-text" style="width: 12em;">Project name</h3>
-                            <input type="text" id="project_name" class="form-control" />
-                            <button class="btn btn-primary" style="position: relative; right: 0;"
-                                onclick="setProject()">Save</button>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="input-group mb-3">
+                                            <h3 class="input-group-text" style="width: 12em;">Project name</h3>
+                                            <input type="text" id="project_name" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <h3 class="input-group-text" style="width: 12em;">Pentester</h3>
+                                            <input type="text" id="pentester" class="form-control" />
+                                        </div>  
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <h3 class="input-group-text" style="width: 12em;">From</h3>
+                                                    <input type="date" id="dateFrom" class="form-control" onchange="validateDate()"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <h3 class="input-group-text" style="width: 12em;">To</h3>
+                                                    <input type="date" id="dateTo" class="form-control" onchange="validateDate()"/>
+                                                </div>
+                                            </div>
+                                        </div>  
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="card">
                             <div class="card-header">
@@ -481,7 +532,7 @@
                                             data-placement="top" title="Import vulnerability"><i
                                                 class="fas fa-file-import"></i></button>
                                         <button class="btn btn-round" onclick="exporter()"
-                                            style="position: relative; right: 9%;" data-toggle="tooltip"
+                                            style="position: relative; right: 8%;" data-toggle="tooltip"
                                             data-placement="top" title="Export vulnerability"><i
                                                 class="fas fa-file-export"></i></button>
                                         <button class="btn btn-primary btn-round" data-toggle="modal"
@@ -823,6 +874,23 @@
         ]);
     }
 
+    function validateDate(){
+        const dateFrom = document.getElementById('dateFrom').value;
+        const dateTo = document.getElementById('dateTo').value;
+        if (dateFrom > dateTo){
+            swal({
+                title: "Error",
+                text: "The end date must be after the start date",
+                icon: "error",
+                button: "Ok",
+            });
+            document.getElementById('dateTo').value = "";
+        }
+
+        localStorage.setItem('dateFrom', dateFrom);
+        localStorage.setItem('dateTo', dateTo);
+    }
+
     function display_issue() {
         document.getElementById('pills-issue-nobd').style.display = "flex";
         document.getElementById('pills-poc-nobd').style.display = "none";
@@ -1138,16 +1206,6 @@
         }
     }
 
-    function setProject() {
-        var project = document.getElementById("project_name").value;
-        localStorage.setItem('project_name', project);
-        if (project !== "") {
-            document.getElementById("title").innerHTML = project;
-        } else {
-            document.getElementById("title").innerHTML = "Project";
-        }
-    }
-
     async function save(id) {
         // Change text color of content of description steps impacts recommandations in black
         // to avoid the color change when saving
@@ -1291,31 +1349,25 @@
     async function generateDocx() {
 
         if (localStorage.getItem('project_name') === null || localStorage.getItem('project_name') === ""){
-            new Notify({
-                status: 'error',
-                title: 'Project name missing',
-                text: 'Please enter a project name before generating the report',
-                effect: 'fade',
-                speed: 300,
-                customClass: '',
-                customIcon: '',
-                showIcon: true,
-                showCloseButton: true,
-                autoclose: true,
-                autotimeout: 1500,
-                gap: 20,
-                distance: 20,
-                type: 1,
-                position: 'top right'
-            });
-            // make the project name input red during 1.5s
-            document.getElementById("project_name").style.borderColor = "red";
-            setTimeout(() => {
-                document.getElementById("project_name").style.borderColor = "";
-            }, 1500);
-            return;
+            localStorage.setItem('project_name', "Project");
+            document.getElementById("project_name").value = "Project";
+            docuement.getElementById("title").innerHTML = "Project";
         }
 
+        if (localStorage.getItem('dateFrom') === null || localStorage.getItem('dateFrom') === ""){
+            localStorage.setItem('dateFrom', new Date().toISOString().split('T')[0]);
+            document.getElementById("dateFrom").value = new Date().toISOString().split('T')[0];
+        }
+
+        if (localStorage.getItem('dateTo') === null || localStorage.getItem('dateTo') === ""){
+            localStorage.setItem('dateTo', new Date().toISOString().split('T')[0]);
+            document.getElementById("dateTo").value = new Date().toISOString().split('T')[0];
+        }
+
+        if (localStorage.getItem('pentester') === null || localStorage.getItem('pentester') === ""){
+            localStorage.setItem('pentester', "Pentester");
+            document.getElementById("pentester").value = "Pentester";
+        }
 
         const risk_color = {
             "Minor": "A2D572",
@@ -1360,7 +1412,7 @@
                             new docx.Paragraph({
                                 alignment: docx.AlignmentType.CENTER,
                                 children: [
-                                    new docx.TextRun("Pentest of " + localStorage.getItem('project_name')),
+                                    new docx.TextRun("Pentest report of " + localStorage.getItem('project_name')),
                                     new docx.TextRun({
                                         children: [" Page ", docx.PageNumber.CURRENT],
                                     }),
@@ -1394,7 +1446,7 @@
                         children: [
                             new docx.TextRun(
                                 {
-                                    text: "The pentest of " + localStorage.getItem('project_name') + " has been conducted by the security team. The following report contains the list of vulnerabilities found during the pentest, their description, their risk evaluation and the steps to reproduce them. The report also contains the proof of concept of each vulnerability.",
+                                    text: "The pentest of " + localStorage.getItem('project_name') + " has been conducted by the security team from " + localStorage.getItem('dateFrom') + " to " + localStorage.getItem('dateTo') +". The following report contains the list of vulnerabilities found during the pentest, their description, their risk evaluation and the steps to reproduce them. The report also contains the proof of concept of each vulnerability.",
                                 break: 1
                             }),
                             new docx.TextRun(
@@ -2184,6 +2236,8 @@
     var description = document.getElementById("description");
     var impacts = document.getElementById("impacts");
     var recommandation = document.getElementById("recommandation");
+    var project_name = document.getElementById("project_name");
+    var pentester = document.getElementById("pentester");
 
 
     function listener_step(evt) {
@@ -2215,10 +2269,25 @@
         vuln_recommandation.innerHTML = this.value.replace(/\n\r?/g, "<br>");
     }
 
+    function listener_project_name(evt) {
+        var title = document.getElementById("title");
+        title.innerHTML = this.value;
+        if (this.value == "") {
+            title.innerHTML = "Project";
+        }
+        localStorage.setItem('project_name', this.value);
+    }
+
+    function listener_pentester(evt) {
+        localStorage.setItem('pentester', this.value);
+    }
+
     step.addEventListener("keyup", listener_step, false);
     description.addEventListener("keyup", listener_description, false);
     impacts.addEventListener("keyup", listener_impacts, false);
     recommandation.addEventListener("keyup", listener_recommandation, false);
+    project_name.addEventListener("keyup", listener_project_name, false);
+    pentester.addEventListener("keyup", listener_pentester, false);
 
     var roundUp1 = function Roundup(input) {
         var int_input = Math.round(input * 100000);
