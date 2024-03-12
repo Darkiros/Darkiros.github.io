@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8">
+    <title>Pentest Helper - Command list</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+    <script src="https://cdn.jsdelivr.net/gh/cvssjs/cvssjs/cvss.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+    <script src="./assets/js/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src=https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js></script>
+
+
+    <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+    <script src="./assets/js/html2canvas.min.js"></script>
+
+
+    <!-- Fonts and icons -->
+    <script src="./assets/js/plugin/webfont/webfont.min.js"></script>
+    <link rel="icon" href="./assets/images/icon.ico" type="image/x-icon" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <!-- List of cheat sheet -->
+    <script src="./assets/js/cheatSheet.js"></script>
+    <script>
+        WebFont.load({
+            google: { families: ["Lato:300,400,700,900"] },
+            custom: {
+                families: [
+                    "Flaticon",
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["./assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+        
+        window.onload = function () {
+            data.forEach(element => {
+                $("#add-row").dataTable().fnAddData([
+                    element.category,
+                    element.tool,
+                    element.information,
+                    element.command,
+                    `
+                    <div class="form-button-action">
+                        <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                            data-original-title="Open command" onclick="open(${element.id})">
+                            <i class="fas fa-eye
+                            "></i>
+                        </button>
+                        <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-success"
+                            data-original-title="Copy command">
+                            <i class="fas fa-copy" onclick="copy(${element.id})"></i>
+                        </button>
+                    </div>
+                    `
+                ]);
+            });
+            //order by sub category
+            $('#add-row').DataTable().order([1, 'asc']).draw();
+        }
+
+    </script>
+
+    <style>
+        th {
+            color: white;
+        }
+
+        .scroll {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .parameters {
+            margin-top: 1em;
+        }
+
+        .scroll {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            margin: auto;
+            width: 300px !important;
+            height: 300px !important;
+        }
+
+        #cvssboard {
+            text-align: center;
+        }
+
+        #chartjs-tooltip {
+            opacity: 1;
+            position: absolute;
+            background: rgba(0, 0, 0, .7);
+            color: white;
+            border-radius: 3px;
+            -webkit-transition: all .1s ease;
+            transition: all .1s ease;
+            pointer-events: none;
+            -webkit-transform: translate(-50%, 0);
+            transform: translate(-50%, 0);
+        }
+
+        #chartjs-radar {
+            margin-top: 2%;
+            display: inline-flex;
+            margin: auto;
+            text-align: center;
+        }
+
+        #vuln_pres {
+            margin: auto;
+            text-align: center;
+        }
+
+        .chartjs-tooltip-key {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin-right: 10px;
+        }
+
+        .download,
+        .copy,
+        .exporter,
+        .importer {
+            margin-left: 3%;
+            background-color: transparent;
+            border: none;
+            height: fit-content;
+            margin-top: 1em;
+            margin-bottom: auto;
+            color: white;
+        }
+
+        .exporter,
+        .importer {
+            margin-top: 1em;
+        }
+
+        .download:hover,
+        .copy:hover,
+        .exporter:hover,
+        .importer:hover {
+            cursor: pointer;
+            color: blue;
+        }
+
+        .center-box {
+            margin: auto;
+            text-align: center;
+        }
+
+        #metricsTable {
+            margin: auto;
+            border-collapse: collapse;
+        }
+
+        #metricsTable th {
+            padding: 5px;
+            color: white;
+            background-color: #6c7ae0;
+            text-align: center;
+            height: 3em;
+        }
+
+        #metricsTable td {
+            padding: 5px;
+            text-align: center;
+            background-color: whitesmoke;
+            font-weight: bold;
+            height: 3em;
+        }
+
+        dd>label {
+            color: black !important;
+        }
+    </style>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./assets/css/atlantis.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="https://cdn.jsdelivr.net/gh/cvssjs/cvssjs/cvss.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
+    <link rel="stylesheet" href="./assets/css/toggle.css" />
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+</head>
+
+
+<body data-background-color="dark">
+    <div class="wrapper">
+        <div class="main-header">
+            <!-- Logo Header -->
+            <div class="logo-header" data-background-color="dark2">
+                <a href="./index.html" class="logo">
+                    <img src="./assets/images/logo.png" alt="navbar brand" class="navbar-brand" width="70px" />
+                </a>
+                <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse"
+                    data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon">
+                        <i class="icon-menu"></i>
+                    </span>
+                </button>
+                <button class="topbar-toggler more">
+                    <i class="icon-options-vertical"></i>
+                </button>
+                <div class="nav-toggle">
+                    <button class="btn btn-toggle toggle-sidebar">
+                        <i class="icon-menu"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- End Logo Header -->
+
+            <!-- Navbar Header -->
+            <nav class="navbar navbar-header navbar-expand-lg" data-background-color="dark">
+                <div class="container-fluid">
+
+                    <div style="margin-left: auto; color: white;">
+                        <h2 class="text-center" id="title">Cheat sheet</h1>
+                    </div>
+
+                    <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+                        <li class="nav-item hidden-caret">
+                            <a class="github-button" href="https://github.com/Darkiros/Darkiros.github.io"
+                                data-color-scheme="no-preference: dark; light: light; dark: dark;"
+                                data-show-count="true" data-icon="octicon-star" data-size="large"
+                                aria-label="Star Darkiros/Darkiros.github.io on GitHub">
+                                Star
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown hidden-caret">
+                            <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#"
+                                aria-expanded="false">
+                                <div class="avatar-sm">
+                                    <img src="./assets/images/Darkiros.jpg" alt="..."
+                                        class="avatar-img rounded-circle" />
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user animated fadeIn">
+                                <div class="dropdown-user-scroll scrollbar-outer">
+                                    <li>
+                                        <div class="user-box">
+                                            <div class="avatar-lg ml-auto mr-auto">
+                                                <img src="./assets/images/Darkiros.jpg" alt="image profile"
+                                                    class="avatar-img rounded" />
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="https://github.com/Darkiros" target="_blank"
+                                            rel="noopener noreferrer">
+                                            <div class="avatar-sm ml-auto mr-auto">
+                                                <img src="./assets/images/github.png" alt="Github Darkiros"
+                                                    class="avatar-img rounded-circle">
+                                            </div>
+                                        </a>
+                                        <p class="text-center dropdown-header">Made by Darkiros</p>
+                                    </li>
+                                </div>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- End Navbar -->
+        </div>
+
+        <div class="sidebar sidebar-style-2" data-background-color="dark2">
+            <div class="sidebar-wrapper scrollbar scrollbar-inner">
+                <div class="sidebar-content">
+                    <ul class="nav nav-primary">
+                        <li class="nav-item">
+                            <a href="./index.html">
+                                <i class="fas fa-home"></i>
+                                <p>Home</p>
+                            </a>
+                        </li>
+                        <li class="nav-section">
+                            <span class="sidebar-mini-icon">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </span>
+                        </li>
+                        <li class="nav-item active submenu">
+                            <a data-toggle="collapse" href="#sheet" aria-expanded="true">
+                              <i class="fas fa-book"></i>
+                              <p>Cheat sheet</p>
+                              <span class="caret"></span>
+                            </a>
+                            <div class="collapse show" id="sheet">
+                              <ul class="nav nav-collapse ">
+                                <li class="active">
+                                  <a href="./commands.html">
+                                    <span class="sub-item">Command list</span>
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a data-toggle="collapse" href="#rapports">
+                                <i class="fas fa-wrench"></i>
+                                <p>Tools</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse" id="rapports">
+                                <ul class="nav nav-collapse">
+                                    <li>
+                                        <a href="./calculatrice.html">
+                                            <span class="sub-item">CVSS 3.1 calculator</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="./graphs.html">
+                                            <span class="sub-item">Graphs generator</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="./generateur_vuln.html">
+                                            <span class="sub-item">Vulnerability sheet generator</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a data-toggle="collapse" href="#project">
+                                <i class="fas fa-list"></i>
+                                <p>Pentest report</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse" id="project">
+                                <ul class="nav nav-collapse ">
+                                    <li>
+                                        <a href="./project.html">
+                                            <span class="sub-item">Project</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- End Sidebar -->
+
+        <div class="main-panel" style="margin-top: 6em;">
+            <div class="page-inner">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="d-flex">
+                                    <h4 class="card-title">Command list</h4>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- Modal in full screen -->
+                                
+                                <!-- End Modal in full screen -->
+                                <div class="table-responsive">
+                                    <div id="add-row_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table id="add-row"
+                                                    class="display table table-striped table-hover dataTable"
+                                                    role="grid" aria-describedby="add-row_info">
+                                                    <thead>
+                                                        <tr role="row">
+                                                            <th>Category</th>
+                                                            <th>Tool</th>
+                                                            <th>Information</th>
+                                                            <th>Command</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- End Custom template -->
+                    </div>
+                    <!--   Core JS Files   -->
+                    <script src="./assets/js/core/jquery.3.2.1.min.js"></script>
+                    <script src="./assets/js/core/popper.min.js"></script>
+                    <script src="./assets/js/core/bootstrap.min.js"></script>
+
+                    <!-- jQuery UI -->
+                    <script src="./assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+                    <script src="./assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+
+                    <!-- jQuery Scrollbar -->
+                    <script src="./assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+                    <!-- jQuery Sparkline -->
+                    <script src="./assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+                    <!-- Chart Circle -->
+                    <script src="./assets/js/plugin/chart-circle/circles.min.js"></script>
+
+                    <!-- Datatables -->
+                    <script src="./assets/js/plugin/datatables/datatables.min.js"></script>
+
+                    <!-- Bootstrap Notify -->
+                    <script src="./assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+                    <!-- jQuery Vector Maps -->
+                    <script src="./assets/js/plugin/jqvmap/jquery.vmap.min.js"></script>
+                    <script src="./assets/js/plugin/jqvmap/maps/jquery.vmap.world.js"></script>
+
+                    <!-- Sweet Alert -->
+                    <script src="./assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+                    <!-- Atlantis JS -->
+                    <script src="./assets/js/atlantis.min.js"></script>
+
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.halo.min.js"></script>
+
+                    <!-- Init to check the space required -->
+                    <script src="./assets/js/init.js"></script>
+                </div>
+            </div>
+        </div>
+</body>
+</html>
