@@ -417,7 +417,7 @@
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <div class="form-group">
+                                                                <div class="form-group" id="command_div">
                                                                     <label for="code">Command</label>
                                                                     <pre><code class="language-bash" id="code" style="white-space: pre-wrap;"></code></pre>
                                                                     <div class="center-box">
@@ -518,6 +518,24 @@
         var tool = document.getElementById('tool');
         var information = document.getElementById('information');
         var copyBtn = document.getElementById('copyBtn');
+
+        var link = document.getElementById('link'); 
+        if (link) {
+            link.remove();
+        }
+
+        if (command.link) {
+            var balise = document.createElement('p');
+            balise.innerHTML = "Link to the tool: ";
+            balise.id = "link";
+            var link = document.createElement('a');
+            balise.appendChild(link);
+            link.href = command.link;
+            link.innerHTML = command.link;
+            link.target = "_blank";
+            link.style = "color: white; text-decoration: underline;";
+            document.getElementById('command_div').prepend(balise);
+        }
 
         code.innerHTML = command.command;
         category.innerHTML = command.category;
