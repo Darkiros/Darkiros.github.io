@@ -48,9 +48,58 @@
         
         window.onload = function () {
             data.forEach(element => {
+                if (element.tool === "linux") {
+                    element.color = "#f1c40f"
+                } else if (element.tool === "windows") {
+                    element.color = "#3498db"
+                } else if (element.tool === "docker") {
+                    element.color = "#9b59b6"
+                } else if (element.tool === "powershell") {
+                    element.color = "#e74c3c"
+                } else if (element.tool === "sqlmap") {
+                    element.color = "#2ecc71"
+                } else if (element.tool === "Metasploit - msf") {
+                    element.color = "#e67e22"
+                } else if (element.tool === "nmap") {
+                    element.color = "#93e0e8"
+                } else if (element.tool === "masscan") {
+                    element.color = "#cbc5ae"
+                } else if (element.tool === "wifi") {
+                    element.color = "#f99757"
+                } else if (element.tool === "msfvenom") {
+                    element.color = "#21701a"
+                } else if (element.tool === "NetExec") {
+                    element.color = "##7bccf7"
+                } else if (element.tool === "kerbrute") {
+                    element.color = "#4e786a"
+                } else if (element.tool === "SCShell") {
+                    element.color = "#913e2e"
+                } else if (element.tool === "chisel") {
+                    element.color = "#f7f7f7"
+                } else if (element.tool === "Compile") {
+                    element.color = "#b198d2"
+                } else if (element.tool === "ffuf") {
+                    element.color = "#af1c75"
+                } else if (element.tool === "grep hash") {
+                    element.color = "#f46c06"
+                } else if (element.tool === "socat") {
+                    element.color = "#f80000"
+                } else if (element.tool === "mimikatz") {
+                    element.color = "#ffccda"
+                } else if (element.tool === "JwtTool") {
+                    element.color = "#cdffb2"
+                } else if (element.tool === "linux bash") {
+                    element.color = "#cdffb2"
+                } else if (element.tool === "Others grep") {
+                    element.color = "#eefc9f"
+                } else if (element.tool === "procdump") {
+                    element.color = "#ecfc94"
+                } else if (element.tool === "WPSCAN") {
+                    element.color = "#889fe8"
+                }
                 $("#add-row").dataTable().fnAddData([
                     element.category,
-                    element.tool,
+                    `<span class="badge" style="font-weight: bold; border: 1px solid ${element.color}; background-color: transparent; color: ${element.color}">${element.tool}</span>`,
                     element.information,
                     element.command,
                     `
@@ -76,6 +125,10 @@
     <style>
         th {
             color: white;
+        }
+
+        td {
+            max-width: 200px;
         }
 
         .scroll {
@@ -205,7 +258,7 @@
 </head>
 
 
-<body data-background-color="dark" data-prismjs-copy-timeout="500">
+<body data-background-color="dark">
     <div class="wrapper">
         <div class="main-header">
             <!-- Logo Header -->
@@ -528,17 +581,26 @@
             var balise = document.createElement('p');
             balise.innerHTML = "Link to the tool: ";
             balise.id = "link";
-            var link = document.createElement('a');
-            balise.appendChild(link);
-            link.href = command.link;
-            link.innerHTML = command.link;
-            link.target = "_blank";
-            link.style = "color: white; text-decoration: underline;";
+            var linka = document.createElement('a');
+
+            linka.onmouseover = function () {
+                linka.style = "color: #6861ce;";
+            }
+            linka.onmouseout = function () {
+                linka.style = "color: white; text-decoration: underline;";
+            }
+
+            balise.appendChild(linka);
+            linka.href = command.link;
+            linka.innerHTML = command.link;
+            linka.target = "_blank";
+            linka.style = "color: white; text-decoration: underline;"
             document.getElementById('command_div').prepend(balise);
         }
 
         code.innerHTML = command.command;
         category.innerHTML = command.category;
+        tool.style = `font-weight: bold; border: 1px solid ${command.color}; background-color: transparent; color: ${command.color}`;
         tool.innerHTML = command.tool;
         information.innerHTML = command.information;
         copyBtn.setAttribute('onclick', `copy(${id})`);

