@@ -96,6 +96,12 @@
                     element.color = "#ecfc94"
                 } else if (element.tool === "WPSCAN") {
                     element.color = "#889fe8"
+                } else if (element.tool === "impacket") {
+                    element.color = "#ddfc80"
+                } else if (element.tool === "ntfs") {
+                    element.color = "#74fc76"
+                } else if (element.tool === "coercer") {
+                    element.color = "#7695f2"
                 }
                 $("#add-row").dataTable().fnAddData([
                     element.category,

