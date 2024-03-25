@@ -1838,4 +1838,18 @@ var data = [
         "command": "nmap -sU -p 161 --script snmp-brute --script-args snmpbrute.communitiesdb=[wordlist] [ip]",
         "link": "https://nmap.org/"
     },
+    {
+        "id": 245,
+        "tool": "SSH",
+        "category":"PIVOTING",
+        "information": "SSH - dynamic port forwarding over socks",
+        "command": "ssh -D [local_port] [user]@[ip]",
+    },
+    {
+        "id": 246,
+        "tool": "SSH",
+        "category":"PIVOTING",
+        "information": "SSH - port forwarding",
+        "command": "ssh -L [local_port]:[remote_ip]:[remote_port] [user]@[ip]",
+    }
 ]
