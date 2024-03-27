@@ -479,7 +479,7 @@
                                                                 <div class="form-group" id="command_div">
                                                                     <label for="code">Command</label>
                                                                     <pre><code class="language-bash" id="code" style="white-space: pre-wrap;"></code></pre>
-                                                                    <div class="center-box">
+                                                                    <div class="center-box" id="CopyDiv">
                                                                         <button id="copyBtn" class="btn btn-primary" onclick="copy()">Copy command</button>
                                                                     </div>
                                                                 </div>
@@ -570,7 +570,17 @@
 
     hljs.highlightAll();
 
+    function clean() {
+        var elements = document.getElementById('parameters');
+        while (elements) {
+            elements.remove();
+            elements = document.getElementById('parameters');
+        }
+
+    }
+
     function inspect(id) {
+        clean();
         var command = data.find(x => x.id == id);
         var code = document.getElementById('code');
         var category = document.getElementById('category');
@@ -603,6 +613,61 @@
             linka.style = "color: white; text-decoration: underline;"
             document.getElementById('command_div').prepend(balise);
         }
+
+        // if there is [parameters] in the command create an input text for each parameters 
+        if (command.command) {
+            var command_div = document.getElementById('command_div');
+            var parameters = command.command.match(/\[.*?\]/g);
+            var map_parameters = {};
+
+
+            if (parameters) {
+                parameters.forEach(parameter => {
+                    var div = document.createElement('div');
+                    div.className = "parameters";
+                    div.className = "input-group mb-3";
+
+                    var name_parameter = document.createElement('h3');
+                    name_parameter.style = "width: 50%;"
+                    name_parameter.className = "input-group-text";
+                    
+                    var default_parameter = parameter.match(/\[.*?\|.*?\]/g);
+                    if (default_parameter) {
+                        name_parameter.innerHTML = default_parameter[0].replace("[", "").replace("]", "").split("|")[0];
+                    } else {
+                        name_parameter.innerHTML = parameter.replace("[", "").replace("]", "");
+                    }
+                    div.appendChild(name_parameter);
+
+                    
+                    var input = document.createElement('input');
+                    var origin_code = command.command;
+                    
+                    input.value = default_parameter ? default_parameter[0].replace("[", "").replace("]", "").split("|")[1] : "";
+                    map_parameters[name_parameter.innerHTML] = input.value;
+                    if (input.value != "") {
+                        command.command = command.command.replace(parameter, input.value);
+                        document.getElementById("code").innerHTML = command.command;
+                    }  
+                    input.type = "text";
+                    input.className = "form-control";
+                    div.appendChild(input);
+                    command_div.insertBefore(div, document.getElementById('CopyDiv'));
+                    
+                    input.addEventListener("keyup", function(event) {
+                        map_parameters[name_parameter.innerHTML] = this.value;
+                        var code = origin_code;
+                        Object.keys(map_parameters).forEach(key => {
+                            if (map_parameters[key] != "") {
+                                code = code.replace(new RegExp("\\["+key+"(\\|\\w+)?\\]"), map_parameters[key]);
+                                console.log(key + " -> " +code + " -> " + map_parameters[key]);
+                            }
+                        });
+                        document.getElementById("code").innerHTML = code;                   
+                    }, false);
+                });                
+            }
+        } 
 
         code.innerHTML = command.command;
         category.innerHTML = command.category;
