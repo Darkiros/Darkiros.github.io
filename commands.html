@@ -571,10 +571,11 @@
     hljs.highlightAll();
 
     function clean() {
-        var elements = document.getElementById('parameters');
-        while (elements) {
-            elements.remove();
-            elements = document.getElementById('parameters');
+        var elements = document.getElementsByClassName('parameters');
+        while (elements.length > 0) {
+            // remove event listener
+            elements[0].querySelector('input').removeEventListener('keyup', function () { });
+            elements[0].parentNode.removeChild(elements[0]);
         }
 
     }
@@ -624,8 +625,7 @@
             if (parameters) {
                 parameters.forEach(parameter => {
                     var div = document.createElement('div');
-                    div.className = "parameters";
-                    div.className = "input-group mb-3";
+                    div.className = "parameters input-group mb-3";
 
                     var name_parameter = document.createElement('h3');
                     name_parameter.style = "width: 50%;"
@@ -645,10 +645,7 @@
                     
                     input.value = default_parameter ? default_parameter[0].replace("[", "").replace("]", "").split("|")[1] : "";
                     map_parameters[name_parameter.innerHTML] = input.value;
-                    if (input.value != "") {
-                        command.command = command.command.replace(parameter, input.value);
-                        document.getElementById("code").innerHTML = command.command;
-                    }  
+                    
                     input.type = "text";
                     input.className = "form-control";
                     div.appendChild(input);
@@ -659,17 +656,21 @@
                         var code = origin_code;
                         Object.keys(map_parameters).forEach(key => {
                             if (map_parameters[key] != "") {
-                                code = code.replace(new RegExp("\\["+key+"(\\|\\w+)?\\]"), map_parameters[key]);
-                                console.log(key + " -> " +code + " -> " + map_parameters[key]);
+                                code = code.replace(new RegExp("\\["+key+"([^\\]]*)\\]"), map_parameters[key]);
                             }
                         });
                         document.getElementById("code").innerHTML = code;                   
                     }, false);
-                });                
+                });               
             }
-        } 
-
-        code.innerHTML = command.command;
+        }
+        var origin_code = command.command;
+        for (var key in map_parameters) {
+            if (map_parameters[key] != "") {
+                origin_code = origin_code.replace(new RegExp("\\["+key+"([^\\]]*)\\]"), map_parameters[key]);
+            }
+        }
+        code.innerHTML = origin_code;
         category.innerHTML = command.category;
         tool.style = `font-weight: bold; border: 1px solid ${command.color}; background-color: transparent; color: ${command.color}`;
         tool.innerHTML = command.tool;
