@@ -652,6 +652,10 @@
                     command_div.insertBefore(div, document.getElementById('CopyDiv'));
                     
                     input.addEventListener("keyup", function(event) {
+                        /*if (this.value == "") {
+                            // put default value
+                            this.value = default_parameter ? default_parameter[0].replace("[", "").replace("]", "").split("|")[1] : "";
+                        }*/
                         map_parameters[name_parameter.innerHTML] = this.value;
                         var code = origin_code;
                         Object.keys(map_parameters).forEach(key => {

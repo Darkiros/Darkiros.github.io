@@ -11,6 +11,15 @@
 
     <!-- Fonts and icons -->
     <script src="./assets/js/plugin/webfont/webfont.min.js"></script>
+
+    <!-- Chart JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+    <!-- Notify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
+    
     <script>
         WebFont.load({
             google: { families: ["Lato:300,400,700,900"] },
@@ -30,9 +39,34 @@
         });
     </script>
 
+    <style>
+        .center-box {
+            margin: auto;
+            text-align: center;
+        }
+        .download,
+        .copy {
+            margin-left: 3%;
+            background-color: transparent;
+            border: none;
+            height: fit-content;
+            margin-top: auto;
+            margin-bottom: auto;
+            color: white;
+        }
+        .download:hover,
+        .copy:hover {
+            cursor: pointer;
+            color: blue;
+        }
+
+    </style>
+
     <!-- CSS Files -->
     <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="./assets/css/atlantis.min.css" />
+    <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
 </head>
 
@@ -65,7 +99,7 @@
             <nav class="navbar navbar-header navbar-expand-lg" data-background-color="dark">
                 <div class="container-fluid">
                     <div style="margin-left: auto; color: white;">
-                        <h2 class="text-center">Générateur de graphs</h1>
+                        <h2 class="text-center">Graphs generator</h2>
                     </div>
                     <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
                         <li class="nav-item hidden-caret">
@@ -194,7 +228,86 @@
         <!-- End Sidebar -->
 
         <div class="main-panel" style="margin-top: 6em;">
-            <iframe src="./assets/core/graphs.html" width="100%" height="100%" frameborder="0"></iframe>
+            <div class="page-inner">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <h3 class="input-group-text" style="width: 50%; font-weight: bold; color: rgb(162, 213, 114);">Low</h3>
+                                                    <input type="number" name="low" value="0" id="low" class="form-control" style="width: 5em; text-align: center;"
+                                                        onchange="action_bar(); action_pie()" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <h3 class="input-group-text" style="width: 50%; font-weight: bold; color: rgb(255,205,86);">Medium</h3>
+                                                    <input type="number" name="medium" value="0" id="medium" class="form-control" style="width: 5em; text-align: center;"
+                                                        onchange="action_bar(); action_pie()" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <h3 class="input-group-text" style="width: 50%; font-weight: bold; color: rgb(255, 159, 64)">High</h3>
+                                                    <input type="number" name="high" value="0" id="high" class="form-control" style="width: 5em; text-align: center;"
+                                                        onchange="action_bar(); action_pie()" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="input-group">
+                                                    <h3 class="input-group-text" style="width: 50%; font-weight: bold; color: rgb(255, 99, 132)">Critical</h3>
+                                                    <input type="number" name="critical" value="0" id="critical" class="form-control" style="width: 5em; text-align: center;"
+                                                        onchange="action_bar(); action_pie()" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="center-box">
+                                    <div id="chartjs-bar" style="max-height: 450px; height: 450px;">
+                                        <canvas id="canvas_bar"></canvas>
+                                    </div>
+                                    <div class="center-box">
+                                        <button class="btn btn-primary" style="width: 115px;" onclick="download_bar()">Download</button>
+                                        <button class="btn btn-primary" style="width: 115px; margin-left: 3%;" onclick="copy_bar()">Copy</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="chartjs-pie" style="max-height: 450px; height: 450px;">
+                                    <canvas id="canvas_pie"></canvas>
+                                </div>
+                                <div class="center-box">
+                                    <button class="btn btn-primary" style="width: 115px;" onclick="download_pie()">
+                                        Download
+                                    </button>
+                                    <button class="btn btn-primary" style="width: 115px; margin-left: 3%;" onclick="copy_pie()">
+                                        Copy
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- End Custom template -->
@@ -210,9 +323,6 @@
 
     <!-- jQuery Scrollbar -->
     <script src="./assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-
-    <!-- Chart JS -->
-    <script src="./assets/js/plugin/chart.js/chart.min.js"></script>
 
     <!-- jQuery Sparkline -->
     <script src="./assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
@@ -230,17 +340,220 @@
     <script src="./assets/js/plugin/jqvmap/jquery.vmap.min.js"></script>
     <script src="./assets/js/plugin/jqvmap/maps/jquery.vmap.world.js"></script>
 
-    <!-- Sweet Alert -->
-    <script src="./assets/js/plugin/sweetalert/sweetalert.min.js"></script>
 
     <!-- Atlantis JS -->
     <script src="./assets/js/atlantis.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.halo.min.js"></script>
 
     <!-- Init to check the space required -->
     <script src="./assets/js/init.js"></script>
+
+    <script>
+
+        var image;
+    
+        window.chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(162, 213, 114)',
+            blue: 'rgb(54, 162, 235)'
+        };
+    
+        var color = Chart.helpers.color;
+    
+        var config_bar = {
+            type: 'bar',
+            data: {
+                labels: ["Low", "Medium", "High", "Critical"],
+                datasets: [{
+                    label: "Number of vulnerabilities",
+                    backgroundColor: [window.chartColors.green, window.chartColors.yellow, window.chartColors.orange, window.chartColors.red],
+                    data: [0, 0, 0, 0],
+                }]
+            },
+            plugins: [ChartDataLabels],
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                title: {
+                    display: true,
+                    text: 'Number of vulnerabilities per severity'
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false
+                    },
+                    datalabels: {
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+    
+        var config_pie = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [0, 0, 0, 0],
+                    backgroundColor: [window.chartColors.green, window.chartColors.yellow, window.chartColors.orange, window.chartColors.red],
+                    label: 'Dataset 1',
+                }],
+                labels: ["Low", "Medium", "High", "Critical"]
+            },
+            plugins: [ChartDataLabels],
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                title: {
+                    display: true,
+                    text: 'Number of vulnerabilities per severity'
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        enabled: false
+                    },
+                    datalabels: {
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        };
+    
+        var myBar;
+        var myPie;
+    
+        window.onload = function () {
+            myBar = new Chart(document.getElementById("canvas_bar"), config_bar);
+            myPie = new Chart(document.getElementById("canvas_pie"), config_pie);
+            action_bar();
+            action_pie();
+        };   
+    
+    
+        function download_bar() {
+            var a = document.createElement("a");
+            a.href = myBar.toBase64Image();
+            a.download = "Image.png";
+            a.click();
+        }
+    
+        function download_pie() {
+            var a = document.createElement("a");
+            a.href = myPie.toBase64Image();
+            a.download = "Image.png";
+            a.click();
+        }
+    
+        function SelectText(element) {
+            var doc = document;
+            if (doc.body.createTextRange) {
+                var range = document.body.createTextRange();
+                range.moveToElementText(element);
+                range.select();
+            } else if (window.getSelection) {
+                var selection = window.getSelection();
+                var range = document.createRange();
+                range.selectNodeContents(element);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        }
+    
+        function action_bar() {
+            config_bar.data.datasets[0].data[0] = document.getElementById("low").value;
+            config_bar.data.datasets[0].data[1] = document.getElementById("medium").value;
+            config_bar.data.datasets[0].data[2] = document.getElementById("high").value;
+            config_bar.data.datasets[0].data[3] = document.getElementById("critical").value;
+            myBar.update()
+        }
+    
+        function copy_bar() {
+            var canvas = document.getElementById("canvas_bar");
+            var img = document.createElement('img');
+            img.src = canvas.toDataURL()
+            var div = document.createElement('div');
+            div.contentEditable = true;
+            div.appendChild(img);
+            document.body.appendChild(div);
+            // do copy
+            SelectText(div);
+            document.execCommand('Copy');
+            document.body.removeChild(div);
+            new Notify({
+                status: 'success',
+                title: 'Graph copié avec succès',
+                text: '',
+                effect: 'fade',
+                speed: 300,
+                customClass: '',
+                customIcon: '',
+                showIcon: true,
+                showCloseButton: true,
+                autoclose: true,
+                autotimeout: 1500,
+                gap: 20,
+                distance: 20,
+                type: 1,
+                position: 'top right'
+            })
+        }
+    
+        function action_pie() {
+            config_pie.data.datasets[0].data[0] = document.getElementById("low").value;
+            config_pie.data.datasets[0].data[1] = document.getElementById("medium").value;
+            config_pie.data.datasets[0].data[2] = document.getElementById("high").value;
+            config_pie.data.datasets[0].data[3] = document.getElementById("critical").value;
+            myPie.update()
+        }
+    
+        function copy_pie() {
+            var canvas = document.getElementById("canvas_pie");
+            var img = document.createElement('img');
+            img.src = canvas.toDataURL()
+            var div = document.createElement('div');
+            div.contentEditable = true;
+            div.appendChild(img);
+            document.body.appendChild(div);
+            // do copy
+            SelectText(div);
+            document.execCommand('Copy');
+            document.body.removeChild(div);
+            new Notify({
+                status: 'success',
+                title: 'Graph copié avec succès',
+                text: '',
+                effect: 'fade',
+                speed: 300,
+                customClass: '',
+                customIcon: '',
+                showIcon: true,
+                showCloseButton: true,
+                autoclose: true,
+                autotimeout: 1500,
+                gap: 20,
+                distance: 20,
+                type: 1,
+                position: 'top right'
+            })
+        }
+    </script>
 </body>
 
 </html>
