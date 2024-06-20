@@ -930,6 +930,23 @@
             children[i].cells[0].innerHTML = i + 1;
         }
         localStorage.setItem('list_vuln', JSON.stringify(new_list_vuln));
+
+        // Update the edit function and delete to fit with the new order
+        for (let i = 0; i < new_list_vuln.length; i++) {
+            children[i].cells[4].innerHTML = `
+            <div class="form-button-action">
+                <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                    data-original-title="Edit Task" onclick="edit(` + new_list_vuln[i].id + `)">
+                    <i class="fa fa-edit
+                    "></i>
+                </button>
+                <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                    data-original-title="Remove" onclick="removeVuln(${new_list_vuln[i].id})">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            `;
+        }
     }
 
     function validateDate(){
@@ -1170,6 +1187,9 @@
     function edit(id) {
         const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
         const vuln = list_vuln.find(vuln => vuln.id === id);
+        console.log("vuln " + vuln)
+        console.log("id : " + id)
+        console.log("vuln id : " + vuln.id)
 
         document.getElementById("vuln_title").innerHTML = "Edit vulnerability - " + vuln.name;
         document.getElementById("add_poc").setAttribute("onclick", "add_poc(" + id + ")");
