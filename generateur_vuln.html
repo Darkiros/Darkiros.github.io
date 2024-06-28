@@ -706,7 +706,7 @@
     }
 
     function change_language() {
-        if (document.getElementById("switch").checked) {
+        if (!document.getElementById("switch").checked) {
             if (document.getElementById("name").value == "") {
                 document.getElementById("vuln_name").innerHTML = "Vulnerability name";
             }
