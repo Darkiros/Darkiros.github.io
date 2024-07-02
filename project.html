@@ -1189,9 +1189,6 @@
     function edit(id) {
         const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
         const vuln = list_vuln.find(vuln => vuln.id === id);
-        console.log("vuln " + vuln)
-        console.log("id : " + id)
-        console.log("vuln id : " + vuln.id)
 
         document.getElementById("vuln_title").innerHTML = "Edit vulnerability - " + vuln.name;
         document.getElementById("add_poc").setAttribute("onclick", "add_poc(" + id + ")");
@@ -1431,7 +1428,7 @@
         if (localStorage.getItem('project_name') === null || localStorage.getItem('project_name') === ""){
             localStorage.setItem('project_name', "Project");
             document.getElementById("project_name").value = "Project";
-            docuement.getElementById("title").innerHTML = "Project";
+            document.getElementById("title").innerHTML = "Project";
         }
 
         if (localStorage.getItem('dateFrom') === null || localStorage.getItem('dateFrom') === ""){
