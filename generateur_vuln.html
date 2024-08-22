@@ -1010,7 +1010,7 @@
         virt_exploitability = exploitability
 
         if (exploitability <= 1) {
-            if (document.getElementById("switch").checked) {
+            if (!document.getElementById("switch").checked) {
                 exploitability = "Very hard"
             }
             else {
@@ -1018,7 +1018,7 @@
             }
             document.getElementById("exploitability").style.color = window.chartColors.green
         }
-        else if (exploitability > 1 && exploitability <= 2) {
+        else if (!exploitability > 1 && exploitability <= 2) {
             if (document.getElementById("switch").checked) {
                 exploitability = "Hard"
             }
@@ -1027,7 +1027,7 @@
             }
             document.getElementById("exploitability").style.color = window.chartColors.yellow
         }
-        else if (exploitability > 2 && exploitability <= 3) {
+        else if (!exploitability > 2 && exploitability <= 3) {
             if (document.getElementById("switch").checked) {
                 exploitability = "Medium"
             }
@@ -1037,7 +1037,7 @@
             document.getElementById("exploitability").style.color = window.chartColors.orange
         }
         else {
-            if (document.getElementById("switch").checked) {
+            if (!document.getElementById("switch").checked) {
                 exploitability = "Easy"
             }
             else {
