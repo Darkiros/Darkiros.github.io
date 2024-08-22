@@ -119,6 +119,14 @@
         var colorNames = Object.keys(window.chartColors);
 
         async function download(id) {
+            var content = document.getElementById("vuln_description")
+            content.style.color = "black";
+            content = document.getElementById("vuln_step")
+            content.style.color = "black";
+            content = document.getElementById("vuln_impacts")
+            content.style.color = "black";
+            content = document.getElementById("vuln_recommandation")
+            content.style.color = "black";
             var a = document.createElement("a");
 
             await html2canvas(document.getElementById(id)).then((canvas) => {
@@ -131,6 +139,16 @@
             //remove a and b
             a.remove();
             b.remove();
+            
+            //revert
+            var content = document.getElementById("vuln_description")
+            content.style.color = "rgba(169, 175, 187, 0.82)";
+            content = document.getElementById("vuln_step")
+            content.style.color = "rgba(169, 175, 187, 0.82)";
+            content = document.getElementById("vuln_impacts")
+            content.style.color = "rgba(169, 175, 187, 0.82)";
+            content = document.getElementById("vuln_recommandation")
+            content.style.color = "rgba(169, 175, 187, 0.82)";
         }
 
         function SelectText(element) {
@@ -149,6 +167,15 @@
         }
 
         async function copy(id) {
+            var content = document.getElementById("vuln_description")
+            content.style.color = "black";
+            content = document.getElementById("vuln_step")
+            content.style.color = "black";
+            content = document.getElementById("vuln_impacts")
+            content.style.color = "black";
+            content = document.getElementById("vuln_recommandation")
+            content.style.color = "black";
+
             var a = document.createElement("a");
             await html2canvas(document.getElementById(id)).then((canvas) => {
                 a.appendChild(canvas);
@@ -182,6 +209,16 @@
                 position: 'top right'
             })
             a.remove();
+
+            //revert
+            var content = document.getElementById("vuln_description")
+            content.style.color = "rgba(169, 175, 187, 0.82)";
+            content = document.getElementById("vuln_step")
+            content.style.color = "rgba(169, 175, 187, 0.82)";
+            content = document.getElementById("vuln_impacts")
+            content.style.color = "rgba(169, 175, 187, 0.82)";
+            content = document.getElementById("vuln_recommandation")
+            content.style.color = "rgba(169, 175, 187, 0.82)";
         }
 
     </script>
