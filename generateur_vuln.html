@@ -964,7 +964,7 @@
         console.log("impact : " + impact)
 
         if (impact <= 2.5) {
-            if (document.getElementById("switch").checked) {
+            if (!document.getElementById("switch").checked) {
                 impact = "Minor"
             }
             else {
@@ -977,7 +977,7 @@
             document.getElementById("impact").style.color = window.chartColors.yellow
         }
         else if (impact > 4 && impact <= 5.5) {
-            if (document.getElementById("switch").checked) {
+            if (!document.getElementById("switch").checked) {
                 impact = "Major"
             }
             else {
@@ -986,7 +986,7 @@
             document.getElementById("impact").style.color = window.chartColors.orange
         }
         else {
-            if (document.getElementById("switch").checked) {
+            if (!document.getElementById("switch").checked) {
                 impact = "Critical"
             }
             else {
@@ -1018,8 +1018,8 @@
             }
             document.getElementById("exploitability").style.color = window.chartColors.green
         }
-        else if (!exploitability > 1 && exploitability <= 2) {
-            if (document.getElementById("switch").checked) {
+        else if (exploitability > 1 && exploitability <= 2) {
+            if (!document.getElementById("switch").checked) {
                 exploitability = "Hard"
             }
             else {
@@ -1027,8 +1027,8 @@
             }
             document.getElementById("exploitability").style.color = window.chartColors.yellow
         }
-        else if (!exploitability > 2 && exploitability <= 3) {
-            if (document.getElementById("switch").checked) {
+        else if (exploitability > 2 && exploitability <= 3) {
+            if (!document.getElementById("switch").checked) {
                 exploitability = "Medium"
             }
             else {
@@ -1065,7 +1065,7 @@
 
         var risk_matrix;
 
-        if (document.getElementById("switch").checked) {
+        if (!document.getElementById("switch").checked) {
             risk_matrix = risk_matrix_en
         }
         else {
