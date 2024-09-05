@@ -120,73 +120,96 @@
         var myRadar;
 
         window.onload = function () {
+            try {
+                if (localStorage.getItem('language') == 'FR') {
+                    document.getElementById('switch').checked = true;
+                } else {
+                    localStorage.setItem('language', 'EN');
+                    document.getElementById('switch').checked = false;
+                }
+                change_language();
 
-            var list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+                var list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
 
-            myRadar = new Chart(document.getElementById("canvas"), config_radar);
-            $('#add-row').DataTable({
-                "pageLength": 10,
-            });
-
-            const project_name = localStorage.getItem('project_name');
-
-            if (project_name) {
-                document.getElementById("title").innerHTML = project_name;
-                document.getElementById("project_name").value = project_name;
-            }
-
-            if (list_vuln) {
-                list_vuln.forEach(vuln => {
-                    vuln.description = vuln.description.replace(/\n/g, "<br>");
-                    addRow(vuln);
+                myRadar = new Chart(document.getElementById("canvas"), config_radar);
+                $('#add-row').DataTable({
+                    "pageLength": 10,
+                    "lengthMenu": [
+                        [10, 25, 50, -1],
+                        [10, 25, 50, "All"]
+                    ],
+                    responsive: true,
                 });
-                var cvss = list_vuln.map(vuln => vuln.score);
-                var cvss_color = cvss.map(score => {
-                    if (parseFloat(score) <= 3.9) {
-                        return "green";
-                    }
-                    else if (parseFloat(score) <= 6.9) {
-                        return "yellow";
-                    }
-                    else if (parseFloat(score) <= 8.9) {
-                        return "orange";
-                    }
-                    else {
-                        return "red";
-                    }
-                });
-                var rows = document.getElementById("add-row").rows;
-                if (list_vuln.length !== 0) {
-                    for (var i = 1; i < rows.length; i++) {
-                        rows[i].cells[3].style.color = cvss_color[i - 1];
+
+                const project_name = localStorage.getItem('project_name');
+
+                if (project_name) {
+                    document.getElementById("title").innerHTML = project_name;
+                    document.getElementById("project_name").value = project_name;
+                }
+
+                if (list_vuln) {
+                    list_vuln.forEach(vuln => {
+                        vuln.description = vuln.description.replace(/\n/g, "<br>");
+                        addRow(vuln);
+                    });
+                    var cvss = list_vuln.map(vuln => vuln.score);
+                    var cvss_color = cvss.map(score => {
+                        if (parseFloat(score) <= 3.9) {
+                            return "green";
+                        }
+                        else if (parseFloat(score) <= 6.9) {
+                            return "yellow";
+                        }
+                        else if (parseFloat(score) <= 8.9) {
+                            return "orange";
+                        }
+                        else {
+                            return "red";
+                        }
+                    });
+                    var rows = document.getElementById("add-row").rows;
+                    if (list_vuln.length !== 0) {
+                        for (var i = 1; i < rows.length; i++) {
+                            rows[i].cells[3].style.color = cvss_color[i - 1];
+                        }
                     }
                 }
-            }
-            else {
-                localStorage.setItem('list_vuln', JSON.stringify([]));
-            }
+                else {
+                    localStorage.setItem('list_vuln', JSON.stringify([]));
+                }
 
-            if (localStorage.getItem('pentester')) {
-                document.getElementById('pentester').value = localStorage.getItem('pentester');
-            }
-            else {
-                localStorage.setItem('pentester', "");
-            }
+                if (localStorage.getItem('pentester')) {
+                    document.getElementById('pentester').value = localStorage.getItem('pentester');
+                }
+                else {
+                    localStorage.setItem('pentester', "");
+                }
 
-            if (localStorage.getItem('dateFrom')) {
-                document.getElementById('dateFrom').value = localStorage.getItem('dateFrom');
-            }
-            else {
-                document.getElementById('dateFrom').value = new Date().toISOString().split('T')[0];
-                localStorage.setItem('dateFrom', document.getElementById('dateFrom').value);
-            }
+                if (localStorage.getItem('dateFrom')) {
+                    document.getElementById('dateFrom').value = localStorage.getItem('dateFrom');
+                }
+                else {
+                    document.getElementById('dateFrom').value = new Date().toISOString().split('T')[0];
+                    localStorage.setItem('dateFrom', document.getElementById('dateFrom').value);
+                }
 
-            if (localStorage.getItem('dateTo')) {
-                document.getElementById('dateTo').value = localStorage.getItem('dateTo');
-            }
-            else {
-                document.getElementById('dateTo').value = new Date().toISOString().split('T')[0];
-                localStorage.setItem('dateTo', document.getElementById('dateTo').value);
+                if (localStorage.getItem('dateTo')) {
+                    document.getElementById('dateTo').value = localStorage.getItem('dateTo');
+                }
+                else {
+                    document.getElementById('dateTo').value = new Date().toISOString().split('T')[0];
+                    localStorage.setItem('dateTo', document.getElementById('dateTo').value);
+                }
+            } catch (error) {
+                swal({
+                    title: "Error",
+                    text: "An error occured when parsing the data in the local storage.\nThe local storage will be cleared.",
+                    icon: "error",
+                }).then(() => {
+                    localStorage.clear();
+                    location.reload();
+                });
             }
         };
 
@@ -816,6 +839,14 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="center-box" style="margin-bottom: 1%;">
+                                    <div style="width: fit-content; display: inline-flex;">
+                                        <span>EN</span>
+                                        <input type="checkbox" id="switch" onclick="change_language()"/>
+                                        <label style="margin-right: 1%;" class="switch" for="switch">Toggle</label>
+                                        <span>FR</span>
+                                    </div>
+                                </div>
                                 <div class="center-box">
                                     <button class="btn btn-primary" onclick="generateDocx()">Generate Docx</button>
                                 </div>
@@ -869,6 +900,49 @@
 </body>
 
 <script>
+
+    function change_language() {
+        if (document.getElementById('switch').checked) {
+            localStorage.setItem('language', 'FR');
+            if (document.getElementById("name").value == "") {
+                document.getElementById("vuln_name").innerHTML = "Nom de la vulnérabilité";
+            }
+            document.getElementById('description_title').innerHTML = "Description :";
+            document.getElementById('step_title').innerHTML = "Étapes pour reproduire :";
+            document.getElementById('impact_title').innerHTML = "Impacts :";
+            document.getElementById('evaluation_title').innerHTML = "Évaluation du risque :";
+            document.getElementById('cvss_title').innerHTML = "Évaluation CVSS 3.1 :";
+            document.getElementById('recommandation_title').innerHTML = "Recommandations :";
+            document.getElementById('exploitability_table').innerHTML = "Exploitabilité";
+            document.getElementById('impact_table').innerHTML = "Impact";
+            document.getElementById('risk_table').innerHTML = "Risque";
+            document.getElementById('add_poc').innerHTML = "Ajouter";
+
+            config_radar.data.labels = [
+                "Intégrité", "Disponibilité", "Vecteur d'accès", "Complexité de l'attaque", "Privilèges requis", "Interaction utilisateur", "Portée", "Confidentialité"
+            ] 
+        }
+        else {
+            localStorage.setItem('language', 'EN');
+            if (document.getElementById("name").value == "") {
+                document.getElementById("vuln_name").innerHTML = "Vulnerability name";
+            }
+            document.getElementById('description_title').innerHTML = "Description :";
+            document.getElementById('step_title').innerHTML = "Steps to reproduce :";
+            document.getElementById('impact_title').innerHTML = "Impact :";
+            document.getElementById('evaluation_title').innerHTML = "Risk evaluation :";
+            document.getElementById('cvss_title').innerHTML = "CVSS 3.1 evaluation :";
+            document.getElementById('recommandation_title').innerHTML = "Recommandations :";
+            document.getElementById('exploitability_table').innerHTML = "Exploitability";
+            document.getElementById('impact_table').innerHTML = "Impact";
+            document.getElementById('risk_table').innerHTML = "Risk";
+            document.getElementById('add_poc').innerHTML = "Add";
+
+            config_radar.data.labels = [
+                "Integrity", "Availability", "Access vector", "Attack complexity", "Privileges required", "User interaction", "Scope", "Confidentiality"
+            ]
+        }
+    }
 
     function addRow(vuln) {
         $("#add-row").dataTable().fnAddData([
@@ -1112,10 +1186,14 @@
     }
 
     function clean() {
+        if (localStorage.getItem('language') === 'FR') {
+            document.getElementById("vuln_name").innerHTML = "Nom de la vulnérabilité";
+        } else {
+            document.getElementById("vuln_name").innerHTML = "Vulnerability name";
+        }
         document.getElementById("vuln_title").innerHTML = "Add new vulnerability";
         document.getElementById("poc_menu").style.display = "none";
         document.getElementById("name").value = "";
-        document.getElementById("vuln_name").innerHTML = "Vulnerability name";
         document.getElementById("description").value = "";
         document.getElementById("vuln_description").innerHTML = "";
         document.getElementById("step").value = "";
@@ -1408,7 +1486,13 @@
     }
 
     function exporter() {
-        const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+        const list_vuln ={
+            "list_vuln": JSON.parse(localStorage.getItem('list_vuln')),
+            "language": localStorage.getItem('language'),
+            "dateFrom": localStorage.getItem('dateFrom'),
+            "dateTo": localStorage.getItem('dateTo'),
+            "pentester": localStorage.getItem('pentester')
+        }
 
         var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(list_vuln));
         var a = document.createElement('a');
@@ -1424,6 +1508,69 @@
     }
 
     async function generateDocx() {
+
+        const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+
+        const report_lng = {
+            "FR": {
+                "report_name": "Audit de sécurité de " + localStorage.getItem('project_name'),
+                "report_page_of": " sur ",
+                "report_summary": "Synthèse",
+                "report_summary_text": "L'audit de sécurité de " + localStorage.getItem('project_name') + " a été réalisé par l'équipe de sécurité du " + localStorage.getItem('dateFrom').split('T')[0].split('-').reverse().join('/') + " au " + localStorage.getItem('dateTo').split('T')[0].split('-').reverse().join('/') + ". Le rapport suivant contient la liste des vulnérabilités trouvées lors de l'audit, leur description, leur évaluation du risque et les étapes pour les reproduire. Le rapport contient également la preuve de concept de chaque vulnérabilité.",
+                "report_summary_text2": "L'audit comporte " + list_vuln.length + " vulnérabilités, dont " + list_vuln.filter(vuln => vuln.score >= 7).length + " vulnérabilités avec un risque supérieur ou égal à élevé. Les vulnérabilités sont classées en fonction de leur score de risque.",
+                "report_vuln": "Vulnérabilités",
+                "report_vuln_list": "Liste des vulnérabilités : ",
+                "report_vuln_description": "Description : ",
+                "report_vuln_steps": "Étapes pour reproduire : ",
+                "report_vuln_impacts": "Impacts : ",
+                "report_vuln_evaluation": "Evaluation du risque : ",
+                "report_vuln_exploitability": "Exploitabilité",
+                "report_vuln_impact": "Impact",
+                "report_vuln_risk": "Risque",
+                "report_vuln_recommandation": "Recommandations : ",
+                "metrics_submetrics_img": "./assets/images/sub_metrics_FR.png",
+                "metrics_resulting_risk_img": "./assets/images/resulting_risk_FR.png",
+                "metrics_title": "Evaluation du risque",
+                "metrics_submetrics": "Sous-métriques",
+                "metrics_resulting_risk": "Risque résultant",
+                "cvss_title": "Evaluation basée sur le CVSS v3",
+                "cvss_text": "CVSS v3 est la troisième version du \"Common Vulnerability Scoring System\" développé par le \"Forum of Incident Response Security Teams\".",
+                "cvss_text2": "Ce score fournit une note entre 0 et 10, calculée à partir de critères d'exploitabilité et d'impact pour les vulnérabilités.",
+                "cvss_text3": "Le standard peut être consulté sur : https://www.first.org/cvss/specification-document",
+            },
+            "EN": {
+                "report_name": "Pentest report of " + localStorage.getItem('project_name'),
+                "report_page_of": " of ",
+                "report_summary": "Summary",
+                "report_summary_text": "The security audit of " + localStorage.getItem('project_name') + " has been conducted by the security team from " + localStorage.getItem('dateFrom') + " to " + localStorage.getItem('dateTo') + ". The following report contains the list of vulnerabilities found during the audit, their description, their risk evaluation and the steps to reproduce them. The report also contains the proof of concept of each vulnerability.",
+                "report_summary_text2": "The audit consists of " + list_vuln.length + " vulnerabilities, including " + list_vuln.filter(vuln => vuln.score >= 7).length + " vulnerabilities with a risk greater than or equal to high. The vulnerabilities are classified according to their risk score.",
+                "report_vuln": "Vulnerabilities: ",
+                "report_vuln_list": "List of vulnerabilities",
+                "report_vuln_description": "Description: ",
+                "report_vuln_steps": "Steps to reproduce: ",
+                "report_vuln_impacts": "Impacts: ",
+                "report_vuln_evaluation": "Risk evaluation: ",
+                "report_vuln_exploitability": "Exploitability",
+                "report_vuln_impact": "Impact",
+                "report_vuln_risk": "Risk",
+                "report_vuln_recommandation": "Recommandations: ",
+                "metrics_submetrics_img": "./assets/images/sub_metrics_EN.png",
+                "metrics_resulting_risk_img": "./assets/images/resulting_risk_EN.png",
+                "metrics_title": "Risk evaluation",
+                "metrics_submetrics": "Submetrics",
+                "metrics_resulting_risk": "Resulting risk",
+                "cvss_title": "CVSS v3 evaluation",
+                "cvss_text": "CVSS v3 is the third version of the \"Common Vulnerability Scoring System\" developed by the \"Forum of Incident Response Security Teams\".",
+                "cvss_text2": "This score provides a rating between 0 and 10, calculated from exploitability and impact criteria for vulnerabilities.",
+                "cvss_text3": "The standard can be consulted at: https://www.first.org/cvss/specification-document",
+            }
+        };
+
+        var report = report_lng["EN"];
+
+        if (document.getElementById('switch').checked) {
+            report = report_lng["FR"];
+        }
 
         if (localStorage.getItem('project_name') === null || localStorage.getItem('project_name') === ""){
             localStorage.setItem('project_name', "Project");
@@ -1448,24 +1595,33 @@
 
         const risk_color = {
             "Minor": "A2D572",
+            "Mineur": "A2D572",
             "Important": "FFCD56",
             "Major": "FF9F40",
-            "Critical": "FF6384"
+            "Majeur": "FF9F40",
+            "Critical": "FF6384",
+            "Critique": "FF6384"
         };
         const exploitability_color = {
             "Very hard": "A2D572",
+            "Très difficile": "A2D572",
             "Hard": "FFCD56",
+            "Difficile": "FFCD56",
             "Medium": "FF9F40",
-            "Easy": "FF6384"
+            "Moyen": "FF9F40",
+            "Easy": "FF6384",
+            "Facile": "FF6384"
         };
         const impact_color = {
             "Minor": "A2D572",
+            "Mineur": "A2D572",
             "Important": "FFCD56",
             "Major": "FF9F40",
-            "Critical": "FF6384"
+            "Majeur": "FF9F40",
+            "Critical": "FF6384",
+            "Critique": "FF6384"
         };
 
-        const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
         var doc = new docx.Document({
             styles: {
                 default: {
@@ -1489,12 +1645,12 @@
                             new docx.Paragraph({
                                 alignment: docx.AlignmentType.CENTER,
                                 children: [
-                                    new docx.TextRun("Pentest report of " + localStorage.getItem('project_name')),
+                                    new docx.TextRun(report.report_name),
                                     new docx.TextRun({
                                         children: [" Page ", docx.PageNumber.CURRENT],
                                     }),
                                     new docx.TextRun({
-                                        children: [" of ", docx.PageNumber.TOTAL_PAGES],
+                                        children: [report.report_page_of, docx.PageNumber.TOTAL_PAGES],
                                     }),
                                 ],
                             }),
@@ -1504,7 +1660,7 @@
                 children: [
                     new docx.Paragraph({
                         children: [
-                            new docx.TextRun("Pentest report of " + localStorage.getItem('project_name')),
+                            new docx.TextRun(report.report_name),
                         ],
                         heading: docx.HeadingLevel.TITLE,
                         alignment: docx.AlignmentType.CENTER,
@@ -1514,7 +1670,7 @@
                         children: [
                             new docx.TextRun(
                                 {
-                                    text: "Executive summary: ",
+                                    text: report.report_summary,
                                 }),
                         ],
                         heading: docx.HeadingLevel.HEADING_1,
@@ -1523,12 +1679,12 @@
                         children: [
                             new docx.TextRun(
                                 {
-                                    text: "The pentest of " + localStorage.getItem('project_name') + " has been conducted by the security team from " + localStorage.getItem('dateFrom') + " to " + localStorage.getItem('dateTo') +". The following report contains the list of vulnerabilities found during the pentest, their description, their risk evaluation and the steps to reproduce them. The report also contains the proof of concept of each vulnerability.",
+                                    text: report.report_summary_text,
                                 break: 1
                             }),
                             new docx.TextRun(
                                 {
-                                    text: "The audit consists of " + list_vuln.length + " vulnerabilities, including " + list_vuln.filter(vuln => vuln.score >= 7).length + " vulnerabilities with a risk greater than or equal to high. The vulnerabilities are classified according to their risk score.",
+                                    text: report.report_summary_text2,
                                     break: 1
                             }),
                         ],
@@ -1588,7 +1744,7 @@
                     children: [
                         new docx.TextRun(
                             {
-                                text: "Vulnerability summary: ",
+                                text: report.report_vuln,
                             }),
                     ],
                     heading: docx.HeadingLevel.HEADING_1,
@@ -1672,7 +1828,7 @@
                             children: [
                                 new docx.TextRun(
                                     {
-                                        text: "Vulnerability list : ",
+                                        text: report.report_vuln_list,
                                     }),
                             ],
                             heading: docx.HeadingLevel.HEADING_1,
@@ -1751,7 +1907,7 @@
                                                 children: [
                                                     new docx.TextRun(
                                                         {
-                                                            text: "Description : ",
+                                                            text: report.report_vuln_description,
                                                             allCaps: true,
                                                             color: "#6c7ae0",
                                                             break: 1
@@ -1767,7 +1923,7 @@
                                                 children: [
                                                     new docx.TextRun(
                                                         {
-                                                            text: "Steps to reproduce : ",
+                                                            text: report.report_vuln_steps,
                                                             allCaps: true,
                                                             color: "#6c7ae0",
                                                             break: 1
@@ -1783,7 +1939,7 @@
                                                 children: [
                                                     new docx.TextRun(
                                                         {
-                                                            text: "Impact : ",
+                                                            text: report.report_vuln_impacts,
                                                             allCaps: true,
                                                             color: "#6c7ae0",
                                                             break: 1
@@ -1799,7 +1955,7 @@
                                                 children: [
                                                     new docx.TextRun(
                                                         {
-                                                            text: "Risk evaluation : ",
+                                                            text: report.report_vuln_evaluation,
                                                             allCaps: true,
                                                             color: "#6c7ae0",
                                                             break: 1
@@ -1819,7 +1975,7 @@
                                                                     children: [
                                                                         new docx.TextRun(
                                                                             {
-                                                                                text: "Exploitability",
+                                                                                text: report.report_vuln_exploitability,
                                                                                 color: "FFFFFF",
                                                                             }
                                                                         )],
@@ -1856,7 +2012,7 @@
                                                                     children: [
                                                                         new docx.TextRun(
                                                                             {
-                                                                                text: "Impact",
+                                                                                text: report.report_vuln_impact,
                                                                                 color: "FFFFFF",
                                                                             }
                                                                         )],
@@ -1893,7 +2049,7 @@
                                                                     children: [
                                                                         new docx.TextRun(
                                                                             {
-                                                                                text: "Risk",
+                                                                                text: report.report_vuln_risk,
                                                                                 color: "FFFFFF",
                                                                             }
                                                                         )],
@@ -2066,7 +2222,7 @@
                                                 children: [
                                                     new docx.TextRun(
                                                         {
-                                                            text: "Recommandations : ",
+                                                            text: report.report_vuln_recommandation,
                                                             allCaps: true,
                                                             color: "#6c7ae0",
                                                             break: 1
@@ -2115,7 +2271,7 @@
                 ],
             });
         });
-        const sub_metrics = await fetch('./assets/images/sub_metrics.png').then(response => response.blob()).then(blob => {
+        const sub_metrics = await fetch(report.metrics_submetrics_img).then(response => response.blob()).then(blob => {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onloadend = () => resolve(reader.result);
@@ -2123,7 +2279,7 @@
                 reader.readAsDataURL(blob);
             });
         });
-        const resulting_risk = await fetch('./assets/images/resulting_risk.png').then(response => response.blob()).then(blob => {
+        const resulting_risk = await fetch(report.metrics_resulting_risk_img).then(response => response.blob()).then(blob => {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onloadend = () => resolve(reader.result);
@@ -2135,11 +2291,11 @@
             properties: {},
             children: [
                 new docx.Paragraph({
-                    text: "Risk ratings:",
+                    text: report.metrics_title,
                     heading: docx.HeadingLevel.HEADING_1
                 }),
                 new docx.Paragraph({
-                    text: "Sub metrics ",
+                    text: report.metrics_submetrics,
                     heading: docx.HeadingLevel.HEADING_2,
                 }),
                 new docx.Paragraph({
@@ -2155,7 +2311,7 @@
                     alignment: docx.AlignmentType.CENTER,
                 }),
                 new docx.Paragraph({
-                    text: "Resulting risk ",
+                    text: report.metrics_resulting_risk,
                     heading: docx.HeadingLevel.HEADING_2,
                 }),
                 new docx.Paragraph({
@@ -2176,19 +2332,24 @@
             properties: {},
             children: [
                 new docx.Paragraph({
-                    text: "CVSS V3 Ratings",
+                    text: report.cvss_title,
                     heading: docx.HeadingLevel.HEADING_1,
                 }),
                 new docx.Paragraph({
                     children: [
                         new docx.TextRun(
                         {
-                            text: "CVSS v3 is the third version of the Common Vulnerability Scoring System developed by the Forum of Incident Response Security Teams.",
+                            text: report.cvss_text,
                             break: 1,
                         }),
                         new docx.TextRun(
                         {
-                            text: "Specification can be read on: https://www.first.org/cvss/specification-document",
+                            text: report.cvss_text2,
+                            break: 1,
+                        }),
+                        new docx.TextRun(
+                        {
+                            text: report.cvss_text3,
                             break: 1,
                         }),
                     ],
@@ -2280,14 +2441,36 @@
             var reader = new FileReader();
             reader.readAsText(file, 'UTF-8');
             reader.onload = readerEvent => {
-                var content = readerEvent.target.result;
-                localStorage.setItem('list_vuln', content);
-                var table = $('#add-row').DataTable();
-                table.clear().draw();
-                JSON.parse(content).forEach(vuln => {
-                    addRow(vuln);
-                });
-                colorCVSS();
+                try {
+                    var content = JSON.parse(readerEvent.target.result);
+                    localStorage.setItem('list_vuln', JSON.stringify(content.list_vuln));
+                    localStorage.setItem('language', content.language);
+                    document.getElementById('switch').checked = content.language === "FR";
+                    change_language();
+                    localStorage.setItem('dateFrom', content.dateFrom);
+                    document.getElementById("dateFrom").value = content.dateFrom;
+                    localStorage.setItem('dateTo', content.dateTo);
+                    document.getElementById("dateTo").value = content.dateTo;
+                    localStorage.setItem('pentester', content.pentester);
+                    document.getElementById("pentester").value = content.pentester;
+                    document.getElementById("project_name").value = file.name.split(".")[0];
+                    document.getElementById("title").innerHTML = file.name.split(".")[0];
+                    var table = $('#add-row').DataTable();
+                    table.clear().draw();
+                    content.list_vuln.forEach(vuln => {
+                        addRow(vuln);
+                    });
+                    colorCVSS();
+                } catch (error) {
+                    swal({
+                        title: "Error",
+                        text: "The file is not in the correct format for Pentest Helper",
+                        icon: "error",
+                        button: "OK",
+                    }).then(() => {
+                        location.reload();
+                    });
+                }
             }
             if (localStorage.getItem('project_name')) {
                 document.getElementById("project_name").value = localStorage.getItem('project_name');
@@ -2295,7 +2478,6 @@
             else {
                 document.getElementById("project_name").value = file.name.split(".")[0];
             }
-            setProject();
         }
         input.click();
     }
@@ -2305,7 +2487,11 @@
 
         vuln_name.innerHTML = document.getElementById("name").value;
         if (vuln_name.innerHTML == "") {
-            vuln_name.innerHTML = "Vulnerability name";
+            if (localStorage.getItem('language') === "FR") {
+                vuln_name.innerHTML = "Nom de la vulnérabilité";
+            } else {
+                vuln_name.innerHTML = "Vulnerability name";
+            }
         }
     }
 
@@ -2550,7 +2736,11 @@
         var impact_metric = impact;
 
         if (impact <= 2.5) {
-            impact = "Minor"
+            if (localStorage.getItem('language') === "FR") {
+                impact = "Mineur";
+            } else {
+                impact = "Minor";
+            }
             document.getElementById("impact").style.color = window.chartColors.green
         }
         else if (impact > 2.5 && impact <= 4) {
@@ -2558,11 +2748,19 @@
             document.getElementById("impact").style.color = window.chartColors.yellow
         }
         else if (impact > 4 && impact <= 5.5) {
-            impact = "Major"
+            if (localStorage.getItem('language') === "FR") {
+                impact = "Majeur";
+            } else {
+                impact = "Major";
+            }
             document.getElementById("impact").style.color = window.chartColors.orange
         }
         else {
-            impact = "Critical"
+            if (localStorage.getItem('language') === "FR") {
+                impact = "Critique";
+            } else {
+                impact = "Critical";
+            }
             document.getElementById("impact").style.color = window.chartColors.red
         }
 
@@ -2579,19 +2777,35 @@
         virt_exploitability = exploitability
 
         if (exploitability <= 1) {
-            exploitability = "Very hard"
+            if (localStorage.getItem('language') === "FR") {
+                exploitability = "Difficile";
+            } else {
+                exploitability = "Very hard";
+            }
             document.getElementById("exploitability").style.color = window.chartColors.green
         }
         else if (exploitability > 1 && exploitability <= 2) {
-            exploitability = "Hard"
+            if (localStorage.getItem('language') === "FR") {
+                exploitability = "Elevée";
+            } else {
+                exploitability = "Hard";
+            }
             document.getElementById("exploitability").style.color = window.chartColors.yellow
         }
         else if (exploitability > 2 && exploitability <= 3) {
-            exploitability = "Medium"
+            if (localStorage.getItem('language') === "FR") {
+                exploitability = "Moyen";
+            } else {
+                exploitability = "Medium";
+            }
             document.getElementById("exploitability").style.color = window.chartColors.orange
         }
         else {
-            exploitability = "Easy"
+            if (localStorage.getItem('language') === "FR") {
+                exploitability = "Facile";
+            } else {
+                exploitability = "Easy";
+            }
             document.getElementById("exploitability").style.color = window.chartColors.red
         }
 
@@ -2613,7 +2827,11 @@
 
         var risk_matrix;
 
-        risk_matrix = risk_matrix_en
+        if (localStorage.getItem('language') === "FR") {
+            risk_matrix = risk_matrix_fr;
+        } else {
+            risk_matrix = risk_matrix_en;
+        }
         var risk = risk_matrix[impact][exploitability]
 
         document.getElementById("risk").innerHTML = risk;

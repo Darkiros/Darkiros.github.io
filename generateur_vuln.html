@@ -700,25 +700,25 @@
             reader.onload = readerEvent => {
                 var content = readerEvent.target.result;
                 var data = JSON.parse(content);
-                //Replace name
+                
                 document.getElementById("name").value = data.vuln_name;
                 document.getElementById("vuln_name").innerHTML = data.vuln_name;
-                //Replace description
+                
                 document.getElementById("description").value = data.vuln_description;
                 document.getElementById("vuln_description").innerHTML = data.vuln_description.replace(/\n\r?/g, "<br>");
-                //Replace steps
+                
                 document.getElementById("step").value = data.vuln_step;
                 document.getElementById("vuln_step").innerHTML = data.vuln_step.replace(/\n\r?/g, "<br>");
-                //Replace impacts
+
                 document.getElementById("impacts").value = data.vuln_impacts;
                 document.getElementById("vuln_impacts").innerHTML = data.vuln_impacts.replace(/\n\r?/g, "<br>");
-                //Replace metrics
+
                 document.getElementById("exploitability").innerHTML = data.exploitability;
                 document.getElementById("impact").innerHTML = data.impact;
                 document.getElementById("risk").innerHTML = data.risk;
-                //Set CVSS
+
                 c.set(data.vuln_cvss);
-                //Replace recommandation
+
                 document.getElementById("recommandation").value = data.vuln_recommandation;
                 document.getElementById("vuln_recommandation").innerHTML = data.vuln_recommandation.replace(/\n\r?/g, "<br>");
             }
@@ -758,6 +758,9 @@
             document.getElementById("exploitability_table").innerHTML = "Exploitability";
             document.getElementById("impact_table").innerHTML = "Impact";
             document.getElementById("risk_table").innerHTML = "Risk";
+
+            labels = ["Integrity", "Availability", "Access vector", "Attack complexity", "Privileges required", "User interaction", "Scope", "Confidentiality"];
+            myRadar.data.labels = labels;
         }
         else {
             if (document.getElementById("name").value == "") {
@@ -770,6 +773,9 @@
             document.getElementById("impact_table").innerHTML = "Impact";
             document.getElementById("risk_table").innerHTML = "Risque";
             document.getElementById("cvss_title").innerHTML = "Evaluation CVSS 3.1 :";
+
+            labels = ["Intégrité", "Disponibilité", "Vecteur d'accès", "Complexité de l'attaque", "Privilèges requis", "Interaction utilisateur", "Portée", "Confidentialité"];
+            myRadar.data.labels = labels;
         }
         action();
     }
