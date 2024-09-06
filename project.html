@@ -138,6 +138,20 @@
                         [10, 25, 50, -1],
                         [10, 25, 50, "All"]
                     ],
+                    "columnDefs": [
+                        {
+                            "targets": 2, // Description
+                            "render": function (data, type, row) {
+                                var maxWords = 10;
+                                var wordsArray = data.split(' ');
+                                if (wordsArray.length > maxWords) {
+                                    // Tronquer le texte à maxWords et ajouter "..."
+                                    return wordsArray.slice(0, maxWords).join(' ') + '...';
+                                }
+                                return data;
+                            }
+                        }
+                    ],
                     responsive: true,
                 });
 
@@ -919,7 +933,7 @@
             document.getElementById('add_poc').innerHTML = "Ajouter";
 
             config_radar.data.labels = [
-                "Intégrité", "Disponibilité", "Vecteur d'accès", "Complexité de l'attaque", "Privilèges requis", "Interaction utilisateur", "Portée", "Confidentialité"
+                "Intégrité", "Disponibilité", "Vecteur d'accès", "Complexité", "Privilèges requis", "Interaction", "Portée", "Confidentialité"
             ] 
         }
         else {

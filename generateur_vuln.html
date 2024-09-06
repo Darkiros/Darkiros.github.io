@@ -672,6 +672,7 @@
         var risk = document.getElementById("risk").innerHTML;
         var vuln_cvss = c.get().vector;
         var vuln_recommandation = document.getElementById("recommandation").value;
+        var language = document.getElementById("switch").checked == false ? "EN" : "FR";
         var data = {
             "vuln_name": vuln_name,
             "vuln_description": vuln_description,
@@ -682,7 +683,8 @@
             "impact": impact,
             "risk": risk,
             "vuln_cvss": vuln_cvss,
-            "vuln_recommandation": vuln_recommandation
+            "vuln_recommandation": vuln_recommandation,
+            "language": language
         }
         vuln_name = vuln_name.replace(/\s/g, "_");
         var filename = vuln_name + ".json";
@@ -716,6 +718,15 @@
                 document.getElementById("exploitability").innerHTML = data.exploitability;
                 document.getElementById("impact").innerHTML = data.impact;
                 document.getElementById("risk").innerHTML = data.risk;
+
+                if (data.language == "EN") {
+                    document.getElementById("switch").checked = false;
+                }
+                else {
+                    document.getElementById("switch").checked = true;
+                }
+
+                change_language();
 
                 c.set(data.vuln_cvss);
 
@@ -774,7 +785,7 @@
             document.getElementById("risk_table").innerHTML = "Risque";
             document.getElementById("cvss_title").innerHTML = "Evaluation CVSS 3.1 :";
 
-            labels = ["Intégrité", "Disponibilité", "Vecteur d'accès", "Complexité de l'attaque", "Privilèges requis", "Interaction utilisateur", "Portée", "Confidentialité"];
+            labels = ["Intégrité", "Disponibilité", "Vecteur d'accès", "Complexité", "Privilèges requis", "Interaction", "Portée", "Confidentialité"];
             myRadar.data.labels = labels;
         }
         action();
