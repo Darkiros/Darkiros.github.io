@@ -1128,6 +1128,9 @@
         document.getElementById('vuln_title').innerHTML = "Add new note";
         document.getElementById('import_vuln').style.display = "none";
         document.getElementById('export_vuln').style.display = "none";
+
+        //clean the note display
+        document.getElementById('note_poc_display').innerHTML = "";
     }
 
     function display_poc(id) {
@@ -1280,6 +1283,7 @@
         const poc = document.getElementById('poc');
         var list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
         var vuln = list_vuln.find(vuln => vuln.id === parseInt(id));
+        
         if (vuln === undefined) {
             swal({
                 title: "Error",
@@ -1291,30 +1295,42 @@
         }
 
         if (poc.files.length > 0) {
+            const filePromises = [];
+
             for (let i = 0; i < poc.files.length; i++) {
-                var file = poc.files[i];
-                await readFileAsBase64(file).then(function (result) {
-                    if (vuln.poc === undefined) {
-                        vuln.poc = [];
-                    }
-                    var image = new Image();
-                    image.src = result;
-                    image.onload = function () {
-                        vuln.poc.push({ data: result, width: image.width, height: image.height });
-                        list_vuln[list_vuln.findIndex(vuln => vuln.id === parseInt(id))] = vuln;
-                    }
+                let file = poc.files[i];
+                let promise = readFileAsBase64(file).then(function (result) {
+                    return new Promise(function (resolve) {
+                        var image = new Image();
+                        image.src = result;
+                        image.onload = function () {
+                            if (vuln.poc === undefined) {
+                                vuln.poc = [];
+                            }
+                            vuln.poc.push({ data: result, width: image.width, height: image.height });
+                            resolve();  // Resolve when the image is fully loaded
+                        };
+                    });
                 }).catch(function (error) {
                     swal({
                         title: "Error",
-                        text: "An error occured while reading the file",
+                        text: "An error occurred while reading the file",
                         icon: "error",
                         button: "Ok",
                     });
                 });
+                filePromises.push(promise);
             }
+
+            // Wait for all images to load before continuing
+            await Promise.all(filePromises);
         }
+
         poc.value = "";
+
+        list_vuln[list_vuln.findIndex(vuln => vuln.id === parseInt(id))] = vuln;
         localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
+
         display_poc(id);
     }
 
@@ -1596,7 +1612,7 @@
     }
 
     async function create_note() {
-        var list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+        var list_vuln = JSON.parse(localStorage.getItem('list_vuln')) || [];
         const note = document.getElementById("note").value;
         const id = list_vuln.reduce((max, vuln) => vuln.id > max ? vuln.id : max, 0);
         var vuln = {
@@ -1607,40 +1623,37 @@
             poc: [],
         };
         
-
         const poc = document.getElementById('note_poc');
-        if (vuln === undefined) {
-            swal({
-                title: "Error",
-                text: "Please save the vulnerability before adding a proof of concept",
-                icon: "error",
-                button: "Ok",
-            });
-            return;
-        }
 
         if (poc.files.length > 0) {
+            const filePromises = [];
+
             for (let i = 0; i < poc.files.length; i++) {
-                var file = poc.files[i];
-                await readFileAsBase64(file).then(function (result) {
-                    if (vuln.poc === undefined) {
-                        vuln.poc = [];
-                    }
-                    var image = new Image();
-                    image.src = result;
-                    image.onload = function () {
-                        vuln.poc.push({data: result, width: image.width, height: image.height});
-                    };
+                let file = poc.files[i];
+                let promise = readFileAsBase64(file).then(function (result) {
+                    return new Promise(function (resolve) {
+                        var image = new Image();
+                        image.src = result;
+                        image.onload = function () {
+                            vuln.poc.push({ data: result, width: image.width, height: image.height });
+                            resolve();  // Résoudre quand l'image est complètement chargée
+                        };
+                    });
                 }).catch(function (error) {
                     swal({
                         title: "Error",
-                        text: "An error occured while reading the file",
+                        text: "An error occurred while reading the file",
                         icon: "error",
                         button: "Ok",
                     });
                 });
+                filePromises.push(promise);
             }
+
+            // Attendre que toutes les images soient chargées avant de continuer
+            await Promise.all(filePromises);
         }
+
         poc.value = "";
         list_vuln.push(vuln);
         localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
@@ -1650,6 +1663,7 @@
         $('#addRowModal').modal('hide');
         colorCVSS();
     }
+
 
     function revert_text() {
         //revert
@@ -1784,32 +1798,50 @@
         vuln.description = document.getElementById("note").value;
 
         const poc = document.getElementById('note_poc');
+        
         if (poc.files.length > 0) {
+            const filePromises = [];
+            
             for (let i = 0; i < poc.files.length; i++) {
-                var file = poc.files[i];
-                await readFileAsBase64(file).then(function (result) {
-                    if (vuln.poc === undefined) {
-                        vuln.poc = [];
-                    }
-                    var image = new Image();
-                    image.src = result;
-                    image.onload = function () {
-                        vuln.poc.push({data: result, width: image.width, height: image.height});
-                    };
+                let file = poc.files[i];
+                let promise = readFileAsBase64(file).then(function (result) {
+                    return new Promise(function (resolve) {
+                        var image = new Image();
+                        image.src = result;
+                        image.onload = function () {
+                            if (vuln.poc === undefined) {
+                                vuln.poc = [];
+                            }
+                            vuln.poc.push({
+                                data: result,
+                                width: image.width,
+                                height: image.height
+                            });
+                            resolve();  // Resolve when image is loaded
+                        };
+                    });
                 }).catch(function (error) {
                     swal({
                         title: "Error",
-                        text: "An error occured while reading the file",
+                        text: "An error occurred while reading the file",
                         icon: "error",
                         button: "Ok",
                     });
                 });
+                filePromises.push(promise);
             }
+
+            // Wait for all images to load before continuing
+            await Promise.all(filePromises);
         }
+
         poc.value = "";
 
         list_vuln[list_vuln.findIndex(vuln => vuln.id === parseInt(id))] = vuln;
+        console.log(vuln);
+        console.log(list_vuln);
         localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
+
         // reload table without refreshing the page
         var table = $('#add-row').DataTable();
         table.clear().draw();
@@ -1822,6 +1854,7 @@
         $('#addRowModal').modal('hide');
         colorCVSS();
     }
+
 
     function colorCVSS() {
         const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
