@@ -179,6 +179,9 @@
                             return "orange";
                         }
                         else {
+                            if (score === "") {
+                                return "white";
+                            }
                             return "red";
                         }
                     });
@@ -618,7 +621,7 @@
                                                             title="Import vulnerability">
                                                             <i class="fas fa-file-import"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-icon btn-link"
+                                                        <button id="export_vuln" type="button" class="btn btn-icon btn-link"
                                                             onclick="export_vuln()"
                                                             onmouseover="this.style.color='#1572e8'"
                                                             onmouseleave="this.style.color='white'"
@@ -637,11 +640,17 @@
                                                 <div class="card-body">
                                                     <ul class="nav nav-pills nav-secondary nav-pills-no-bd"
                                                         id="pills-tab-without-border" role="tablist">
-                                                        <li class="nav-item submenu">
+                                                        <li class="nav-item submenu" id="issue_submenu">
                                                             <a class="nav-link active show" id="pills-home-tab-nobd"
                                                                 data-toggle="pill" href="#pills-issue-nobd" role="tab"
                                                                 aria-controls="pills-home-nobd" aria-selected="true"
                                                                 onclick="display_issue()">Issue</a>
+                                                        </li>
+                                                        <li class="nav-item submenu" id="note_submenu">
+                                                            <a class="nav-link" id="pills-note-tab-nobd"
+                                                                data-toggle="pill" href="#pills-note-nobd" role="tab"
+                                                                aria-controls="pills-note-nobd" aria-selected="false"
+                                                                onclick="display_note()">Note</a>
                                                         </li>
                                                         <li class="nav-item submenu" id="poc_menu"
                                                             style="display: none;">
@@ -681,7 +690,7 @@
                                                                                     <textarea
                                                                                         class="form-control scroll"
                                                                                         id="description"
-                                                                                        style="height: fit-content; min-height: 10em;"
+                                                                                        style="height: fit-content; min-height: 10em; overflow-y: scroll;"
                                                                                         oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
                                                                                     </textarea>
                                                                                 </div>
@@ -697,7 +706,7 @@
                                                                                     <textarea
                                                                                         class="form-control scroll"
                                                                                         id="step"
-                                                                                        style="height: fit-content; min-height: 10em;"
+                                                                                        style="height: fit-content; min-height: 10em; overflow-y: scroll;"
                                                                                         oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
                                                                                     </textarea>
                                                                                 </div>
@@ -712,7 +721,7 @@
                                                                                     <textarea
                                                                                         class="form-control scroll"
                                                                                         id="impacts"
-                                                                                        style="height: fit-content; min-height: 6em;"
+                                                                                        style="height: fit-content; min-height: 6em; overflow-y: scroll;"
                                                                                         oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
                                                                                     </textarea>
                                                                                 </div>
@@ -733,7 +742,7 @@
                                                                                     <textarea
                                                                                         class="form-control scroll"
                                                                                         id="recommandation"
-                                                                                        style="height: fit-content; min-height: 6em;"
+                                                                                        style="height: fit-content; min-height: 6em; overflow-y: scroll;"
                                                                                         oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
                                                                                     </textarea>
                                                                                 </div>
@@ -813,13 +822,58 @@
                                                                                 of concept</label>
                                                                             <input type="file" id="poc"
                                                                                 class="form-control-file"
-                                                                                accept="image/png, image/jpg, image/jpeg" />
+                                                                                accept="image/png, image/jpg, image/jpeg" multiple />
                                                                             <button id="add_poc" class="btn btn-primary"
                                                                                 onclick="add_poc()">Add</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row" id="poc_display">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class = "row fade" id="pills-note-nobd" role="tabpanel" aria-labelledby="pills-note-tab-nobd" style="display: flex !important;">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="form-group"
+                                                                        style="width: 100%; margin-top: 1%;">
+                                                                        <div class="input-group" style="margin-bottom: 1%;">
+                                                                            <h3 class="input-group-text"
+                                                                                style="width: 12em;">Name</h3>
+                                                                            <input type="text" id="note_name" class="form-control" />
+                                                                        </div>
+                                                                        <textarea
+                                                                            class="form-control scroll"
+                                                                            id="note"
+                                                                            style="height: fit-content; min-height: 10em;"
+                                                                            oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>
+                                                                        </textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="form-group">
+                                                                        <div class="input-group">
+                                                                            <label for="poc" style="width: 12em;">Proof
+                                                                                of concept</label>
+                                                                            <input type="file" id="note_poc"
+                                                                                class="form-control-file"
+                                                                                accept="image/png, image/jpg, image/jpeg" multiple />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="center-box"
+                                                                            style="margin-top: 1%;">
+                                                                            <button class="btn btn-danger download"
+                                                                                style="width:160px" data-dismiss="modal"
+                                                                                aria-label="Close" style="width: 160px;" >Cancel</button>
+                                                                            <button id="save_note" class="btn btn-primary copy" style="width: 160px;"
+                                                                                onclick="create_note()">Save</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" id="note_poc_display" style="margin-top: 1%;">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -930,7 +984,6 @@
             document.getElementById('exploitability_table').innerHTML = "Exploitabilité";
             document.getElementById('impact_table').innerHTML = "Impact";
             document.getElementById('risk_table').innerHTML = "Risque";
-            document.getElementById('add_poc').innerHTML = "Ajouter";
 
             config_radar.data.labels = [
                 "Intégrité", "Disponibilité", "Vecteur d'accès", "Complexité", "Privilèges requis", "Interaction", "Portée", "Confidentialité"
@@ -950,7 +1003,6 @@
             document.getElementById('exploitability_table').innerHTML = "Exploitability";
             document.getElementById('impact_table').innerHTML = "Impact";
             document.getElementById('risk_table').innerHTML = "Risk";
-            document.getElementById('add_poc').innerHTML = "Add";
 
             config_radar.data.labels = [
                 "Integrity", "Availability", "Access vector", "Attack complexity", "Privileges required", "User interaction", "Scope", "Confidentiality"
@@ -963,11 +1015,11 @@
             vuln.id,
             vuln.name,
             vuln.description,
-            vuln.score,
+            vuln.score !== "" ? vuln.score : "N/A",
             `
             <div class="form-button-action">
                 <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
-                    data-original-title="Edit Task" onclick="edit(` + vuln.id + `)">
+                    data-original-title="Edit Task" onclick="edit(${vuln.id})">
                     <i class="fa fa-edit
                     "></i>
                 </button>
@@ -1026,7 +1078,7 @@
             children[i].cells[4].innerHTML = `
             <div class="form-button-action">
                 <button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
-                    data-original-title="Edit Task" onclick="edit(` + new_list_vuln[i].id + `)">
+                    data-original-title="Edit Task" onclick="edit(${new_list_vuln[i].id})">
                     <i class="fa fa-edit
                     "></i>
                 </button>
@@ -1059,6 +1111,23 @@
     function display_issue() {
         document.getElementById('pills-issue-nobd').style.display = "flex";
         document.getElementById('pills-poc-nobd').style.display = "none";
+        document.getElementById('pills-note-nobd').style.display = "none";
+        document.getElementById('vuln_title').innerHTML = "Add new vulnerability"; 
+        document.getElementById('note_submenu').style.display = "hidden";
+        document.getElementById('import_vuln').style.display = "inline-block";
+        document.getElementById('export_vuln').style.display = "inline-block";
+
+        document.getElementById('pills-profile-tab-nobd').classList.remove("active");
+        document.getElementById('pills-profile-tab-nobd').classList.remove("show");
+    }
+
+    function display_note() {
+        document.getElementById('pills-issue-nobd').style.display = "none";
+        document.getElementById('pills-poc-nobd').style.display = "none";
+        document.getElementById('pills-note-nobd').style.display = "flex";
+        document.getElementById('vuln_title').innerHTML = "Add new note";
+        document.getElementById('import_vuln').style.display = "none";
+        document.getElementById('export_vuln').style.display = "none";
     }
 
     function display_poc(id) {
@@ -1084,7 +1153,90 @@
                     delete_button.classList.add("btn-danger");
                     delete_button.style.display = "block";
 
-                    img.src = vuln.poc[i];
+                    img.src = vuln.poc[i].data;
+                    // check if the browser is firefox
+                    if (navigator.userAgent.indexOf("Firefox") != -1) {
+                        img.style.width = "-moz-available";
+                    }
+                    else {
+                        img.style.width = "-webkit-fill-available";
+                    }
+                    //img.style.height = "auto";
+                    img.style.marginBottom = "1%";
+                    img.style.marginLeft = "1em";
+
+                    div.style.width = "24%";
+                    div.style.marginBottom = "1%";
+
+                    div.appendChild(img);
+                    div.appendChild(delete_button);
+                    poc_display.appendChild(div);
+                }
+            }
+        });
+    }
+
+    function delete_note_poc(id, index) {
+        // demande de confirmation
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted the image will not be recoverable!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+                    const vuln = list_vuln.find(vuln => vuln.id === id);
+                    vuln.poc.splice(index, 1);
+                    list_vuln[list_vuln.findIndex(vuln => vuln.id === id)] = vuln;
+                    localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
+                    display_note_poc(id);
+                    new Notify({
+                        status: 'success',
+                        title: 'Image deleted',
+                        text: '',
+                        effect: 'fade',
+                        speed: 300,
+                        customClass: '',
+                        customIcon: '',
+                        showIcon: true,
+                        showCloseButton: true,
+                        autoclose: true,
+                        autotimeout: 1500,
+                        gap: 20,
+                        distance: 20,
+                        type: 1,
+                        position: 'top right'
+                    });
+                }
+            });
+    }
+    
+
+    function display_note_poc(id) {
+
+        // Display all proof of concept 
+        const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+        const poc_display = document.getElementById('note_poc_display');
+        poc_display.innerHTML = "";
+        list_vuln.forEach(vuln => {
+            if (vuln.id === id) {
+                for (let i = 0; i < vuln.poc.length; i++) {
+                    const div = document.createElement('div');
+                    const img = document.createElement('img');
+                    const delete_button = document.createElement('button');
+
+                    delete_button.innerHTML = "Delete";
+                    delete_button.setAttribute("onclick", "delete_note_poc(" + vuln.id + ", " + i + ")");
+                    delete_button.style.marginLeft = "auto";
+                    delete_button.style.marginRight = "auto";
+                    delete_button.classList.add("btn");
+                    delete_button.classList.add("btn-danger");
+                    delete_button.style.display = "block";
+
+                    img.src = vuln.poc[i].data;
                     // check if the browser is firefox
                     if (navigator.userAgent.indexOf("Firefox") != -1) {
                         img.style.width = "-moz-available";
@@ -1124,10 +1276,10 @@
         });
     }
 
-    function add_poc(id) {
+    async function add_poc(id) {
         const poc = document.getElementById('poc');
-        const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
-        const vuln = list_vuln.find(vuln => vuln.id === parseInt(id));
+        var list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+        var vuln = list_vuln.find(vuln => vuln.id === parseInt(id));
         if (vuln === undefined) {
             swal({
                 title: "Error",
@@ -1139,25 +1291,31 @@
         }
 
         if (poc.files.length > 0) {
-            var file = poc.files[0];
-            readFileAsBase64(file).then(function (result) {
-                if (vuln.poc === undefined) {
-                    vuln.poc = [];
-                }
-                vuln.poc.push(result);
-                list_vuln[list_vuln.findIndex(vuln => vuln.id === parseInt(id))] = vuln;
-                localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
-                display_poc(id);
-            }).catch(function (error) {
-                swal({
-                    title: "Error",
-                    text: "An error occured while reading the file",
-                    icon: "error",
-                    button: "Ok",
+            for (let i = 0; i < poc.files.length; i++) {
+                var file = poc.files[i];
+                await readFileAsBase64(file).then(function (result) {
+                    if (vuln.poc === undefined) {
+                        vuln.poc = [];
+                    }
+                    var image = new Image();
+                    image.src = result;
+                    image.onload = function () {
+                        vuln.poc.push({ data: result, width: image.width, height: image.height });
+                        list_vuln[list_vuln.findIndex(vuln => vuln.id === parseInt(id))] = vuln;
+                    }
+                }).catch(function (error) {
+                    swal({
+                        title: "Error",
+                        text: "An error occured while reading the file",
+                        icon: "error",
+                        button: "Ok",
+                    });
                 });
-            });
+            }
         }
         poc.value = "";
+        localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
+        display_poc(id);
     }
 
     function delete_poc(id, index) {
@@ -1222,14 +1380,23 @@
         document.getElementById("exploitability").innerHTML = "0";
         document.getElementById("impact").innerHTML = "0";
         document.getElementById("risk").innerHTML = "0";
+        document.getElementById("note").value = "";
+        document.getElementById("note_name").value = "";
         document.getElementById("save").setAttribute("onclick", "save()");
+        document.getElementById("save_note").setAttribute("onclick", "create_note()");
         document.getElementById("import_vuln").setAttribute("onclick", "import_vuln()");
+        document.getElementById("issue_submenu").style.display = "flex";
+        document.getElementById("note_submenu").style.display = "flex";
         document.getElementById("pills-issue-nobd").classList.add("active");
         document.getElementById("pills-issue-nobd").classList.add("show");
         document.getElementById("pills-home-tab-nobd").classList.add("active");
         document.getElementById("pills-home-tab-nobd").classList.add("show");
         document.getElementById("pills-profile-tab-nobd").classList.remove("active");
         document.getElementById("pills-profile-tab-nobd").classList.remove("show");
+        document.getElementById("pills-note-tab-nobd").classList.remove("active");
+        document.getElementById("pills-note-tab-nobd").classList.remove("show");
+        document.getElementById("note_poc").value = "";
+        document.getElementById("poc").value = "";
         display_issue();
         cleanSelect();
     }
@@ -1282,35 +1449,88 @@
         const list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
         const vuln = list_vuln.find(vuln => vuln.id === id);
 
-        document.getElementById("vuln_title").innerHTML = "Edit vulnerability - " + vuln.name;
-        document.getElementById("add_poc").setAttribute("onclick", "add_poc(" + id + ")");
-        document.getElementById("poc_menu").style.display = "block";
-        document.getElementById("pills-profile-tab-nobd").setAttribute("onclick", "display_poc(" + id + ")");
+        const escapeHTML = (str) => {
+            return str.replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+        };
 
-        document.getElementById("name").value = vuln.name;
-        document.getElementById("vuln_name").innerHTML = vuln.name;
-        document.getElementById("vuln_description").innerHTML = vuln.description.replace(/\n\r?/g, "<br>");
-        document.getElementById("description").value = vuln.description;
-        document.getElementById("vuln_step").innerHTML = vuln.steps.replace(/\n\r?/g, "<br>");
-        document.getElementById("step").value = vuln.steps;
-        document.getElementById("vuln_impacts").innerHTML = vuln.impacts.replace(/\n\r?/g, "<br>");
-        document.getElementById("impacts").value = vuln.impacts;
-        document.getElementById("vuln_recommandation").innerHTML = vuln.recommandation.replace(/\n\r?/g, "<br>");
-        document.getElementById("recommandation").value = vuln.recommandation;
-        c.set(vuln.cvss);
-        score_cvss = vuln.score;
-        document.getElementById("canvas").src = vuln.cvss_graph;
-        document.getElementById("exploitability").innerHTML = vuln.exploitability;
-        document.getElementById("impact").innerHTML = vuln.impact;
-        document.getElementById("risk").innerHTML = vuln.risk;
-        $('#addRowModal').modal('show');
-        //Change the button to validate
-        document.getElementById("save").setAttribute("onclick", "save(" + id + ")");
-        document.getElementById("import_vuln").setAttribute("onclick", "import_vuln(" + id + ")");
+        if (vuln.score === "") {
+            document.getElementById("note_name").value = vuln.name;
+            document.getElementById("note").value = vuln.description;
+            document.getElementById("pills-issue-nobd").classList.remove("active");
+            document.getElementById("pills-issue-nobd").classList.remove("show");
+            document.getElementById("pills-issue-nobd").style.display = "none";
+            document.getElementById("pills-home-tab-nobd").classList.remove("active");
+            document.getElementById("pills-home-tab-nobd").classList.remove("show");
+            document.getElementById("pills-poc-nobd").style.display = "none";
+            document.getElementById("pills-note-tab-nobd").classList.add("active");
+            document.getElementById("pills-note-tab-nobd").classList.add("show");
+            document.getElementById("pills-note-nobd").style.display = "flex";
+            document.getElementById("pills-note-nobd").classList.add("active");
+            document.getElementById("pills-note-nobd").classList.add("show");
+            document.getElementById("issue_submenu").style.display = "none";
+            document.getElementById("note_submenu").style.display = "flex";
+            document.getElementById("poc_menu").style.display = "none";
+            document.getElementById("import_vuln").style.display = "none";
+            document.getElementById("export_vuln").style.display = "none";
+            document.getElementById("vuln_title").innerHTML = "Edit note - " + escapeHTML(vuln.name);
+            document.getElementById("note_poc").value = "";
+            document.getElementById("save_note").setAttribute("onclick", "save_note(" + id + ")");
+            display_note_poc(id);
+            $('#addRowModal').modal('show');
+            
+        } else {
 
-        //Add <select> to choose the fiche_control content
-        addSelect(list_vuln, id);
+            document.getElementById("note_submenu").style.display = "none";
+            document.getElementById("pills-poc-nobd").style.display = "none";
+            document.getElementById("pills-note-nobd").style.display = "none";
 
+            document.getElementById("pills-home-tab-nobd").classList.add("active");
+            document.getElementById("pills-home-tab-nobd").classList.add("show");
+            document.getElementById("pills-profile-tab-nobd").classList.remove("active");
+            document.getElementById("pills-profile-tab-nobd").classList.remove("show");
+
+            document.getElementById("issue_submenu").style.display = "flex";
+            
+            document.getElementById("pills-note-nobd").classList.remove("active");
+            document.getElementById("pills-note-nobd").classList.remove("show");
+            document.getElementById("pills-issue-nobd").classList.add("active");
+            document.getElementById("pills-issue-nobd").classList.add("show");
+            document.getElementById("pills-issue-nobd").style.display = "flex";
+
+            document.getElementById("vuln_title").innerHTML = "Edit vulnerability - " + escapeHTML(vuln.name);
+            document.getElementById("add_poc").setAttribute("onclick", "add_poc(" + id + ")");
+            document.getElementById("poc_menu").style.display = "block";
+            document.getElementById("pills-profile-tab-nobd").setAttribute("onclick", "display_poc(" + id + ")");
+
+            document.getElementById("name").value = vuln.name;
+            document.getElementById("vuln_name").innerHTML = escapeHTML(vuln.name).replace(/\n\r?/g, "<br>");
+            document.getElementById("vuln_description").innerHTML = escapeHTML(vuln.description).replace(/\n\r?/g, "<br>");
+            document.getElementById("description").value = vuln.description;
+            document.getElementById("vuln_step").innerHTML = escapeHTML(vuln.steps).replace(/\n\r?/g, "<br>");
+            document.getElementById("step").value = vuln.steps;
+            document.getElementById("vuln_impacts").innerHTML = escapeHTML(vuln.impact).replace(/\n\r?/g, "<br>");
+            document.getElementById("impacts").value = vuln.impacts;
+            document.getElementById("vuln_recommandation").innerHTML = escapeHTML(vuln.recommandation).replace(/\n\r?/g, "<br>");
+            document.getElementById("recommandation").value = vuln.recommandation;
+            c.set(vuln.cvss);
+            score_cvss = vuln.score;
+            document.getElementById("canvas").src = vuln.cvss_graph;
+            document.getElementById("exploitability").innerHTML = vuln.exploitability;
+            document.getElementById("impact").innerHTML = vuln.impact;
+            document.getElementById("risk").innerHTML = vuln.risk;
+            document.getElementById("poc").value = "";
+            $('#addRowModal').modal('show');
+            //Change the button to validate
+            document.getElementById("save").setAttribute("onclick", "save(" + id + ")");
+            document.getElementById("import_vuln").setAttribute("onclick", "import_vuln(" + id + ")");
+
+            //Add <select> to choose the fiche_control content
+            addSelect(list_vuln, id);
+        }
     }
 
     function addSelect(list_vuln, vuln_id) {
@@ -1375,6 +1595,74 @@
         }
     }
 
+    async function create_note() {
+        var list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+        const note = document.getElementById("note").value;
+        const id = list_vuln.reduce((max, vuln) => vuln.id > max ? vuln.id : max, 0);
+        var vuln = {
+            id: id + 1,
+            name: document.getElementById("note_name").value,
+            description: note,
+            score: "",
+            poc: [],
+        };
+        
+
+        const poc = document.getElementById('note_poc');
+        if (vuln === undefined) {
+            swal({
+                title: "Error",
+                text: "Please save the vulnerability before adding a proof of concept",
+                icon: "error",
+                button: "Ok",
+            });
+            return;
+        }
+
+        if (poc.files.length > 0) {
+            for (let i = 0; i < poc.files.length; i++) {
+                var file = poc.files[i];
+                await readFileAsBase64(file).then(function (result) {
+                    if (vuln.poc === undefined) {
+                        vuln.poc = [];
+                    }
+                    var image = new Image();
+                    image.src = result;
+                    image.onload = function () {
+                        vuln.poc.push({data: result, width: image.width, height: image.height});
+                    };
+                }).catch(function (error) {
+                    swal({
+                        title: "Error",
+                        text: "An error occured while reading the file",
+                        icon: "error",
+                        button: "Ok",
+                    });
+                });
+            }
+        }
+        poc.value = "";
+        list_vuln.push(vuln);
+        localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
+
+        addRow(vuln);
+        clean();
+        $('#addRowModal').modal('hide');
+        colorCVSS();
+    }
+
+    function revert_text() {
+        //revert
+        var content = document.getElementById("vuln_description")
+        content.style.color = "rgba(169, 175, 187, 0.82)";
+        content = document.getElementById("vuln_step")
+        content.style.color = "rgba(169, 175, 187, 0.82)";
+        content = document.getElementById("vuln_impacts")
+        content.style.color = "rgba(169, 175, 187, 0.82)";
+        content = document.getElementById("vuln_recommandation")
+        content.style.color = "rgba(169, 175, 187, 0.82)";
+    }
+
     async function save(id) {
         // Change text color of content of description steps impacts recommandations in black
         // to avoid the color change when saving
@@ -1407,6 +1695,16 @@
                 cvss_graph: document.getElementById("canvas").toDataURL(),
                 score: score_cvss
             };
+            if (vuln.name === "" || vuln.description === "" || vuln.steps === "" || vuln.impacts === "" || vuln.recommandation === "") {
+                swal({
+                    title: "Error",
+                    text: "Please fill all the fields",
+                    icon: "error",
+                    button: "Ok",
+                });
+                revert_text();
+                return;
+            }
             list_vuln.push(vuln);
             var a = document.createElement("a");
             await html2canvas(document.getElementById("fiche")).then((canvas) => {
@@ -1434,6 +1732,17 @@
             vuln.risk = document.getElementById("risk").innerHTML;
             vuln.cvss_graph = document.getElementById("canvas").toDataURL();
             vuln.score = score_cvss;
+
+            if (vuln.name === "" || vuln.description === "" || vuln.steps === "" || vuln.impacts === "" || vuln.recommandation === "") {
+                swal({
+                    title: "Error",
+                    text: "Please fill all the fields",
+                    icon: "error",
+                    button: "Ok",
+                });
+                revert_text();
+                return;
+            }
 
             // Swap the id of the vulnerability if it has changed
             if (id !== parseInt(document.getElementById("id").value)) {
@@ -1463,15 +1772,53 @@
             });
         }
         clean();
-        //revert
-        var content = document.getElementById("vuln_description")
-        content.style.color = "rgba(169, 175, 187, 0.82)";
-        content = document.getElementById("vuln_step")
-        content.style.color = "rgba(169, 175, 187, 0.82)";
-        content = document.getElementById("vuln_impacts")
-        content.style.color = "rgba(169, 175, 187, 0.82)";
-        content = document.getElementById("vuln_recommandation")
-        content.style.color = "rgba(169, 175, 187, 0.82)";
+        revert_text();
+        $('#addRowModal').modal('hide');
+        colorCVSS();
+    }
+
+    async function save_note(id) {
+        var list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
+        var vuln = list_vuln.find(vuln => vuln.id === id);
+        vuln.name = document.getElementById("note_name").value;
+        vuln.description = document.getElementById("note").value;
+
+        const poc = document.getElementById('note_poc');
+        if (poc.files.length > 0) {
+            for (let i = 0; i < poc.files.length; i++) {
+                var file = poc.files[i];
+                await readFileAsBase64(file).then(function (result) {
+                    if (vuln.poc === undefined) {
+                        vuln.poc = [];
+                    }
+                    var image = new Image();
+                    image.src = result;
+                    image.onload = function () {
+                        vuln.poc.push({data: result, width: image.width, height: image.height});
+                    };
+                }).catch(function (error) {
+                    swal({
+                        title: "Error",
+                        text: "An error occured while reading the file",
+                        icon: "error",
+                        button: "Ok",
+                    });
+                });
+            }
+        }
+        poc.value = "";
+
+        list_vuln[list_vuln.findIndex(vuln => vuln.id === parseInt(id))] = vuln;
+        localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
+        // reload table without refreshing the page
+        var table = $('#add-row').DataTable();
+        table.clear().draw();
+        list_vuln.forEach(vuln => {
+            vuln.description = vuln.description.replace(/\n\r?/g, "<br>");
+            addRow(vuln);
+        });
+
+        clean();
         $('#addRowModal').modal('hide');
         colorCVSS();
     }
@@ -1490,6 +1837,9 @@
                 return "orange";
             }
             else {
+                if (score === "") {
+                    return "white";
+                }
                 return "red";
             }
         });
@@ -1531,7 +1881,7 @@
                 "report_page_of": " sur ",
                 "report_summary": "Synthèse",
                 "report_summary_text": "L'audit de sécurité de " + localStorage.getItem('project_name') + " a été réalisé par l'équipe de sécurité du " + localStorage.getItem('dateFrom').split('T')[0].split('-').reverse().join('/') + " au " + localStorage.getItem('dateTo').split('T')[0].split('-').reverse().join('/') + ". Le rapport suivant contient la liste des vulnérabilités trouvées lors de l'audit, leur description, leur évaluation du risque et les étapes pour les reproduire. Le rapport contient également la preuve de concept de chaque vulnérabilité.",
-                "report_summary_text2": "L'audit comporte " + list_vuln.length + " vulnérabilités, dont " + list_vuln.filter(vuln => vuln.score >= 7).length + " vulnérabilités avec un risque supérieur ou égal à élevé. Les vulnérabilités sont classées en fonction de leur score de risque.",
+                "report_summary_text2": "L'audit comporte " + list_vuln.filter(vuln => vuln.score !== "").length + " vulnérabilités, dont " + list_vuln.filter(vuln => vuln.score >= 7).length + " vulnérabilités avec un risque supérieur ou égal à \"élevé\". Les vulnérabilités sont classées en fonction de leur score de risque.",
                 "report_vuln": "Vulnérabilités",
                 "report_vuln_list": "Liste des vulnérabilités : ",
                 "report_vuln_description": "Description : ",
@@ -1767,44 +2117,46 @@
             ]
         });
         list_vuln.forEach(vuln => {
-            doc.addSection({
-                properties: { type: docx.SectionType.CONTINUOUS, },
-                children: [
-                    new docx.Paragraph({
-                        children: [
-                            new docx.TextRun(
-                                {
-                                    text: vuln.name,
-                                    underline: {},
-                                    allCaps: true,
-                                    color: "#6c7ae0"
-                                }
-                            ),
-                            new docx.TextRun(
-                                {
-                                    text: " " + vuln.score,
-                                    color: risk_color[vuln.risk.split(" ")[0]],
-                                }
-                            ),
-                            new docx.TextRun(
-                                {
-                                    text: " ➔ "
-                                }
-                            ),
-                            new docx.TextRun(
-                                {
-                                    text: vuln.risk,
-                                    color: risk_color[vuln.risk.split(" ")[0]],
-                                }
-                            ),
-                        ],
-                        anchor: vuln.name,
-                        bullet: {
-                            level: 0
-                        }
-                    })
-                ]
-            });
+            if (vuln.score !== "") {
+                doc.addSection({
+                    properties: { type: docx.SectionType.CONTINUOUS, },
+                    children: [
+                        new docx.Paragraph({
+                            children: [
+                                new docx.TextRun(
+                                    {
+                                        text: vuln.name,
+                                        underline: {},
+                                        allCaps: true,
+                                        color: "#6c7ae0"
+                                    }
+                                ),
+                                new docx.TextRun(
+                                    {
+                                        text: " " + vuln.score,
+                                        color: risk_color[vuln.risk.split(" ")[0]],
+                                    }
+                                ),
+                                new docx.TextRun(
+                                    {
+                                        text: " ➔ "
+                                    }
+                                ),
+                                new docx.TextRun(
+                                    {
+                                        text: vuln.risk,
+                                        color: risk_color[vuln.risk.split(" ")[0]],
+                                    }
+                                ),
+                            ],
+                            anchor: vuln.name,
+                            bullet: {
+                                level: 0
+                            }
+                        })
+                    ]
+                });
+            }
         });
         doc.addSection({
             properties: {},
@@ -1849,441 +2201,525 @@
                         }),
                     ]
                 })
-                doc.addSection({
-                    properties: {type: docx.SectionType.CONTINUOUS, },
-                    children: [
-                        new docx.Paragraph({
-                            text: vuln.name,
-                            heading: docx.HeadingLevel.HEADING_2,
-                        })
-                    ]
-                })
+                if (vuln.score !== "") {
+                    doc.addSection({
+                        properties: {type: docx.SectionType.CONTINUOUS, },
+                        children: [
+                            new docx.Paragraph({
+                                text: vuln.name,
+                                heading: docx.HeadingLevel.HEADING_2,
+                            })
+                        ]
+                    })
+                }
             } else {
+                if (vuln.score !== "") {
+                    doc.addSection({
+                        properties: {},
+                        children: [
+                            new docx.Paragraph({
+                                text: vuln.name,
+                                heading: docx.HeadingLevel.HEADING_2,
+                            })
+                        ]
+                    })
+                }
+            }
+            if (vuln.score !== "") {
+                for (let i = 0; i < vuln.poc.length; i++) {
+                    doc.addSection({
+                        properties: { type: docx.SectionType.CONTINUOUS, },
+                        children: [
+                            new docx.Paragraph({
+                                children: [
+                                    new docx.ImageRun({
+                                        data: vuln.poc[i].data,
+                                        transformation: {
+                                            width: 580,
+                                            height: (vuln.poc[i].height / vuln.poc[i].width) * 580,
+                                        },
+                                    }),
+                                ],
+                            })
+                        ]
+                    })
+                }
+            
+            
+                var tmp_description = vuln.description.split("\n");
+                var tmp_reproduce = vuln.steps.split("\n");
+                var tmp_impacts = vuln.impacts.split("\n");
+                var tmp_recommandation = vuln.recommandation.split("\n");
+                var ligne_description = [];
+                var ligne_reproduce = [];
+                var ligne_impacts = [];
+                var ligne_recommandation = [];
+                for (var i = 0; i < tmp_description.length; i++) {
+                    ligne_description.push(new docx.TextRun(
+                        {
+                            text: tmp_description[i],
+                            break: 1
+                        }));
+                }
+                for (var i = 0; i < tmp_reproduce.length; i++) {
+                    ligne_reproduce.push(new docx.TextRun(
+                        {
+                            text: tmp_reproduce[i],
+                            break: 1
+                        }));
+                }
+                for (var i = 0; i < tmp_impacts.length; i++) {
+                    ligne_impacts.push(new docx.TextRun(
+                        {
+                            text: tmp_impacts[i],
+                            break: 1
+                        }));
+                }
+                for (var i = 0; i < tmp_recommandation.length; i++) {
+                    ligne_recommandation.push(new docx.TextRun(
+                        {
+                            text: tmp_recommandation[i],
+                            break: 1
+                        }));
+                }
+                doc.addSection({
+                    properties: {},
+                    children: [
+                        new docx.Table({
+                            width: {
+                                size: 100,
+                                type: docx.WidthType.PERCENTAGE,
+                            },
+                            rows: [
+                                new docx.TableRow({
+                                    children: [
+                                        new docx.TableCell({
+                                            children: [
+                                                new docx.Paragraph({
+                                                    children: [
+                                                        new docx.Bookmark(
+                                                            {
+                                                                id: vuln.name,
+                                                                children: [
+                                                                    new docx.TextRun(
+                                                                        {
+                                                                            text: vuln.name,
+                                                                            underline: {},
+                                                                            allCaps: true,
+                                                                            color: "#6c7ae0"
+                                                                        }),
+                                                                ],
+                                                            }),
+                                                    ],
+                                                }),
+                                                new docx.Paragraph({
+                                                    children: [
+                                                        new docx.TextRun(
+                                                            {
+                                                                text: report.report_vuln_description,
+                                                                allCaps: true,
+                                                                color: "#6c7ae0",
+                                                                break: 1
+                                                            }),
+                                                        new docx.TextRun(
+                                                            {
+                                                                children: ligne_description,
+                                                            }),
+                                                    ],
+                                                }),
+                                                new docx.Paragraph({
+                                                    children: [
+                                                        new docx.TextRun(
+                                                            {
+                                                                text: report.report_vuln_steps,
+                                                                allCaps: true,
+                                                                color: "#6c7ae0",
+                                                                break: 1
+                                                            }),
+                                                        new docx.TextRun(
+                                                            {
+                                                                children: ligne_reproduce,
+                                                            }),
+                                                    ],
+                                                }),
+                                                new docx.Paragraph({
+                                                    children: [
+                                                        new docx.TextRun(
+                                                            {
+                                                                text: report.report_vuln_impacts,
+                                                                allCaps: true,
+                                                                color: "#6c7ae0",
+                                                                break: 1
+                                                            }),
+                                                        new docx.TextRun(
+                                                            {
+                                                                children: ligne_impacts,
+                                                            }),
+                                                    ],
+                                                }),
+                                                new docx.Paragraph({
+                                                    children: [
+                                                        new docx.TextRun(
+                                                            {
+                                                                text: report.report_vuln_evaluation,
+                                                                allCaps: true,
+                                                                color: "#6c7ae0",
+                                                                break: 1
+                                                            }),
+                                                    ],
+                                                }),
+                                                new docx.Table({
+                                                    width: {
+                                                        size: 100,
+                                                        type: docx.WidthType.PERCENTAGE,
+                                                    },
+                                                    rows: [
+                                                        new docx.TableRow({
+                                                            children: [
+                                                                new docx.TableCell({
+                                                                    children: [new docx.Paragraph({
+                                                                        children: [
+                                                                            new docx.TextRun(
+                                                                                {
+                                                                                    text: report.report_vuln_exploitability,
+                                                                                    color: "FFFFFF",
+                                                                                }
+                                                                            )],
+                                                                        alignment: docx.AlignmentType.CENTER
+                                                                    })],
+                                                                    shading: {
+                                                                        fill: "#6c7ae0",
+                                                                    },
+                                                                    borders: {
+                                                                        top: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        bottom: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        left: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        right: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                    }
+                                                                }),
+                                                                new docx.TableCell({
+                                                                    children: [new docx.Paragraph({
+                                                                        children: [
+                                                                            new docx.TextRun(
+                                                                                {
+                                                                                    text: report.report_vuln_impact,
+                                                                                    color: "FFFFFF",
+                                                                                }
+                                                                            )],
+                                                                        alignment: docx.AlignmentType.CENTER
+                                                                    })],
+                                                                    shading: {
+                                                                        fill: "#6c7ae0",
+                                                                    },
+                                                                    borders: {
+                                                                        top: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        bottom: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        left: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        right: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                    }
+                                                                }),
+                                                                new docx.TableCell({
+                                                                    children: [new docx.Paragraph({
+                                                                        children: [
+                                                                            new docx.TextRun(
+                                                                                {
+                                                                                    text: report.report_vuln_risk,
+                                                                                    color: "FFFFFF",
+                                                                                }
+                                                                            )],
+                                                                        alignment: docx.AlignmentType.CENTER
+                                                                    })],
+                                                                    shading: {
+                                                                        fill: "#6c7ae0",
+                                                                    },
+                                                                    borders: {
+                                                                        top: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        bottom: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        left: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        right: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                    }
+                                                                }),
+                                                            ],
+                                                        }),
+                                                        new docx.TableRow({
+                                                            children: [
+                                                                new docx.TableCell({
+                                                                    children: [new docx.Paragraph(
+                                                                        {
+                                                                            children: [
+                                                                                new docx.TextRun(
+                                                                                    {
+                                                                                        text: vuln.exploitability.split(" ")[0],
+                                                                                        color: exploitability_color[vuln.exploitability.split(" ")[0]],
+                                                                                    }
+                                                                                )],
+                                                                            alignment: docx.AlignmentType.CENTER
+                                                                        }
+                                                                    )],
+                                                                    shading: {
+                                                                        fill: "F5F5F5",
+                                                                    },
+                                                                    borders: {
+                                                                        top: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        bottom: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        left: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        right: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                    }
+                                                                }),
+                                                                new docx.TableCell({
+                                                                    children: [new docx.Paragraph(
+                                                                        {
+                                                                            children: [
+                                                                                new docx.TextRun(
+                                                                                    {
+                                                                                        text: vuln.impact.split(" ")[0],
+                                                                                        color: impact_color[vuln.impact.split(" ")[0]],
+                                                                                    }
+                                                                                )],
+                                                                            alignment: docx.AlignmentType.CENTER
+                                                                        }
+                                                                    )],
+                                                                    shading: {
+                                                                        fill: "F5F5F5",
+                                                                    },
+                                                                    borders: {
+                                                                        top: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        bottom: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        left: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        right: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                    }
+                                                                }),
+                                                                new docx.TableCell({
+                                                                    children: [new docx.Paragraph(
+                                                                        {
+                                                                            children: [
+                                                                                new docx.TextRun(
+                                                                                    {
+                                                                                        text: vuln.risk.split(" ")[0],
+                                                                                        color: risk_color[vuln.risk.split(" ")[0]],
+                                                                                    }
+                                                                                )],
+                                                                            alignment: docx.AlignmentType.CENTER
+                                                                        }
+                                                                    )],
+                                                                    shading: {
+                                                                        fill: "F5F5F5",
+                                                                    },
+                                                                    borders: {
+                                                                        top: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        bottom: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        left: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                        right: {
+                                                                            style: docx.BorderStyle.SINGLE,
+                                                                            size: 0,
+                                                                            color: "FFFFFF"
+                                                                        },
+                                                                    }
+                                                                }),
+                                                            ],
+                                                        }),
+                                                    ],
+                                                }),
+                                                new docx.Paragraph({
+                                                    children: [
+                                                        new docx.ImageRun({
+                                                            data: vuln.cvss_graph,
+                                                            transformation: {
+                                                                width: 300,
+                                                                height: 300
+                                                            }
+                                                        }),
+                                                    ],
+                                                    alignment: docx.AlignmentType.CENTER
+                                                }),
+                                                new docx.Paragraph({
+                                                    children: [
+                                                        new docx.TextRun(
+                                                            {
+                                                                text: report.report_vuln_recommandation,
+                                                                allCaps: true,
+                                                                color: "#6c7ae0",
+                                                                break: 1
+                                                            }),
+                                                        new docx.TextRun(
+                                                            {
+                                                                children: ligne_recommandation,
+                                                            }),
+                                                    ],
+                                                }),
+                                            ],
+                                            margins: {
+                                                top: 0,
+                                                bottom: 0,
+                                                left: 100,
+                                                right: 0,
+                                            },
+                                            borders: {
+                                                top: {
+                                                    style: docx.BorderStyle.SINGLE,
+                                                    size: 1,
+                                                    color: "FFFFFF"
+                                                },
+                                                bottom: {
+                                                    style: docx.BorderStyle.SINGLE,
+                                                    size: 1,
+                                                    color: "FFFFFF"
+                                                },
+                                                left: {
+                                                    style: docx.BorderStyle.SINGLE,
+                                                    size: 25,
+                                                    color: "6c7ae0"
+                                                },
+                                                right: {
+                                                    style: docx.BorderStyle.SINGLE,
+                                                    size: 0,
+                                                    color: "FFFFFF"
+                                                },
+                                            }
+                                        }),
+                                    ]
+                                }),
+                            ],
+                        }),
+                    ],
+                });
+            } else {
+                // Il s'agit d'une note
+                var ligne = [];
+                var tmp = vuln.description.split("\n");
+                for (var i = 0; i < tmp.length; i++) {
+                    ligne.push(new docx.TextRun(
+                        {
+                            text: tmp[i],
+                            break: 1
+                        }));
+                }
                 doc.addSection({
                     properties: {},
                     children: [
                         new docx.Paragraph({
-                            text: vuln.name,
-                            heading: docx.HeadingLevel.HEADING_2,
-                        })
-                    ]
-                })
-            }
-            for (let i = 0; i < vuln.poc.length; i++) {
-                doc.addSection({
-                    properties: { type: docx.SectionType.CONTINUOUS, },
-                    children: [
-                        new docx.Paragraph({
                             children: [
-                                new docx.ImageRun({
-                                    data: vuln.poc[i],
-                                    transformation: {
-                                        width: 580,
-                                        height: (vuln.fiche_height / vuln.fiche_width) * 500,
-                                    },
-                                }),
-                            ],
-                        })
-                    ]
-                })
-            }
-            doc.addSection({
-                properties: {},
-                children: [
-                    new docx.Table({
-                        width: {
-                            size: 100,
-                            type: docx.WidthType.PERCENTAGE,
-                        },
-                        rows: [
-                            new docx.TableRow({
-                                children: [
-                                    new docx.TableCell({
-                                        children: [
-                                            new docx.Paragraph({
-                                                children: [
-                                                    new docx.Bookmark(
-                                                        {
-                                                            id: vuln.name,
-                                                            children: [
-                                                                new docx.TextRun(
-                                                                    {
-                                                                        text: vuln.name,
-                                                                        underline: {},
-                                                                        allCaps: true,
-                                                                        color: "#6c7ae0"
-                                                                    }),
-                                                            ],
-                                                        }),
-                                                ],
-                                            }),
-                                            new docx.Paragraph({
-                                                children: [
-                                                    new docx.TextRun(
-                                                        {
-                                                            text: report.report_vuln_description,
-                                                            allCaps: true,
-                                                            color: "#6c7ae0",
-                                                            break: 1
-                                                        }),
-                                                    new docx.TextRun(
-                                                        {
-                                                            text: vuln.description,
-                                                            break: 1
-                                                        }),
-                                                ],
-                                            }),
-                                            new docx.Paragraph({
-                                                children: [
-                                                    new docx.TextRun(
-                                                        {
-                                                            text: report.report_vuln_steps,
-                                                            allCaps: true,
-                                                            color: "#6c7ae0",
-                                                            break: 1
-                                                        }),
-                                                    new docx.TextRun(
-                                                        {
-                                                            text: vuln.steps,
-                                                            break: 1
-                                                        }),
-                                                ],
-                                            }),
-                                            new docx.Paragraph({
-                                                children: [
-                                                    new docx.TextRun(
-                                                        {
-                                                            text: report.report_vuln_impacts,
-                                                            allCaps: true,
-                                                            color: "#6c7ae0",
-                                                            break: 1
-                                                        }),
-                                                    new docx.TextRun(
-                                                        {
-                                                            text: vuln.impacts,
-                                                            break: 1
-                                                        }),
-                                                ],
-                                            }),
-                                            new docx.Paragraph({
-                                                children: [
-                                                    new docx.TextRun(
-                                                        {
-                                                            text: report.report_vuln_evaluation,
-                                                            allCaps: true,
-                                                            color: "#6c7ae0",
-                                                            break: 1
-                                                        }),
-                                                ],
-                                            }),
-                                            new docx.Table({
-                                                width: {
-                                                    size: 100,
-                                                    type: docx.WidthType.PERCENTAGE,
-                                                },
-                                                rows: [
-                                                    new docx.TableRow({
-                                                        children: [
-                                                            new docx.TableCell({
-                                                                children: [new docx.Paragraph({
-                                                                    children: [
-                                                                        new docx.TextRun(
-                                                                            {
-                                                                                text: report.report_vuln_exploitability,
-                                                                                color: "FFFFFF",
-                                                                            }
-                                                                        )],
-                                                                    alignment: docx.AlignmentType.CENTER
-                                                                })],
-                                                                shading: {
-                                                                    fill: "#6c7ae0",
-                                                                },
-                                                                borders: {
-                                                                    top: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    bottom: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    left: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    right: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                }
-                                                            }),
-                                                            new docx.TableCell({
-                                                                children: [new docx.Paragraph({
-                                                                    children: [
-                                                                        new docx.TextRun(
-                                                                            {
-                                                                                text: report.report_vuln_impact,
-                                                                                color: "FFFFFF",
-                                                                            }
-                                                                        )],
-                                                                    alignment: docx.AlignmentType.CENTER
-                                                                })],
-                                                                shading: {
-                                                                    fill: "#6c7ae0",
-                                                                },
-                                                                borders: {
-                                                                    top: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    bottom: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    left: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    right: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                }
-                                                            }),
-                                                            new docx.TableCell({
-                                                                children: [new docx.Paragraph({
-                                                                    children: [
-                                                                        new docx.TextRun(
-                                                                            {
-                                                                                text: report.report_vuln_risk,
-                                                                                color: "FFFFFF",
-                                                                            }
-                                                                        )],
-                                                                    alignment: docx.AlignmentType.CENTER
-                                                                })],
-                                                                shading: {
-                                                                    fill: "#6c7ae0",
-                                                                },
-                                                                borders: {
-                                                                    top: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    bottom: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    left: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    right: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                }
-                                                            }),
-                                                        ],
-                                                    }),
-                                                    new docx.TableRow({
-                                                        children: [
-                                                            new docx.TableCell({
-                                                                children: [new docx.Paragraph(
-                                                                    {
-                                                                        children: [
-                                                                            new docx.TextRun(
-                                                                                {
-                                                                                    text: vuln.exploitability.split(" ")[0],
-                                                                                    color: exploitability_color[vuln.exploitability.split(" ")[0]],
-                                                                                }
-                                                                            )],
-                                                                        alignment: docx.AlignmentType.CENTER
-                                                                    }
-                                                                )],
-                                                                shading: {
-                                                                    fill: "F5F5F5",
-                                                                },
-                                                                borders: {
-                                                                    top: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    bottom: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    left: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    right: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                }
-                                                            }),
-                                                            new docx.TableCell({
-                                                                children: [new docx.Paragraph(
-                                                                    {
-                                                                        children: [
-                                                                            new docx.TextRun(
-                                                                                {
-                                                                                    text: vuln.impact.split(" ")[0],
-                                                                                    color: impact_color[vuln.impact.split(" ")[0]],
-                                                                                }
-                                                                            )],
-                                                                        alignment: docx.AlignmentType.CENTER
-                                                                    }
-                                                                )],
-                                                                shading: {
-                                                                    fill: "F5F5F5",
-                                                                },
-                                                                borders: {
-                                                                    top: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    bottom: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    left: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    right: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                }
-                                                            }),
-                                                            new docx.TableCell({
-                                                                children: [new docx.Paragraph(
-                                                                    {
-                                                                        children: [
-                                                                            new docx.TextRun(
-                                                                                {
-                                                                                    text: vuln.risk.split(" ")[0],
-                                                                                    color: risk_color[vuln.risk.split(" ")[0]],
-                                                                                }
-                                                                            )],
-                                                                        alignment: docx.AlignmentType.CENTER
-                                                                    }
-                                                                )],
-                                                                shading: {
-                                                                    fill: "F5F5F5",
-                                                                },
-                                                                borders: {
-                                                                    top: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    bottom: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    left: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                    right: {
-                                                                        style: docx.BorderStyle.SINGLE,
-                                                                        size: 0,
-                                                                        color: "FFFFFF"
-                                                                    },
-                                                                }
-                                                            }),
-                                                        ],
-                                                    }),
-                                                ],
-                                            }),
-                                            new docx.Paragraph({
-                                                children: [
-                                                    new docx.ImageRun({
-                                                        data: vuln.cvss_graph,
-                                                        transformation: {
-                                                            width: 300,
-                                                            height: 300
-                                                        }
-                                                    }),
-                                                ],
-                                                alignment: docx.AlignmentType.CENTER
-                                            }),
-                                            new docx.Paragraph({
-                                                children: [
-                                                    new docx.TextRun(
-                                                        {
-                                                            text: report.report_vuln_recommandation,
-                                                            allCaps: true,
-                                                            color: "#6c7ae0",
-                                                            break: 1
-                                                        }),
-                                                    new docx.TextRun(
-                                                        {
-                                                            text: vuln.recommandation,
-                                                            break: 1
-                                                        }),
-                                                ],
-                                            }),
-                                        ],
-                                        margins: {
-                                            top: 0,
-                                            bottom: 0,
-                                            left: 100,
-                                            right: 0,
-                                        },
-                                        borders: {
-                                            top: {
-                                                style: docx.BorderStyle.SINGLE,
-                                                size: 1,
-                                                color: "FFFFFF"
-                                            },
-                                            bottom: {
-                                                style: docx.BorderStyle.SINGLE,
-                                                size: 1,
-                                                color: "FFFFFF"
-                                            },
-                                            left: {
-                                                style: docx.BorderStyle.SINGLE,
-                                                size: 25,
-                                                color: "6c7ae0"
-                                            },
-                                            right: {
-                                                style: docx.BorderStyle.SINGLE,
-                                                size: 0,
-                                                color: "FFFFFF"
-                                            },
-                                        }
+                                new docx.TextRun(
+                                    {
+                                        children: ligne,
                                     }),
-                                ]
-                            }),
-                        ],
-                    }),
-                ],
-            });
+                            ],
+                        }),
+                    ]
+                });
+                if (vuln.poc.length !== 0) {
+                    for (let i = 0; i < vuln.poc.length; i++) {
+                        doc.addSection({
+                            properties: { type: docx.SectionType.CONTINUOUS, },
+                            children: [
+                                new docx.Paragraph({
+                                    children: [
+                                        new docx.ImageRun({
+                                            data: vuln.poc[i].data,
+                                            transformation: {
+                                                width: 580,
+                                                height: (vuln.poc[i].height / vuln.poc[i].width) * 580,
+                                            },
+                                        }),
+                                    ],
+                                })
+                            ]
+                        })
+                    }
+                }
+            }
         });
         const sub_metrics = await fetch(report.metrics_submetrics_img).then(response => response.blob()).then(blob => {
             return new Promise((resolve, reject) => {
@@ -2519,31 +2955,64 @@
 
     function listener_step(evt) {
         vuln_step = document.getElementById("vuln_step");
-        vuln_step.innerHTML = this.value.replace(/\n\r?/g, "<br>");
+
+        const escapeHTML = (str) => {
+            return str.replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+        };
+
+        const safeValue = escapeHTML(this.value).replace(/\n\r?/g, "<br>");
+
+        vuln_step.innerHTML = safeValue;
     }
 
     function listener_description(evt) {
-        /*// if there is an image and if is too big, it will be resized and centered
-        var images = this.getElementsByTagName("img");
-        for (let index = 0; index < images.length; index++) {
-            if (images[index].width > 500) {
-                images[index].width = 500;
-            }
-        }
         vuln_description = document.getElementById("vuln_description");
-        vuln_description.innerHTML = this.innerHTML;*/
-        vuln_description = document.getElementById("vuln_description");
-        vuln_description.innerHTML = this.value.replace(/\n\r?/g, "<br>");
+
+        const escapeHTML = (str) => {
+            return str.replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+        };
+
+        const safeValue = escapeHTML(this.value).replace(/\n\r?/g, "<br>");
+
+        vuln_description.innerHTML = safeValue;
     }
 
     function listener_impacts(evt) {
         vuln_impacts = document.getElementById("vuln_impacts");
-        vuln_impacts.innerHTML = this.value.replace(/\n\r?/g, "<br>");
+        
+        const escapeHTML = (str) => {
+            return str.replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+        };
+
+        const safeValue = escapeHTML(this.value).replace(/\n\r?/g, "<br>");
+        vuln_impacts.innerHTML = safeValue;
     }
 
     function listener_recommandation(evt) {
         vuln_recommandation = document.getElementById("vuln_recommandation");
-        vuln_recommandation.innerHTML = this.value.replace(/\n\r?/g, "<br>");
+
+        const escapeHTML = (str) => {
+            return str.replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+        };
+
+        const safeValue = escapeHTML(this.value).replace(/\n\r?/g, "<br>");
+        vuln_recommandation.innerHTML = safeValue;
     }
 
     function listener_project_name(evt) {
