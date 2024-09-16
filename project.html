@@ -1011,10 +1011,18 @@
     }
 
     function addRow(vuln) {
+        const escapeHTML = (unsafe) => {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        };
         $("#add-row").dataTable().fnAddData([
             vuln.id,
-            vuln.name,
-            vuln.description,
+            escapeHTML(vuln.name),
+            escapeHTML(vuln.description),
             vuln.score !== "" ? vuln.score : "N/A",
             `
             <div class="form-button-action">
@@ -1528,7 +1536,7 @@
             document.getElementById("description").value = vuln.description;
             document.getElementById("vuln_step").innerHTML = escapeHTML(vuln.steps).replace(/\n\r?/g, "<br>");
             document.getElementById("step").value = vuln.steps;
-            document.getElementById("vuln_impacts").innerHTML = escapeHTML(vuln.impact).replace(/\n\r?/g, "<br>");
+            document.getElementById("vuln_impacts").innerHTML = escapeHTML(vuln.impacts).replace(/\n\r?/g, "<br>");
             document.getElementById("impacts").value = vuln.impacts;
             document.getElementById("vuln_recommandation").innerHTML = escapeHTML(vuln.recommandation).replace(/\n\r?/g, "<br>");
             document.getElementById("recommandation").value = vuln.recommandation;
