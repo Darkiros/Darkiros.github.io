@@ -581,6 +581,15 @@
     }
 
     function inspect(id) {
+
+        const escapeHTML = (str) => {
+            return str.replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+        };
+
         clean();
         var command = data.find(x => x.id == id);
         var code = document.getElementById('code');
@@ -663,7 +672,7 @@
                                 code = code.replace(new RegExp("\\["+key+"([^\\]]*)\\]"), map_parameters[key]);
                             }
                         });
-                        document.getElementById("code").innerHTML = code;                   
+                        document.getElementById("code").innerHTML = escapeHTML(code);                   
                     }, false);
                 });               
             }
@@ -687,13 +696,13 @@
 
     function copy(id) {
         var command = data.find(x => x.id == id);
-        var code = command.command;
-        var el = document.createElement('textarea');
-        el.value = code;
-        document.body.appendChild(el);
-        el.select();
+        var code = document.getElementById('code').innerText
+        var input = document.getElementsByTagName('input')[0];
+        var old_value = input.value;
+        input.value = code;
+        input.select();
         document.execCommand('copy');
-        document.body.removeChild(el);
+        input.value = old_value;
         new Notify({
             status: 'success',
             title: 'Command copied',
