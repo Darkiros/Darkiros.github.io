@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -33,6 +33,7 @@
   <!-- CSS Files -->
   <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
   <link rel="stylesheet" href="./assets/css/atlantis.min.css" />
+  <link rel="stylesheet" href="./assets/css/home.css" />
 
 </head>
 
@@ -188,9 +189,239 @@
     <div class="main-panel" id="vanta">
       <div class="content">
         <div class="page-inner">
-          <div class="ml-auto mr-auto" style="text-align: center;">
-            <img src="./assets/images/logo.png" class="img-fluid" alt="...">
+          <!-- Hero Section -->
+          <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+              <div class="hero-section">
+                <img src="./assets/images/logo.png" class="img-fluid mb-4" alt="Pentest Helper Logo" style="max-width: 200px;">
+                <h1 class="display-4 text-white font-weight-bold mb-3">Pentest Helper</h1>
+                <p class="lead text-white-50 mb-4">
+                  Your complete toolkit for penetration testing and security auditing. 
+                  Quickly access commands, CVSS calculators, report generators and much more.
+                </p>
+                <div class="row justify-content-center">
+                  <div class="col-auto">
+                    <a href="./project.html" class="btn btn-primary btn-lg mr-3 mb-3">
+                      <i class="fas fa-file-alt mr-2"></i>Pentest Reports
+                    </a>
+                  </div>
+                  <div class="col-auto">
+                    <a href="./calculatrice.html" class="btn btn-outline-light btn-lg mb-3">
+                      <i class="fas fa-calculator mr-2"></i>CVSS Calculator
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
+          <!-- Tools Overview -->
+          <div class="row">
+            <div class="col-12">
+              <div class="section-title text-center mb-5">
+                <h2 class="text-white mb-3">Available Tools</h2>
+                <p class="text-white-50">Discover all integrated tools to optimize your security testing</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Cheat Sheet -->
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);">
+                <div class="card-body text-center">
+                  <div class="tool-icon mb-3">
+                    <i class="fas fa-book fa-3x text-primary"></i>
+                  </div>
+                  <h5 class="card-title text-white">Cheat Sheet</h5>
+                  <p class="card-text text-white-50">
+                    Complete command database for all your favorite pentest tools.
+                  </p>
+                  <div class="mt-auto">
+                    <a href="./commands.html" class="btn btn-outline-primary">
+                      <i class="fas fa-arrow-right mr-2"></i>Explore
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CVSS Calculator -->
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);">
+                <div class="card-body text-center">
+                  <div class="tool-icon mb-3">
+                    <i class="fas fa-calculator fa-3x text-success"></i>
+                  </div>
+                  <h5 class="card-title text-white">CVSS 3.1 Calculator</h5>
+                  <p class="card-text text-white-50">
+                    Accurately calculate the CVSS score of your discovered vulnerabilities.
+                  </p>
+                  <div class="mt-auto">
+                    <a href="./calculatrice.html" class="btn btn-outline-success">
+                      <i class="fas fa-arrow-right mr-2"></i>Calculate
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Graphs Generator -->
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);">
+                <div class="card-body text-center">
+                  <div class="tool-icon mb-3">
+                    <i class="fas fa-chart-bar fa-3x text-warning"></i>
+                  </div>
+                  <h5 class="card-title text-white">Graphs Generator</h5>
+                  <p class="card-text text-white-50">
+                    Create professional graphs for your penetration testing reports.
+                  </p>
+                  <div class="mt-auto">
+                    <a href="./graphs.html" class="btn btn-outline-warning">
+                      <i class="fas fa-arrow-right mr-2"></i>Create
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vulnerability Sheet -->
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);">
+                <div class="card-body text-center">
+                  <div class="tool-icon mb-3">
+                    <i class="fas fa-bug fa-3x text-danger"></i>
+                  </div>
+                  <h5 class="card-title text-white">Vulnerability Sheet</h5>
+                  <p class="card-text text-white-50">
+                    Detailed sheet generator to document your vulnerabilities.
+                  </p>
+                  <div class="mt-auto">
+                    <a href="./generateur_vuln.html" class="btn btn-outline-danger">
+                      <i class="fas fa-arrow-right mr-2"></i>Generate
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pentest Reports -->
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);">
+                <div class="card-body text-center">
+                  <div class="tool-icon mb-3">
+                    <i class="fas fa-file-alt fa-3x text-info"></i>
+                  </div>
+                  <h5 class="card-title text-white">Pentest Reports</h5>
+                  <p class="card-text text-white-50">
+                    Manage and organize your penetration testing projects efficiently.
+                  </p>
+                  <div class="mt-auto">
+                    <a href="./project.html" class="btn btn-outline-info">
+                      <i class="fas fa-arrow-right mr-2"></i>Manage
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- GitHub -->
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card h-100" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);">
+                <div class="card-body text-center">
+                  <div class="tool-icon mb-3">
+                    <i class="fab fa-github fa-3x text-light"></i>
+                  </div>
+                  <h5 class="card-title text-white">Open Source</h5>
+                  <p class="card-text text-white-50">
+                    Contribute to the project or explore the source code on GitHub.
+                  </p>
+                  <div class="mt-auto">
+                    <a href="https://github.com/Darkiros/Darkiros.github.io" target="_blank" class="btn btn-outline-light">
+                      <i class="fab fa-github mr-2"></i>GitHub
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Features Section -->
+          <div class="row mt-5">
+            <div class="col-12">
+              <div class="section-title text-center mb-5">
+                <h2 class="text-white mb-3">Why Pentest Helper?</h2>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-4 text-center mb-4">
+              <div class="feature-item">
+                <i class="fas fa-rocket fa-3x text-primary mb-3"></i>
+                <h5 class="text-white">Fast & Efficient</h5>
+                <p class="text-white-50">
+                  Instant access to all your favorite tools and commands
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 text-center mb-4">
+              <div class="feature-item">
+                <i class="fas fa-mobile-alt fa-3x text-success mb-3"></i>
+                <h5 class="text-white">Mobile Compatible</h5>
+                <p class="text-white-50">
+                  Use your tools anywhere, on all your devices
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-4 text-center mb-4">
+              <div class="feature-item">
+                <i class="fas fa-shield-alt fa-3x text-warning mb-3"></i>
+                <h5 class="text-white">Secure</h5>
+                <p class="text-white-50">
+                  No data is sent to external servers
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Start -->
+          <div class="row mt-5">
+            <div class="col-lg-8 mx-auto">
+              <div class="card" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);">
+                <div class="card-body text-center">
+                  <h4 class="text-white mb-4">
+                    <i class="fas fa-play-circle mr-2"></i>Quick Start
+                  </h4>
+                  <div class="row">
+                    <div class="col-md-4 mb-3">
+                      <div class="step">
+                        <div class="step-number bg-primary text-white rounded-circle mx-auto mb-2" style="width: 40px; height: 40px; line-height: 40px;">1</div>
+                        <h6 class="text-white">Explore</h6>
+                        <p class="text-white-50 small">Browse available commands</p>
+                      </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                      <div class="step">
+                        <div class="step-number bg-success text-white rounded-circle mx-auto mb-2" style="width: 40px; height: 40px; line-height: 40px;">2</div>
+                        <h6 class="text-white">Customize</h6>
+                        <p class="text-white-50 small">Adapt parameters to your needs</p>
+                      </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                      <div class="step">
+                        <div class="step-number bg-warning text-white rounded-circle mx-auto mb-2" style="width: 40px; height: 40px; line-height: 40px;">3</div>
+                        <h6 class="text-white">Execute</h6>
+                        <p class="text-white-50 small">Copy and use in your terminal</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -235,23 +466,9 @@
   <script src="./assets/js/atlantis.min.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.halo.min.js"></script>
   
   <!-- Init to check the space required -->
   <script src="./assets/js/init.js"></script>
-  <script>
-    VANTA.HALO({
-      el: "#vanta",
-      mouseControls: false,
-      touchControls: false,
-      gyroControls: false,
-      minHeight: 500.00,
-      minWidth: 500.00,
-      yOffset: -0.15,
-      backgroundColor: 0x1a2035,
-      amplitudeFactor: 0.0,
-    })
-  </script>
 </body>
 
 </html>

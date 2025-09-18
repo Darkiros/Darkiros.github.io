@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta charset="utf-8">
-    <title>Pentest Helper - Graphs generator</title>
+    <title>Pentest Helper - Vulnerability Graphs Generator</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="./assets/images/icon.ico" type="image/x-icon" />
     <script async defer src="https://buttons.github.io/buttons.js"></script>
@@ -39,34 +39,11 @@
         });
     </script>
 
-    <style>
-        .center-box {
-            margin: auto;
-            text-align: center;
-        }
-        .download,
-        .copy {
-            margin-left: 3%;
-            background-color: transparent;
-            border: none;
-            height: fit-content;
-            margin-top: auto;
-            margin-bottom: auto;
-            color: white;
-        }
-        .download:hover,
-        .copy:hover {
-            cursor: pointer;
-            color: blue;
-        }
-
-    </style>
-
     <!-- CSS Files -->
     <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="./assets/css/atlantis.min.css" />
-    <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="./assets/css/graphs.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
 </head>
 
@@ -229,79 +206,153 @@
 
         <div class="main-panel" style="margin-top: 6em;">
             <div class="page-inner">
+                <!-- Header Section -->
+                <div class="row justify-content-center mb-5">
+                    <div class="col-lg-10 text-center">
+                        <div class="hero-section">
+                            <div class="hero-icon mb-3">
+                                <i class="fas fa-chart-bar fa-4x text-warning"></i>
+                            </div>
+                            <h1 class="display-5 text-white font-weight-bold mb-3">Vulnerability Graphs Generator</h1>
+                            <p class="lead text-white-50 mb-4">Create professional charts for vulnerability assessment reports using the Common Vulnerability Scoring System</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-body">
+                    <!-- Input Controls -->
+                    <div class="col-md-12 mb-4">
+                        <div class="glass-card">
+                            <h3 class="text-white mb-4">
+                                <i class="fas fa-sliders-h mr-2"></i>Vulnerability Configuration
+                            </h3>
+                            <div class="vulnerability-input">
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="input-group">
-                                                    <h3 class="input-group-text" style="width: 50%; font-weight: bold; color: rgb(162, 213, 114);">Low</h3>
-                                                    <input type="number" name="low" value="0" id="low" class="form-control" style="width: 5em; text-align: center;"
-                                                        onchange="action_bar(); action_pie()" />
-                                                </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text d-flex justify-content-center align-items-center" style="color: rgb(162, 213, 114); font-weight: bold; width: 102px;">
+                                                    <i class="fas fa-info-circle mr-2"></i>Low
+                                                </span>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="input-group">
-                                                    <h3 class="input-group-text" style="width: 50%; font-weight: bold; color: rgb(255,205,86);">Medium</h3>
-                                                    <input type="number" name="medium" value="0" id="medium" class="form-control" style="width: 5em; text-align: center;"
-                                                        onchange="action_bar(); action_pie()" />
-                                                </div>
-                                            </div>
+                                            <input type="number" name="low" value="0" id="low" class="form-control" 
+                                                   min="0" max="999" onchange="action_bar(); action_pie()" />
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="input-group">
-                                                    <h3 class="input-group-text" style="width: 50%; font-weight: bold; color: rgb(255, 159, 64)">High</h3>
-                                                    <input type="number" name="high" value="0" id="high" class="form-control" style="width: 5em; text-align: center;"
-                                                        onchange="action_bar(); action_pie()" />
-                                                </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text d-flex justify-content-center align-items-center" style="color: rgb(255,205,86); font-weight: bold; width: 102px;">
+                                                    <i class="fas fa-exclamation-triangle mr-2"></i>Medium
+                                                </span>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="input-group">
-                                                    <h3 class="input-group-text" style="width: 50%; font-weight: bold; color: rgb(255, 99, 132)">Critical</h3>
-                                                    <input type="number" name="critical" value="0" id="critical" class="form-control" style="width: 5em; text-align: center;"
-                                                        onchange="action_bar(); action_pie()" />
-                                                </div>
+                                            <input type="number" name="medium" value="0" id="medium" class="form-control" 
+                                                   min="0" max="999" onchange="action_bar(); action_pie()" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text d-flex justify-content-center align-items-center" style="color: rgb(255, 159, 64); font-weight: bold; width: 102px;">
+                                                    <i class="fas fa-exclamation mr-2"></i>High
+                                                </span>
                                             </div>
+                                            <input type="number" name="high" value="0" id="high" class="form-control" 
+                                                   min="0" max="999" onchange="action_bar(); action_pie()" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text d-flex justify-content-center align-items-center" style="color: rgb(255, 99, 132); font-weight: bold; width: 102px;">
+                                                    <i class="fas fa-skull mr-2"></i>Critical
+                                                </span>
+                                            </div>
+                                            <input type="number" name="critical" value="0" id="critical" class="form-control" 
+                                                   min="0" max="999" onchange="action_bar(); action_pie()" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="row">
+                    <!-- Bar Chart -->
                     <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="center-box">
-                                    <div id="chartjs-bar" style="max-height: 450px; height: 450px;">
-                                        <canvas id="canvas_bar"></canvas>
-                                    </div>
-                                    <div class="center-box">
-                                        <button class="btn btn-primary" style="width: 115px;" onclick="download_bar()">Download</button>
-                                        <button class="btn btn-primary" style="width: 115px; margin-left: 3%;" onclick="copy_bar()">Copy</button>
-                                    </div>
+                        <div class="glass-card">
+                            <h4 class="text-white mb-3">
+                                <i class="fas fa-chart-bar mr-2"></i>Bar Chart
+                            </h4>
+                            <div class="chart-container">
+                                <div id="chartjs-bar" style="max-height: 400px; height: 400px;">
+                                    <canvas id="canvas_bar"></canvas>
                                 </div>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="btn btn-glass" onclick="download_bar()">
+                                    <i class="fas fa-download mr-2"></i>Download PNG
+                                </button>
+                                <button class="btn btn-glass" onclick="copy_bar()">
+                                    <i class="fas fa-copy mr-2"></i>Copy to Clipboard
+                                </button>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Pie Chart -->
                     <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div id="chartjs-pie" style="max-height: 450px; height: 450px;">
+                        <div class="glass-card">
+                            <h4 class="text-white mb-3">
+                                <i class="fas fa-chart-pie mr-2"></i>Pie Chart
+                            </h4>
+                            <div class="chart-container">
+                                <div id="chartjs-pie" style="max-height: 400px; height: 400px;">
                                     <canvas id="canvas_pie"></canvas>
                                 </div>
-                                <div class="center-box">
-                                    <button class="btn btn-primary" style="width: 115px;" onclick="download_pie()">
-                                        Download
-                                    </button>
-                                    <button class="btn btn-primary" style="width: 115px; margin-left: 3%;" onclick="copy_pie()">
-                                        Copy
-                                    </button>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="btn btn-glass" onclick="download_pie()">
+                                    <i class="fas fa-download mr-2"></i>Download PNG
+                                </button>
+                                <button class="btn btn-glass" onclick="copy_pie()">
+                                    <i class="fas fa-copy mr-2"></i>Copy to Clipboard
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Section -->
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="glass-card">
+                            <h4 class="text-white mb-3">
+                                <i class="fas fa-info-circle mr-2"></i>How to Use
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="text-center mb-3">
+                                        <i class="fas fa-edit text-primary" style="font-size: 2rem;"></i>
+                                        <h5 class="text-white mt-2">1. Input Values</h5>
+                                        <p class="text-white-50">Enter the number of vulnerabilities for each severity level</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="text-center mb-3">
+                                        <i class="fas fa-eye text-success" style="font-size: 2rem;"></i>
+                                        <h5 class="text-white mt-2">2. Preview Charts</h5>
+                                        <p class="text-white-50">View real-time updates of your vulnerability charts</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="text-center mb-3">
+                                        <i class="fas fa-download text-warning" style="font-size: 2rem;"></i>
+                                        <h5 class="text-white mt-2">3. Export Results</h5>
+                                        <p class="text-white-50">Download as PNG or copy to clipboard for reports</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -348,212 +399,8 @@
     <!-- Init to check the space required -->
     <script src="./assets/js/init.js"></script>
 
-    <script>
-
-        var image;
-    
-        window.chartColors = {
-            red: 'rgb(255, 99, 132)',
-            orange: 'rgb(255, 159, 64)',
-            yellow: 'rgb(255, 205, 86)',
-            green: 'rgb(162, 213, 114)',
-            blue: 'rgb(54, 162, 235)'
-        };
-    
-        var color = Chart.helpers.color;
-    
-        var config_bar = {
-            type: 'bar',
-            data: {
-                labels: ["Low", "Medium", "High", "Critical"],
-                datasets: [{
-                    label: "Number of vulnerabilities",
-                    backgroundColor: [window.chartColors.green, window.chartColors.yellow, window.chartColors.orange, window.chartColors.red],
-                    data: [0, 0, 0, 0],
-                }]
-            },
-            plugins: [ChartDataLabels],
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Number of vulnerabilities per severity'
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: false
-                    },
-                    datalabels: {
-                        font: {
-                            weight: 'bold'
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        };
-    
-        var config_pie = {
-            type: 'pie',
-            data: {
-                datasets: [{
-                    data: [0, 0, 0, 0],
-                    backgroundColor: [window.chartColors.green, window.chartColors.yellow, window.chartColors.orange, window.chartColors.red],
-                    label: 'Dataset 1',
-                }],
-                labels: ["Low", "Medium", "High", "Critical"]
-            },
-            plugins: [ChartDataLabels],
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                title: {
-                    display: true,
-                    text: 'Number of vulnerabilities per severity'
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom'
-                    },
-                    tooltip: {
-                        enabled: false
-                    },
-                    datalabels: {
-                        font: {
-                            weight: 'bold'
-                        }
-                    }
-                }
-            }
-        };
-    
-        var myBar;
-        var myPie;
-    
-        window.onload = function () {
-            myBar = new Chart(document.getElementById("canvas_bar"), config_bar);
-            myPie = new Chart(document.getElementById("canvas_pie"), config_pie);
-            action_bar();
-            action_pie();
-        };   
-    
-    
-        function download_bar() {
-            var a = document.createElement("a");
-            a.href = myBar.toBase64Image();
-            a.download = "Image.png";
-            a.click();
-        }
-    
-        function download_pie() {
-            var a = document.createElement("a");
-            a.href = myPie.toBase64Image();
-            a.download = "Image.png";
-            a.click();
-        }
-    
-        function SelectText(element) {
-            var doc = document;
-            if (doc.body.createTextRange) {
-                var range = document.body.createTextRange();
-                range.moveToElementText(element);
-                range.select();
-            } else if (window.getSelection) {
-                var selection = window.getSelection();
-                var range = document.createRange();
-                range.selectNodeContents(element);
-                selection.removeAllRanges();
-                selection.addRange(range);
-            }
-        }
-    
-        function action_bar() {
-            config_bar.data.datasets[0].data[0] = document.getElementById("low").value;
-            config_bar.data.datasets[0].data[1] = document.getElementById("medium").value;
-            config_bar.data.datasets[0].data[2] = document.getElementById("high").value;
-            config_bar.data.datasets[0].data[3] = document.getElementById("critical").value;
-            myBar.update()
-        }
-    
-        function copy_bar() {
-            var canvas = document.getElementById("canvas_bar");
-            var img = document.createElement('img');
-            img.src = canvas.toDataURL()
-            var div = document.createElement('div');
-            div.contentEditable = true;
-            div.appendChild(img);
-            document.body.appendChild(div);
-            // do copy
-            SelectText(div);
-            document.execCommand('Copy');
-            document.body.removeChild(div);
-            new Notify({
-                status: 'success',
-                title: 'Graph copié avec succès',
-                text: '',
-                effect: 'fade',
-                speed: 300,
-                customClass: '',
-                customIcon: '',
-                showIcon: true,
-                showCloseButton: true,
-                autoclose: true,
-                autotimeout: 1500,
-                gap: 20,
-                distance: 20,
-                type: 1,
-                position: 'top right'
-            })
-        }
-    
-        function action_pie() {
-            config_pie.data.datasets[0].data[0] = document.getElementById("low").value;
-            config_pie.data.datasets[0].data[1] = document.getElementById("medium").value;
-            config_pie.data.datasets[0].data[2] = document.getElementById("high").value;
-            config_pie.data.datasets[0].data[3] = document.getElementById("critical").value;
-            myPie.update()
-        }
-    
-        function copy_pie() {
-            var canvas = document.getElementById("canvas_pie");
-            var img = document.createElement('img');
-            img.src = canvas.toDataURL()
-            var div = document.createElement('div');
-            div.contentEditable = true;
-            div.appendChild(img);
-            document.body.appendChild(div);
-            // do copy
-            SelectText(div);
-            document.execCommand('Copy');
-            document.body.removeChild(div);
-            new Notify({
-                status: 'success',
-                title: 'Graph copié avec succès',
-                text: '',
-                effect: 'fade',
-                speed: 300,
-                customClass: '',
-                customIcon: '',
-                showIcon: true,
-                showCloseButton: true,
-                autoclose: true,
-                autotimeout: 1500,
-                gap: 20,
-                distance: 20,
-                type: 1,
-                position: 'top right'
-            })
-        }
-    </script>
+    <!-- Graphs functionality -->
+    <script src="./assets/js/graphs.js"></script>
 </body>
 
 </html>

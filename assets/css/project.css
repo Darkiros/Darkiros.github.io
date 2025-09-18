@@ -1,0 +1,427 @@
+/* project.css : styles spécifiques à la page de gestion de projet */
+
+/* Glassmorphism cards styling */
+.glass-card {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
+    border-radius: 15px !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Enhanced input styling */
+.enhanced-input .input-group-text {
+    background: rgba(108, 122, 224, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    border-radius: 8px 0 0 8px !important;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.enhanced-input .form-control {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    border-radius: 0 8px 8px 0 !important;
+    transition: all 0.3s ease;
+}
+
+.enhanced-input .form-control:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(108, 122, 224, 0.8) !important;
+    color: white !important;
+    box-shadow: 0 0 0 0.2rem rgba(108, 122, 224, 0.25) !important;
+}
+
+.enhanced-input .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Enhanced table styling */
+.enhanced-table {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(10px);
+    border-radius: 15px !important;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.enhanced-table thead th {
+    background: linear-gradient(45deg, #6c7ae0, #8e9af7) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 600;
+    padding: 1rem !important;
+    text-align: center;
+    position: relative;
+}
+
+.enhanced-table tbody tr {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.enhanced-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.enhanced-table tbody td {
+    padding: 0.8rem !important;
+    border: none !important;
+    color: white !important;
+    vertical-align: middle;
+}
+
+/* Enhanced buttons */
+.btn-enhanced {
+    background: linear-gradient(45deg, #6c7ae0, #8e9af7);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    box-shadow: 0 4px 15px 0 rgba(108, 122, 224, 0.3);
+}
+
+.btn-enhanced:hover {
+    box-shadow: 0 8px 25px 0 rgba(108, 122, 224, 0.5);
+    color: white;
+    background: linear-gradient(45deg, #5a67d8, #7c8df0);
+}
+
+.btn-enhanced:focus {
+    color: white;
+    box-shadow: 0 8px 25px 0 rgba(108, 122, 224, 0.5);
+}
+
+/* Card header enhancement */
+.enhanced-card-header {
+    background: linear-gradient(45deg, rgba(108, 122, 224, 0.8), rgba(142, 154, 247, 0.8)) !important;
+    border-radius: 15px 15px 0 0 !important;
+    border: none !important;
+    padding: 1.5rem !important;
+}
+
+.enhanced-card-header .card-title {
+    color: white !important;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Action buttons styling */
+.action-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.5rem;
+}
+
+.action-btn:hover {
+    background: rgba(108, 122, 224, 0.8);
+    color: white;
+    border-color: rgba(108, 122, 224, 0.8);
+}
+
+.action-btn:focus {
+    color: white;
+    box-shadow: 0 0 0 0.2rem rgba(108, 122, 224, 0.25);
+}
+
+/* Modal enhancements */
+.modal-content {
+    background: rgba(30, 30, 30, 0.95) !important;
+    backdrop-filter: blur(20px);
+    border-radius: 20px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.modal-header {
+    background: linear-gradient(45deg, rgba(108, 122, 224, 0.8), rgba(142, 154, 247, 0.8));
+    border-radius: 20px 20px 0 0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Statistics cards enhancement */
+.stats-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(45deg, #6c7ae0, #8e9af7);
+}
+
+.stats-card:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+/* Progress bars */
+.progress {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    transition: width 0.6s ease;
+    border-radius: 10px;
+}
+
+/* Animation keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(108, 122, 224, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(108, 122, 224, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(108, 122, 224, 0);
+    }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #6c7ae0, #8e9af7);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #5a67d8, #7c8df0);
+}
+
+/* DataTable customization */
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    color: white;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    padding: 0.5rem;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    padding: 0.25rem;
+}
+
+.dataTables_wrapper .dataTables_length select option {
+    color: black;
+}
+
+/* Buttons styling - making them more rectangular */
+.btn-round {
+    border-radius: 8px !important;
+}
+
+.btn-primary.btn-round {
+    border-radius: 8px !important;
+}
+
+/* DataTable pagination buttons - more specific targeting */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    border-radius: 8px !important;
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    padding: 0.2rem 0.4rem !important;
+    margin: 0 0.2rem !important;
+    text-decoration: none !important;
+    font-size: 0.85rem !important;
+    box-shadow: none !important;
+    /* Force override any nested styling */
+    overflow: hidden !important;
+    cursor: pointer !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button * {
+    border-radius: inherit !important;
+    background: transparent !important;
+    border: none !important;
+    cursor: inherit !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: rgba(108, 122, 224, 0.3) !important;
+    border-color: rgba(108, 122, 224, 0.6) !important;
+    color: white !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover * {
+    background: transparent !important;
+    color: inherit !important;
+    cursor: inherit !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: rgba(108, 122, 224, 0.6) !important;
+    border-color: rgba(108, 122, 224, 0.8) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current * {
+    background: transparent !important;
+    color: inherit !important;
+    cursor: inherit !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled * {
+    background: transparent !important;
+    color: inherit !important;
+    cursor: inherit !important;
+}
+
+/* Force override any existing DataTables theme */
+.dataTable tbody tr {
+    background-color: transparent !important;
+}
+
+.dataTable tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* DataTable pagination container */
+.dataTables_wrapper .dataTables_paginate {
+    text-align: center !important;
+    margin-top: 1rem !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .pagination {
+    justify-content: center;
+    margin: 0;
+}
+
+/* DataTable info and controls spacing */
+.dataTables_wrapper .dataTables_info {
+    padding-top: 1rem !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.dataTables_wrapper .dataTables_length {
+    margin-bottom: 1rem !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .enhanced-input .input-group-text {
+        font-size: 0.9rem;
+        width: 10em !important;
+    }
+    
+    .action-btn {
+        width: 35px;
+        height: 35px;
+        margin-left: 0.25rem;
+    }
+    
+    .glass-card {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Enhanced form styling for modals */
+.modal .enhanced-input .input-group-text {
+    background: rgba(108, 122, 224, 0.9) !important;
+}
+
+.modal .enhanced-input .form-control {
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Modal styling fixes */
+.modal-content {
+    background: transparent !important;
+    border: none !important;
+}
+
+
+.modal .card .card-body {
+    padding: 1.5rem !important;
+}
+
+/* Tooltip enhancement */
+.tooltip-inner {
+    background: linear-gradient(45deg, #6c7ae0, #8e9af7);
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.bs-tooltip-top .arrow::before,
+.bs-tooltip-auto[x-placement^="top"] .arrow::before {
+    border-top-color: #6c7ae0;
+}
+
+
+.chart-container {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+canvas {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    margin: auto;
+    width: fit-content;
+    height: fit-content;
+}

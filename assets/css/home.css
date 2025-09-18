@@ -1,0 +1,142 @@
+/* home.css : styles spécifiques à la page d'accueil */
+
+.hero-section {
+    padding: 2rem 0;
+}
+
+.section-title {
+    margin-bottom: 3rem;
+}
+
+.tool-icon {
+    transition: transform 0.3s ease;
+}
+
+.card:hover .tool-icon {
+    transform: scale(1.1);
+}
+
+.card {
+    transition: all 0.3s ease;
+    border-radius: 15px;
+}
+
+.feature-item {
+    padding: 1.5rem;
+}
+
+.feature-item i {
+    transition: transform 0.3s ease;
+}
+
+.feature-item:hover i {
+    transform: scale(1.1);
+}
+
+.step {
+    padding: 1rem;
+}
+
+.step-number {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.btn {
+    transition: all 0.3s ease;
+    border-radius: 25px;
+    padding: 0.75rem 2rem;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-lg {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+}
+
+/* Glass morphism effect */
+.glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 1rem 0;
+    }
+    
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .lead {
+        font-size: 1rem;
+    }
+    
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .tool-icon i {
+        font-size: 2rem !important;
+    }
+    
+    .feature-item i {
+        font-size: 2rem !important;
+    }
+}
+
+/* Animation for cards on load */
+.card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+.card:nth-child(5) { animation-delay: 0.5s; }
+.card:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hero animation */
+.hero-section {
+    animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Improved text readability */
+.text-white-50 {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Better spacing */
+.mb-5 {
+    margin-bottom: 4rem !important;
+}
+
+.mt-5 {
+    margin-top: 4rem !important;
+}

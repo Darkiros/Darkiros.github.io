@@ -1,0 +1,336 @@
+/* calculatrice.css : styles spécifiques à la calculatrice CVSS */
+
+/* Correction Z-index pour tous les types de tooltips possibles */
+.tooltip,
+.tooltip-inner,
+.bs-tooltip-top,
+.bs-tooltip-bottom,
+.bs-tooltip-left,
+.bs-tooltip-right,
+[data-toggle="tooltip"] + .tooltip,
+/* Tooltips spécifiques CVSS */
+.cvss-tooltip,
+.cvss3-tooltip,
+div[role="tooltip"],
+[class*="tooltip"],
+/* Éléments flottants génériques */
+div[style*="position: absolute"],
+div[style*="position: fixed"],
+/* Popover et descriptions */
+.popover,
+.popover-content,
+.description,
+.info-popup {
+    z-index: 9999 !important;
+    position: relative !important;
+}
+
+/* Force z-index pour tous les descendants directs des tooltips */
+.tooltip *,
+.popover *,
+[role="tooltip"] * {
+    z-index: inherit !important;
+}
+
+/* Règle globale pour tous les éléments avec backdrop-filter */
+*[style*="backdrop-filter"],
+*[class*="glass"] {
+    z-index: 1 !important;
+}
+
+/* Règle globale pour forcer les tooltips au premier plan */
+body > div:last-child,
+body > div[style*="position"],
+body > .tooltip,
+body > [role="tooltip"] {
+    z-index: 10000 !important;
+}
+
+/* Glass morphism cards avec z-index explicitement bas */
+.glass-card {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 15px !important;
+    transition: all 0.3s ease;
+    z-index: 1 !important;
+    position: relative;
+}
+
+/* Hero section */
+.hero-section {
+    padding: 2rem 0;
+    animation: fadeIn 1s ease-out;
+}
+
+.hero-icon {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Canvas styling */
+canvas {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    margin: auto;
+    width: fit-content !important;
+    height: fit-content !important;
+    max-width: 100%;
+}
+
+#cvssboard {
+    text-align: center;
+}
+
+#chartjs-tooltip {
+    opacity: 1;
+    position: absolute;
+    background: rgba(0, 0, 0, .7);
+    color: white;
+    border-radius: 3px;
+    -webkit-transition: all .1s ease;
+    transition: all .1s ease;
+    pointer-events: none;
+    -webkit-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+
+#chartjs-radar {
+    margin: auto;
+    text-align: center;
+    width: 100%;
+}
+
+/* Modern metrics styling */
+.metrics-container {
+    padding: 1rem;
+    position: relative;
+}
+
+/* Amélioration pour les captures d'écran */
+.metrics-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(108, 122, 224, 0.1), rgba(155, 89, 182, 0.1));
+    border-radius: 10px;
+    z-index: -1;
+}
+
+.metric-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Amélioration pour la lisibilité dans les screenshots */
+.metric-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02), transparent);
+    border-radius: 10px;
+    pointer-events: none;
+}
+
+.metric-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateX(5px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.metric-label {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.metric-label i {
+    margin-right: 0.75rem;
+    font-size: 1.3rem;
+    min-width: 20px;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #6c7ae0;
+    background: rgba(108, 122, 224, 0.15);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: 2px solid rgba(108, 122, 224, 0.3);
+    min-width: 60px;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.metric-value.main-score {
+    font-size: 2rem;
+    color: #fff;
+    background: linear-gradient(45deg, #6c7ae0, #9b59b6);
+    border: 2px solid rgba(255,255,255,0.2);
+    box-shadow: 0 4px 15px rgba(108, 122, 224, 0.4);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.metric-value.main-score::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.metric-item:hover .metric-value.main-score::before {
+    left: 100%;
+}
+
+/* Modern buttons */
+.btn-modern {
+    border-radius: 25px;
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 2px solid;
+}
+
+.btn-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.download,
+.copy {
+    background-color: transparent;
+    border: none;
+    height: fit-content;
+    margin-top: auto;
+    margin-bottom: auto;
+    color: white;
+}
+
+.download:hover,
+.copy:hover {
+    cursor: pointer;
+    color: blue;
+}
+
+.center-box {
+    margin: auto;
+    text-align: center;
+}
+
+/* Legacy table styling (hidden by default) */
+.table {
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    width: 25vw;
+    display: none; /* Hidden in favor of new metrics layout */
+}
+
+.table th {
+    padding: 0 25px !important;
+    height: 3em;
+    color: white;
+    background-color: #6c7ae0;
+}
+
+.table td {
+    padding: 0 25px !important;
+    height: 3em;
+    text-align: center;
+    background-color: whitesmoke;
+    font-weight: bold;
+}
+
+dd > label {
+    color: black !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 1rem 0;
+    }
+    
+    .display-5 {
+        font-size: 2rem;
+    }
+    
+    .lead {
+        font-size: 1rem;
+    }
+    
+    .hero-icon i {
+        font-size: 3rem !important;
+    }
+    
+    .metric-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .metric-value {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .btn-modern {
+        padding: 0.5rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Card animations */
+.card {
+    animation: slideInUp 0.6s ease-out;
+}
+
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

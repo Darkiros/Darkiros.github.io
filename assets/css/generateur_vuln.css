@@ -1,0 +1,206 @@
+/* generateur_vuln.css : styles spécifiques à la page de génération de fiches de vulnérabilités */
+
+/* Glass morphism cards */
+.glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+/* CVSS Parameters styling */
+.cvss-parameters {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Canvas container styling */
+.chart-container {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+canvas {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    margin: auto;
+    width: fit-content;
+    height: fit-content;
+}
+
+/* Action buttons styling */
+.btn-glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    margin: 0.25rem;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.btn-glass:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.action-buttons {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.vulnerability-form .form-control,
+.vulnerability-form textarea {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 8px;
+    padding: 0.75rem;
+}
+
+.vulnerability-form .form-control:focus,
+.vulnerability-form textarea:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(74, 144, 226, 0.5);
+    color: white;
+    box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+}
+
+.vulnerability-form .form-control::placeholder,
+.vulnerability-form textarea::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+
+
+/* Table styling */
+.table {
+    margin: auto;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.table th {
+    padding: 1rem;
+    color: white;
+    background-color: rgba(108, 122, 224, 0.8);
+    text-align: center;
+    font-weight: 600;
+}
+
+.table td {
+    padding: 1rem;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    font-weight: 600;
+}
+
+/* CVSS board styling */
+#cvssboard {
+    text-align: center;
+}
+
+#chartjs-radar {
+    margin-top: 2%;
+    display: inline-flex;
+    margin: auto;
+    text-align: center;
+}
+
+#vuln_pres {
+    margin: auto;
+    text-align: center;
+}
+
+/* Download and copy buttons */
+.download,
+.copy,
+.exporter,
+.importer {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    margin: 0.25rem;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.download:hover,
+.copy:hover,
+.exporter:hover,
+.importer:hover {
+    background: rgba(74, 144, 226, 0.2);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Center box styling */
+.center-box {
+    margin: auto;
+    text-align: center;
+}
+
+/* Scroll styling */
+.scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.chartjs-tooltip-key {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+}
+
+/* Parameters styling */
+.parameters {
+    margin-top: 1em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .glass-card {
+        margin-bottom: 1rem;
+        padding: 1rem;
+    }
+    
+    .hero-icon {
+        font-size: 3rem;
+    }
+}
+
+#fiche {
+    border-left: solid;
+    border-left-color: #6c7ae0;
+    padding-left: 1%;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#vuln_name {
+    text-decoration: underline;
+}
+
+dd > label {
+    color: black !important;
+}

@@ -1,0 +1,120 @@
+/* commands.css : styles spécifiques à la page de cheat sheet/commandes */
+
+th {
+    color: white;
+}
+
+td {
+    max-width: 200px;
+}
+
+.scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.parameters {
+    margin-top: 1em;
+}
+
+canvas {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    margin: auto;
+    width: 300px !important;
+    height: 300px !important;
+}
+
+#cvssboard {
+    text-align: center;
+}
+
+#chartjs-tooltip {
+    opacity: 1;
+    position: absolute;
+    background: rgba(0, 0, 0, .7);
+    color: white;
+    border-radius: 3px;
+    -webkit-transition: all .1s ease;
+    transition: all .1s ease;
+    pointer-events: none;
+    -webkit-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+
+#chartjs-radar {
+    margin-top: 2%;
+    display: inline-flex;
+    margin: auto;
+    text-align: center;
+}
+
+#vuln_pres {
+    margin: auto;
+    text-align: center;
+}
+
+.chartjs-tooltip-key {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+}
+
+.download,
+.copy,
+.exporter,
+.importer {
+    margin-left: 3%;
+    background-color: transparent;
+    border: none;
+    height: fit-content;
+    margin-top: 1em;
+    margin-bottom: auto;
+    color: white;
+}
+
+.exporter,
+.importer {
+    margin-top: 1em;
+}
+
+.download:hover,
+.copy:hover,
+.exporter:hover,
+.importer:hover {
+    cursor: pointer;
+    color: blue;
+}
+
+.center-box {
+    margin: auto;
+    text-align: center;
+}
+
+#metricsTable {
+    margin: auto;
+    border-collapse: collapse;
+}
+
+#metricsTable th {
+    padding: 5px;
+    color: white;
+    background-color: #6c7ae0;
+    text-align: center;
+    height: 3em;
+}
+
+#metricsTable td {
+    padding: 5px;
+    text-align: center;
+    background-color: whitesmoke;
+    font-weight: bold;
+    height: 3em;
+}
+
+dd>label {
+    color: black !important;
+}
