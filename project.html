@@ -10,8 +10,8 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
     <script src="./assets/js/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-    <script src=https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js></script>
 
 
     <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
@@ -131,7 +131,12 @@
 
                 var list_vuln = JSON.parse(localStorage.getItem('list_vuln'));
 
-                myRadar = new Chart(document.getElementById("canvas"), config_radar);
+                // Initialize Chart only if Chart.js is available
+                if (typeof Chart !== 'undefined') {
+                    myRadar = new Chart(document.getElementById("canvas"), config_radar);
+                } else {
+                    console.error("Chart.js is not loaded");
+                }
                 $('#add-row').DataTable({
                     "pageLength": 10,
                     "lengthMenu": [
@@ -923,15 +928,34 @@
                                 <div class="row fade" id="pills-poc-nobd" role="tabpanel"
                                     aria-labelledby="pills-poc-tab-nobd" style="display: flex !important;">
                                     <div class="col-md-12">
-                                        <div class="row">
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <label for="poc" style="width: 12em;">Proof
-                                                        of concept</label>
-                                                    <input type="file" id="poc" class="form-control-file"
-                                                        accept="image/png, image/jpg, image/jpeg" multiple />
-                                                    <button id="add_poc" class="btn btn-primary"
-                                                        onclick="add_poc()">Add</button>
+                                        <div class="card glass-card mb-4 mt-2">
+                                            <div class="card-body">
+                                                <h5 class="card-title text-white mb-3">
+                                                    <i class="fas fa-camera mr-2"></i>
+                                                    Upload Proof of Concept
+                                                </h5>
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <div class="input-group enhanced-input">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text">
+                                                                    <i class="fas fa-file-image"></i>
+                                                                </span>
+                                                            </div>
+                                                            <div class="custom-file">
+                                                                <input type="file" id="poc" class="custom-file-input"
+                                                                    accept="image/png, image/jpg, image/jpeg" multiple />
+                                                                <label class="custom-file-label" for="poc">Choose images...</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <button id="add_poc" class="btn btn-enhanced w-100"
+                                                            onclick="add_poc()">
+                                                            <i class="fas fa-plus mr-2"></i>
+                                                            Add Images
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1393,6 +1417,9 @@
         }
 
         poc.value = "";
+        
+        // Reset the file input label
+        updateFileLabel();
 
         list_vuln[list_vuln.findIndex(vuln => vuln.id === parseInt(id))] = vuln;
         localStorage.setItem('list_vuln', JSON.stringify(list_vuln));
@@ -3479,9 +3506,64 @@
             exploitability = "Facile"
         }
 
-        myRadar.update()
+        if (myRadar && typeof myRadar.update === 'function') {
+            myRadar.update()
+        }
 
     }
+
+    // Simple file input label update
+    function updateFileLabel() {
+        const pocInput = document.getElementById('poc');
+        const pocLabel = document.querySelector('label[for="poc"]');
+        
+        if (pocInput && pocLabel) {
+            const fileCount = pocInput.files.length;
+            let labelText = 'Choose images...';
+            
+            if (fileCount === 1) {
+                labelText = `1 image selected: ${pocInput.files[0].name}`;
+            } else if (fileCount > 1) {
+                labelText = `${fileCount} images selected`;
+            }
+            
+            pocLabel.textContent = labelText;
+        }
+    }
+
+    // Initialize Chart with retry mechanism
+    function initializeChart() {
+        if (typeof Chart !== 'undefined' && !myRadar) {
+            const canvasElement = document.getElementById("canvas");
+            if (canvasElement) {
+                try {
+                    myRadar = new Chart(canvasElement, config_radar);
+                    console.log("Chart initialized successfully");
+                } catch (error) {
+                    console.error("Error initializing chart:", error);
+                }
+            }
+        }
+    }
+
+    // Wait for everything to load properly
+    window.addEventListener('load', function() {
+        // Initialize chart if not already done
+        initializeChart();
+        
+        // Setup file input listener
+        const pocInput = document.getElementById('poc');
+        if (pocInput) {
+            pocInput.addEventListener('change', updateFileLabel);
+        }
+    });
+
+    // Fallback: try to initialize chart after a delay
+    setTimeout(function() {
+        if (!myRadar) {
+            initializeChart();
+        }
+    }, 1000);
 
 </script>
 
