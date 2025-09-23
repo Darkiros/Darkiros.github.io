@@ -129,23 +129,66 @@ function listener_recommandation(evt){
 }
 
 async function download(id) {
-    var content = document.getElementById("vuln_description")
-    content.style.color = "black";
-    content = document.getElementById("vuln_step")
-    content.style.color = "black";
-    content = document.getElementById("vuln_impacts")
-    content.style.color = "black";
-    content = document.getElementById("vuln_recommandation")
-    content.style.color = "black";
+    // Store original colors and styles
+    var elements = [
+        { id: "vuln_description", originalColor: "", originalOpacity: "", originalClass: "" },
+        { id: "vuln_step", originalColor: "", originalOpacity: "", originalClass: "" },
+        { id: "vuln_impacts", originalColor: "", originalOpacity: "", originalClass: "" },
+        { id: "vuln_recommandation", originalColor: "", originalOpacity: "", originalClass: "" }
+    ];
+    
+    // Store original styles and set high contrast colors for capture
+    elements.forEach(function(elem) {
+        var content = document.getElementById(elem.id);
+        if (content) {
+            elem.originalColor = content.style.color;
+            elem.originalOpacity = content.style.opacity;
+            elem.originalClass = content.className;
+            
+            // Check if content is just placeholder text
+            var isPlaceholder = content.innerHTML.includes("Enter a description") || 
+                               content.innerHTML.includes("Enter steps") || 
+                               content.innerHTML.includes("Enter impact") || 
+                               content.innerHTML.includes("Enter recommendations") ||
+                               content.innerHTML.includes("Entrez une description") || 
+                               content.innerHTML.includes("Entrez les étapes") || 
+                               content.innerHTML.includes("Entrez l'impact") || 
+                               content.innerHTML.includes("Entrez les recommandations");
+            
+            if (isPlaceholder) {
+                // For placeholders, use a lighter but visible color
+                content.style.color = "#666666";
+                content.style.opacity = "0.8";
+            } else {
+                // For real content, use solid black for maximum contrast
+                content.style.color = "#000000";
+                content.style.opacity = "1";
+            }
+            
+            // Remove the text-white-50 class that makes text very light
+            content.className = content.className.replace('text-white-50', '');
+        }
+    });
+    
+    // Also ensure background elements are visible
+    var targetElement = document.getElementById(id);
+    var originalBgColor = targetElement.style.backgroundColor;
+    var originalBgImage = targetElement.style.backgroundImage;
     
     var a = document.createElement("a");
 
-    await html2canvas(document.getElementById(id)).then((canvas) => {
+    await html2canvas(document.getElementById(id), {
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        scale: 2,  // Higher resolution
+        logging: false // Disable console logs from html2canvas
+    }).then((canvas) => {
         a.appendChild(canvas);
     });
     
     var b = document.createElement("a");
-    b.href = a.childNodes[0].toDataURL("");
+    b.href = a.childNodes[0].toDataURL("image/png");
     b.download = "vulnerability_sheet.png";
     b.click();
     
@@ -153,15 +196,15 @@ async function download(id) {
     a.remove();
     b.remove();
     
-    // Revert colors
-    var content = document.getElementById("vuln_description")
-    content.style.color = "rgba(169, 175, 187, 0.82)";
-    content = document.getElementById("vuln_step")
-    content.style.color = "rgba(169, 175, 187, 0.82)";
-    content = document.getElementById("vuln_impacts")
-    content.style.color = "rgba(169, 175, 187, 0.82)";
-    content = document.getElementById("vuln_recommandation")
-    content.style.color = "rgba(169, 175, 187, 0.82)";
+    // Revert all original colors and styles
+    elements.forEach(function(elem) {
+        var content = document.getElementById(elem.id);
+        if (content) {
+            content.style.color = elem.originalColor || "";
+            content.style.opacity = elem.originalOpacity || "";
+            content.className = elem.originalClass;
+        }
+    });
 
     // Show success notification
     new Notify({
@@ -192,23 +235,61 @@ function SelectText(element) {
 }
 
 async function copy(id) {
-    var content = document.getElementById("vuln_description")
-    content.style.color = "black";
-    content = document.getElementById("vuln_step")
-    content.style.color = "black";
-    content = document.getElementById("vuln_impacts")
-    content.style.color = "black";
-    content = document.getElementById("vuln_recommandation")
-    content.style.color = "black";
+    // Store original colors and styles
+    var elements = [
+        { id: "vuln_description", originalColor: "", originalOpacity: "", originalClass: "" },
+        { id: "vuln_step", originalColor: "", originalOpacity: "", originalClass: "" },
+        { id: "vuln_impacts", originalColor: "", originalOpacity: "", originalClass: "" },
+        { id: "vuln_recommandation", originalColor: "", originalOpacity: "", originalClass: "" }
+    ];
+    
+    // Store original styles and set high contrast colors for capture
+    elements.forEach(function(elem) {
+        var content = document.getElementById(elem.id);
+        if (content) {
+            elem.originalColor = content.style.color;
+            elem.originalOpacity = content.style.opacity;
+            elem.originalClass = content.className;
+            
+            // Check if content is just placeholder text
+            var isPlaceholder = content.innerHTML.includes("Enter a description") || 
+                               content.innerHTML.includes("Enter steps") || 
+                               content.innerHTML.includes("Enter impact") || 
+                               content.innerHTML.includes("Enter recommendations") ||
+                               content.innerHTML.includes("Entrez une description") || 
+                               content.innerHTML.includes("Entrez les étapes") || 
+                               content.innerHTML.includes("Entrez l'impact") || 
+                               content.innerHTML.includes("Entrez les recommandations");
+            
+            if (isPlaceholder) {
+                // For placeholders, use a lighter but visible color
+                content.style.color = "#666666";
+                content.style.opacity = "0.8";
+            } else {
+                // For real content, use solid black for maximum contrast
+                content.style.color = "#000000";
+                content.style.opacity = "1";
+            }
+            
+            // Remove the text-white-50 class that makes text very light
+            content.className = content.className.replace('text-white-50', '');
+        }
+    });
 
     var a = document.createElement("a");
-    await html2canvas(document.getElementById(id)).then((canvas) => {
+    await html2canvas(document.getElementById(id), {
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        scale: 2,  // Higher resolution
+        logging: false // Disable console logs from html2canvas
+    }).then((canvas) => {
         a.appendChild(canvas);
     });
     
     var canvas = a.childNodes[0];
     var img = document.createElement('img');
-    img.src = canvas.toDataURL()
+    img.src = canvas.toDataURL('image/png')
     var div = document.createElement('div');
     div.contentEditable = true;
     div.appendChild(img);
@@ -232,15 +313,15 @@ async function copy(id) {
     
     a.remove();
 
-    // Revert colors
-    var content = document.getElementById("vuln_description")
-    content.style.color = "rgba(169, 175, 187, 0.82)";
-    content = document.getElementById("vuln_step")
-    content.style.color = "rgba(169, 175, 187, 0.82)";
-    content = document.getElementById("vuln_impacts")
-    content.style.color = "rgba(169, 175, 187, 0.82)";
-    content = document.getElementById("vuln_recommandation")
-    content.style.color = "rgba(169, 175, 187, 0.82)";
+    // Revert all original colors and styles
+    elements.forEach(function(elem) {
+        var content = document.getElementById(elem.id);
+        if (content) {
+            content.style.color = elem.originalColor || "";
+            content.style.opacity = elem.originalOpacity || "";
+            content.className = elem.originalClass;
+        }
+    });
 }
 
 function exporter() {
